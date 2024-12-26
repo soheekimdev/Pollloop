@@ -94,3 +94,37 @@ pnpm install
 # 개발 서버 실행
 pnpm dev
 ```
+
+## 🔄 Git 규칙
+
+### 브랜치 네이밍
+- `main`: 배포용 브랜치
+- `develop`: 개발용 브랜치
+- `feature/*`: 기능 개발 브랜치
+
+### 커밋 메시지
+```bash
+type: subject
+
+body
+```
+
+- Type
+  - feat: 새로운 기능 추가
+  - fix: 버그 수정
+  - docs: 문서 수정
+  - style: 코드 포맷팅
+  - refactor: 코드 리팩토링
+  - design: CSS 등 사용자 UI 변경
+  - rename: 파일/폴더명 수정 또는 위치 이동
+  - test: 테스트 코드
+  - chore: 빌드 업무 수정, 패키지 매니저 수정
+ 
+예시:
+```bash
+feat: 로그인 기능 구현
+
+- 이메일/비밀번호 유효성 검사 추가
+- 로그인 API 연동
+- 로그인 후 토큰 저장 구현
+```
