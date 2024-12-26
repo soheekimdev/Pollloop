@@ -14,6 +14,7 @@ export default {
           'brown-03': '#693A0A',
           'bg-01': '#FFF2CD',
           'bg-02': '#FFE3B6',
+          'bg-03': '#EAD8BB',
           'light-beige': '#FFFBEB',
         },
         button: {

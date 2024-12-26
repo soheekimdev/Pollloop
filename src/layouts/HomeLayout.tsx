@@ -1,8 +1,8 @@
 import { Outlet } from 'react-router-dom';
 
-export default function Layout() {
+export default function HomeLayout() {
   return (
-    <div>
+    <div className="h-full bg-pollloop-bg-02">
       {/* Navbar here */}
       <main>
         <Outlet />
