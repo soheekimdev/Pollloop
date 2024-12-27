@@ -2,9 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Gothic+A1&display=swap');
+
+/* Fonts */
+@font-face {
+  font-family: 'Iowan';
+  src: url('./assets/fonts/iowanoldstyle_bold.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* Common Styles */
 html,
 body,
 #root {
   height: 100%;
+}
+
+body {
+  font-family: 'Gothic A1', sans-serif;
 }
