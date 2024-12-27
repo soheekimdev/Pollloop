@@ -8,15 +8,19 @@ import Register from './pages/auth/Register';
 import Forms from './pages/forms';
 import FormCreate from './pages/forms/FormCreate';
 import FormDetail from './pages/forms/FormDetail';
+import AccountLayout from './layouts/AccountLayout';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<HomeLayout />}>
-          <Route path="/" element={<Home />} />
+        <Route element={<AccountLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+        </Route>
+
+        <Route element={<HomeLayout />}>
+          <Route path="/" element={<Home />} />
         </Route>
 
         <Route element={<DashboardLayout />}>
