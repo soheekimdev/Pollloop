@@ -49,6 +49,9 @@ export default {
           'secondary-text': '#A98764',
         },
       },
+      screens: {
+        xs: '322px',
+      },
     },
   },
   plugins: [],
