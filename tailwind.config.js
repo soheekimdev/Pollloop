@@ -9,6 +9,7 @@ export default {
       xl: '1440px',
     },
     colors: {
+      body: '#85582B',
       transperent: 'transperent',
       current: 'currentColor',
       pollloop: {
@@ -32,6 +33,12 @@ export default {
         'danger-bg': '#C63B00',
         'danger-text': '#FFFBEB',
         'ghost-bg-active': '#85582BD9',
+      },
+      input: {
+        bg: '#FFFBEB',
+        border: 'rgba(133, 88, 43, 0.3)',
+        tip: 'rgba(133, 88, 43, 0.8)',
+        placeholder: 'rgba(130, 110, 89, 0.47)',
       },
       status: {
         green: {
@@ -60,7 +67,8 @@ export default {
     },
     extend: {
       fontSize: {
-        22: '22px',
+        13: '0.8125rem',
+        22: '1.375rem',
       },
     },
   },
