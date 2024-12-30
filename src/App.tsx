@@ -9,6 +9,7 @@ import Forms from './pages/forms';
 import FormCreate from './pages/forms/FormCreate';
 import FormDetail from './pages/forms/FormDetail';
 import AccountLayout from './layouts/AccountLayout';
+import PasswordRetrieval from './pages/auth/PasswordRetrieval';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route element={<AccountLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="password" element={<PasswordRetrieval />} />
         </Route>
 
         <Route element={<HomeLayout />}>
