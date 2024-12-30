@@ -34,6 +34,8 @@ interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {}
 
-export default function Button({ size, variant, className, ...props }: ButtonProps) {
-  return <button className={clsx(buttonVariants({ size, variant }), className)} {...props} />;
+export default function Button({ size, variant, fullWidth, className, ...props }: ButtonProps) {
+  return (
+    <button className={clsx(buttonVariants({ size, variant, fullWidth }), className)} {...props} />
+  );
 }
