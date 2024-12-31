@@ -14,7 +14,7 @@ export default function FormActionButton({
 }: FormActionButtonProps) {
   return (
     <div className="w-full flex flex-col gap-4">
-      <Button size="md" variant="primary" fullWidth={true} className="text-sm">
+      <Button type="submit" size="md" variant="primary" fullWidth={true} className="text-sm">
         {submitButtonText}
       </Button>
       <p className="text-13 text-pollloop-orange text-center">
