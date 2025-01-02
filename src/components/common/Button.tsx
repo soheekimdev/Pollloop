@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes } from 'react';
 import clsx from 'clsx';
 
 const buttonVariants = cva(
-  'flex-none flex items-center justify-center rounded-lg transition-colors',
+  'flex-none flex items-center gap-1 justify-center rounded-lg transition-colors',
   {
     variants: {
       size: {
