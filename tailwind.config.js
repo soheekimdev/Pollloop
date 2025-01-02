@@ -72,5 +72,10 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar')({
+      noCompatibility: true,
+      preferredStrategy: 'pseudoelements',
+    }),
+  ],
 };
