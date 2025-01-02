@@ -83,20 +83,10 @@ export default function FormDetail() {
               </button>
             ))}
           </div>
-          {/* @푸른님 여긴 활성화된 탭의 content만 렌더링됩니다. components/details/Participants 컴포넌트에서 작업 이어서 하시면 됩니다. */}
-          <div className="w-full h-20 bg-pollloop-brown-03">{activeTab.content}</div>
+
+          <div className="w-full">{activeTab.content}</div>
         </section>
       </div>
     </div>
   );
 }
-
-/* 
-
-기본 레이아웃 구현
-useTab 커스텀 훅 작성
-탭 컴포넌트 구현
-폼 결과 보기 (데이터 바인딩까지만)
-라이브러리 리스트업
-
-*/
