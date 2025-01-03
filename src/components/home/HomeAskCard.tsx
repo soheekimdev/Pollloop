@@ -1,22 +1,24 @@
 import { Link } from 'react-router-dom';
-import AskStatusBadge from '../status-badge/AskStatusBadge';
 import { useState } from 'react';
 import { Copy } from 'lucide-react';
+import AskStatusBadge from '../common/status-badge/AskStatusBadge';
+import Button from '../common/Button';
 
-interface HomeAskCardProps {
+interface Ask {
+  author_id: number;
+  id: number;
   title: string;
-  ask_id: number;
   tag: string;
   is_closed: boolean;
   access_code: string;
 }
-export default function HomeAskCard({
-  title,
-  ask_id,
-  tag,
-  is_closed,
-  access_code,
-}: HomeAskCardProps) {
+
+interface HomeAskCardProps {
+  item: Ask;
+}
+
+export default function HomeAskCard({ item }: HomeAskCardProps) {
+  const { id: ask_id, title, tag, is_closed, access_code } = item;
   const [isDisplayed, setIsDisplayed] = useState(false);
 
   const handleDisplay = (event: React.MouseEvent) => {
@@ -33,28 +35,27 @@ export default function HomeAskCard({
   };
 
   return (
-    <li className="w-full h-[88px] rounded-2xl p-6 bg-pollloop-light-beige">
-      <Link to={`/asks/${ask_id}`} className="flex items-center justify-between w-full h-full">
-        <AskStatusBadge is_closed={is_closed} />
-        <div className="flex items-center flex-1 min-w-0 gap-2">
-          <h3 className="min-w-0 mx-2 overflow-hidden text-ellipsis whitespace-nowrap">{title}</h3>
-          <p className="shrink-0 px-2 py-1 text-[13px] bg-tag-default-bg rounded-md">{tag}</p>
+    <li className="w-full min-h-[88px] rounded-2xl p-6 bg-pollloop-light-beige">
+      <Link to={`/asks/${ask_id}`} className="flex items-center h-full">
+        <div className="flex flex-col flex-1 gap-2 overflow-hidden md:flex-row">
+          <AskStatusBadge is_closed={is_closed} className="flex-shrink-0 h-full" />
+          <h3 className="flex-1 max-w-fit line-clamp-1">{title}</h3>
+          <p className="px-2 py-1 rounded-md w-fit md:max-w-[200px] line-clamp-1 text-13 bg-tag-default-bg">
+            {tag}
+          </p>
         </div>
         {!is_closed &&
           (isDisplayed ? (
             <button
               onClick={handleCopy}
-              className="items-center gap-2 hidden md:flex shrink-0 ml-10 px-4 py-2 text-[15px] rounded-lg bg-button-ghost-bg-active/15 "
+              className="ml-5 w-fit h-10 flex gap-2 items-center px-4 py-2 text-[15px] rounded-lg bg-button-ghost-bg-active/15 "
             >
               {access_code} <Copy size={16} />
             </button>
           ) : (
-            <button
-              onClick={handleDisplay}
-              className="hidden md:block shrink-0 ml-10 px-4 py-2 text-[13px] rounded-lg bg-button-secondary-bg text-pollloop-light-beige"
-            >
+            <Button size="md" variant="secondary" onClick={handleDisplay} className="ml-5 w-fit ">
               비밀번호 확인하기
-            </button>
+            </Button>
           ))}
       </Link>
     </li>

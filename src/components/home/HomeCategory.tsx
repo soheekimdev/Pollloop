@@ -28,7 +28,7 @@ interface HomeCategoryProps {
   buttonText: string; // 버튼 이름
   items: Form[] | Ask[]; // 카테고리 아이템 리스트
   moreLink: string; // 더보기 링크
-  createLink: string; // 생성 버튼 링크
+  createLink: string; // 폼 생성 버튼 링크
 }
 
 export default function HomeCategory({
@@ -39,7 +39,7 @@ export default function HomeCategory({
   createLink,
 }: HomeCategoryProps) {
   const isForm = (item: Form | Ask): item is Form => {
-    return 'target_count' in item && 'end_at' in item && 'status' in item;
+    return 'target_count' in item;
   };
 
   return (
@@ -53,38 +53,13 @@ export default function HomeCategory({
       </header>
       <div className="w-full">
         {items.length > 0 ? (
-          <ul className="flex flex-wrap w-full h-full gap-4 [&>*]:shrink-0 [&>*]:grow-0">
-            {items.map(item => {
-              if (isForm(item)) {
-                return (
-                  <HomeFormCard
-                    key={item.id}
-                    form_id={item.id}
-                    status={item.status}
-                    title={item.title}
-                    tag={item.tag}
-                    target_count={item.target_count}
-                    actual_count={item.actual_count}
-                    end_at={item.end_at}
-                  />
-                );
-              }
-
-              return (
-                <HomeAskCard
-                  key={item.id}
-                  ask_id={item.id}
-                  title={item.title}
-                  tag={item.tag}
-                  is_closed={item.is_closed}
-                  access_code={item.access_code}
-                />
-              );
-            })}
+          <ul className="flex flex-wrap w-full h-full gap-4">
+            {items.map(item => isForm(item) && <HomeFormCard key={item.id} item={item} />)}
+            {items.map(item => !isForm(item) && <HomeAskCard key={item.id} item={item} />)}
           </ul>
         ) : (
           <Link to={createLink}>
-            <button className="flex items-center justify-center w-full h-[200px] gap-1 bg-pollloop-light-beige bg-opacity-55 rounded-2xl hover:bg-pollloop-light-beige">
+            <button className="flex items-center justify-center w-full h-[200px] gap-1 bg-pollloop-light-beige/55 rounded-2xl hover:bg-pollloop-light-beige">
               <CirclePlus size={18} />
               <span>{buttonText}</span>
             </button>
