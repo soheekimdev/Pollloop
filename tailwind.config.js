@@ -10,7 +10,7 @@ export default {
     },
     colors: {
       body: '#85582B',
-      transperent: 'transperent',
+      transparent: 'transparent',
       current: 'currentColor',
       pollloop: {
         orange: '#FFA632',
@@ -72,5 +72,10 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar')({
+      noCompatibility: true,
+      preferredStrategy: 'pseudoelements',
+    }),
+  ],
 };
