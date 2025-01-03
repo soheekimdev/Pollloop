@@ -70,6 +70,9 @@ export default {
         13: '0.8125rem',
         22: '1.375rem',
       },
+      boxShadow: {
+        'primary': '0px 0px 5px 1px #FF8D1A',
+      }
     },
   },
   plugins: [
