@@ -47,7 +47,7 @@ export default function FormDetail() {
   const { activeIndex, activeTab, changeTab } = useTabs(0, tabInfo);
   return (
     <div className="flex flex-col gap-4 px-10">
-      <Breadcrumbs items={['홈', '나의 홈', '프론트엔드 6기 만족도 조사 15주차']} />
+      <Breadcrumbs items={['홈', '나의 홈', '프론트엔드 6기 만족도 조사 1주차']} />
 
       <div className="relative flex flex-col w-full gap-10 p-10 bg-pollloop-bg-02 rounded-2xl">
         <Button variant="primary" size="md" className="absolute w-40 top-10 right-10 ">
