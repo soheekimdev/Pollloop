@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Trash2, Star, X } from 'lucide-react';
+import { Trash2, Star, X, Check } from 'lucide-react';
 import Breadcrumbs from '../../components/common/Breadcrumbs';
 import Button from '../../components/common/Button';
 
@@ -63,39 +63,63 @@ export default function Forms() {
   const getActionButtons = (status: Form['status']) => {
     const handlePreview = () => setIsPreviewModalOpen(true);
 
-    const previewButton = (
-      <Button size="sm" variant="neutral" className="w-24" onClick={handlePreview}>
-        미리 보기
-      </Button>
-    );
-
     switch (status) {
       case 'draft':
         return (
-          <div className="flex gap-2">
-            {previewButton}
-            <div className="flex gap-2">
-              <Button size="sm" variant="neutral" className="w-24">수정</Button>
-              <Button size="sm" variant="neutral" className="w-20">발행하기</Button>
-            </div>
-          </div>
+          <>
+            <td className="p-4">
+              <Button size="sm" variant="neutral" className="w-20" onClick={handlePreview}>
+                미리 보기
+              </Button>
+            </td>
+            <td className="p-4">
+              <div className="flex gap-2">
+                <Button size="sm" variant="neutral" className="w-14">수정</Button>
+                <Button size="sm" variant="neutral" className="w-20">발행하기</Button>
+              </div>
+            </td>
+          </>
         );
       case 'published':
       case 'closed':
         return (
-          <div className="flex gap-2">
-            {previewButton}
-            <Button size="sm" variant="neutral" className="px-4">결과 보기</Button>
-          </div>
+          <>
+            <td className="p-4">
+              <Button size="sm" variant="neutral" className="w-20" onClick={handlePreview}>
+                미리 보기
+              </Button>
+            </td>
+            <td className="p-4">
+              <Button size="sm" variant="neutral" className="w-[146px]">결과 보기</Button>
+            </td>
+          </>
         );
     }
   };
 
-  const customCheckboxStyle = "w-5 h-5 rounded border-2 border-pollloop-brown-01 text-pollloop-orange bg-pollloop-light-beige focus:ring-0 focus:ring-offset-0";
+  const CheckboxWithLabel = ({ checked, onChange, label }: { checked: boolean; onChange: (checked: boolean) => void; label?: string }) => (
+    <div className="relative flex items-center gap-6">
+      <div className="relative w-5 h-5">
+        <input
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => onChange(e.target.checked)}
+          className="absolute w-5 h-5 rounded-[4px] border border-pollloop-brown-01 bg-pollloop-bg-02 checked:bg-pollloop-brown-01 checked:border-pollloop-brown-01 cursor-pointer appearance-none peer"
+        />
+        {checked && (
+          <Check 
+            className="pointer-events-none absolute left-0 top-0 w-5 h-5 text-pollloop-light-beige stroke-2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+          />
+        )}
+      </div>
+      {label && <span className="font-medium">{label}</span>}
+    </div>
+  );
 
   return (
     <div className="flex flex-col h-full bg-pollloop-bg-01">
-
       {/* Main Content */}
       <div className="flex-1 overflow-hidden">
         <div className="px-10 py-4">
@@ -137,21 +161,18 @@ export default function Forms() {
                     <col className="w-[100px]" />
                     <col className="w-[100px]" />
                     <col className="w-[80px]" />
-                    <col className="w-[300px]" />
+                    <col className="w-[120px]" />
+                    <col className="w-[200px]" />
                     <col className="w-[80px]" />
                   </colgroup>
                   <thead>
                     <tr className="bg-pollloop-coral rounded-lg">
                       <th className="p-4 font-semibold text-sm text-left rounded-l-lg">
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            checked={selectedForms.length === forms.length}
-                            onChange={(e) => handleSelectAll(e.target.checked)}
-                            className={customCheckboxStyle}
-                          />
-                          <span>폼 이름</span>
-                        </div>
+                        <CheckboxWithLabel 
+                          checked={selectedForms.length === forms.length}
+                          onChange={handleSelectAll}
+                          label="폼 이름"
+                        />
                       </th>
                       <th className="p-4 font-semibold text-sm text-left">태그</th>
                       <th className="p-4 font-semibold text-sm text-left">생성 일자</th>
@@ -159,8 +180,9 @@ export default function Forms() {
                       <th className="p-4 font-semibold text-sm text-left">상태</th>
                       <th className="p-4 font-semibold text-sm text-left">참여 인원</th>
                       <th className="p-4 font-semibold text-sm text-left">참여율</th>
-                      <th className="p-4 font-semibold text-sm text-left"></th>
-                      <th className="p-4 rounded-r-lg"></th>
+                      <th className="p-4" />
+                      <th className="p-4" />
+                      <th className="p-4 rounded-r-lg" />
                     </tr>
                   </thead>
                 </table>
@@ -174,7 +196,8 @@ export default function Forms() {
                       <col className="w-[100px]" />
                       <col className="w-[100px]" />
                       <col className="w-[80px]" />
-                      <col className="w-[300px]" />
+                      <col className="w-[120px]" />
+                      <col className="w-[200px]" />
                       <col className="w-[80px]" />
                     </colgroup>
                     <tbody className="divide-y-4 divide-pollloop-bg-01">
@@ -184,15 +207,11 @@ export default function Forms() {
                           className="bg-pollloop-light-beige rounded-lg hover:bg-pollloop-bg-01 h-16"
                         >
                           <td className="p-4 rounded-l-lg">
-                            <div className="flex items-center gap-2">
-                              <input
-                                type="checkbox"
-                                checked={selectedForms.includes(form.id)}
-                                onChange={() => handleSelectForm(form.id)}
-                                className={customCheckboxStyle}
-                              />
-                              <span className="font-medium">{form.name}</span>
-                            </div>
+                            <CheckboxWithLabel 
+                              checked={selectedForms.includes(form.id)}
+                              onChange={() => handleSelectForm(form.id)}
+                              label={form.name}
+                            />
                           </td>
                           <td className="p-4">
                             <div className="flex gap-1">
@@ -219,9 +238,7 @@ export default function Forms() {
                           <td className="p-4 text-sm text-left">
                             {((form.participantCount / form.targetCount) * 100).toFixed(0)}%
                           </td>
-                          <td className="p-4">
-                            {getActionButtons(form.status)}
-                          </td>
+                          {getActionButtons(form.status)}
                           <td className="p-4 rounded-r-lg">
                             <div className="flex gap-4 text-pollloop-brown-01">
                               <button className="hover:text-pollloop-brown-02">
@@ -258,10 +275,10 @@ export default function Forms() {
               </div>
               <div className="flex flex-col gap-6">
                 <div className="flex justify-end gap-2">
-                  <Button variant="neutral" size="sm" className="px-3">
+                  <Button variant="neutral" size="sm" className="w-14">
                     수정
                   </Button>
-                  <Button variant="primary" size="sm" className="px-4">
+                  <Button variant="primary" size="sm" className="w-20">
                     발행하기
                   </Button>
                 </div>
