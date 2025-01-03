@@ -13,9 +13,9 @@ import CheckboxAnswer from '@/components/forms/CheckboxAnswer';
 import clsx from 'clsx';
 import Select from '@/components/form/Select';
 import { Plus } from 'lucide-react';
-import { FileType, Question, QUESTION_TYPES } from '@/types/forms';
+import { FileType, FormInfo, Question, QuestionType } from '@/types/forms';
 import { formatFileSize } from '@/utils/format';
-import { FILE_SIZE_LIMIT, FILE_TYPES } from '@/constants/forms';
+import { FILE_SIZE_LIMIT, FILE_TYPES, QUESTION_TYPES } from '@/constants/forms';
 
 interface SectionProps {
   title?: React.ReactNode;
@@ -43,18 +43,30 @@ function SectionTitle({ title, children }: SectionProps) {
 export default function FormCreate() {
   const breadcrumbsItems = ['홈', '나의 폼', '폼 만들기'];
 
-  const [formInfo, setFormInfo] = useState({
+  const [formInfo, setFormInfo] = useState<FormInfo>({
     title: '',
     tag: '',
-    maxParticipants: '',
-    dueDate: '',
-    isPrivate: false,
+    end_at: '',
+    is_closed: false,
+    access_code: '',
   });
+
   const [questions, setQuestions] = useState<Question[]>([]);
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
+
   const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
 
-  const handleQuestionTypeChange = (questionType: string) => {
+  const [isPrivateForm, setIsPrivateForm] = useState(false);
+
+  const handlePrivateToggle = (isChecked: boolean) => {
+    setIsPrivateForm(isChecked);
+
+    if (!isChecked) {
+      setFormInfo(prev => ({ ...prev, access_code: '' }));
+    }
+  };
+
+  const handleQuestionTypeChange = (questionType: QuestionType) => {
     if (!selectedQuestionId) return;
 
     setQuestions(prev =>
@@ -62,20 +74,20 @@ export default function FormCreate() {
         q.id === selectedQuestionId
           ? {
               ...q,
-              type: questionType as Question['type'],
-              options:
-                questionType === 'CHECKBOX' ||
-                questionType === 'RADIO' ||
-                questionType === 'DROPDOWN'
+              layout_type: questionType,
+              options_of_questions:
+                questionType === '체크박스' ||
+                questionType === '라디오' ||
+                questionType === '드롭다운'
                   ? []
                   : undefined,
               hasEtcOption:
-                questionType === 'CHECKBOX' ||
-                questionType === 'RADIO' ||
-                questionType === 'DROPDOWN'
+                questionType === '체크박스' ||
+                questionType === '라디오' ||
+                questionType === '드롭다운'
                   ? false
                   : undefined,
-              fileTypes: questionType === 'FILE_UPLOAD' ? [] : undefined,
+              fileTypes: questionType === '파일업로드' ? [] : undefined,
             }
           : q,
       ),
@@ -85,23 +97,38 @@ export default function FormCreate() {
   const handleAddQuestion = () => {
     const newQuestion: Question = {
       id: Date.now().toString(), // 임시 ID
-      type: 'SHORT_ANSWER',
-      title: '',
-      required: false,
+      layout_type: '단답형',
+      question: '',
+      question_order: questions.length + 1,
+      is_required: false,
+      options_of_questions: [],
     };
     setQuestions(prev => [...prev, newQuestion]);
     setSelectedQuestionId(newQuestion.id);
   };
 
   const handleUpdateQuestion = (id: string, updates: Partial<Question>) => {
-    setQuestions(prev => prev.map(q => (q.id === id ? { ...q, ...updates } : q)));
+    setQuestions(prev =>
+      prev.map(q =>
+        q.id === id
+          ? { ...q, ...updates, question_order: updates.question_order ?? q.question_order }
+          : q,
+      ),
+    );
   };
 
   const handleSubmit = async (isPublishing: boolean) => {
     const formData = {
       ...formInfo,
-      questions,
-      status: isPublishing ? 'published' : 'draft',
+      access_code: !isPublishing && isPrivateForm ? formInfo.access_code : '',
+      is_closed: !isPublishing,
+      questions: questions.map((q, index) => ({
+        layout_type: q.layout_type,
+        question: q.question,
+        question_order: index + 1,
+        is_required: q.is_required,
+        options_of_questions: q.options_of_questions,
+      })),
     };
 
     try {
@@ -178,14 +205,11 @@ export default function FormCreate() {
               <div className="flex flex-col gap-2">
                 <InputWithLabel direction="row">
                   <Label text="비밀번호 생성" />
-                  <Switch
-                    checked={formInfo.isPrivate}
-                    onChange={isChecked => setFormInfo(prev => ({ ...prev, isPrivate: isChecked }))}
-                  />
+                  <Switch checked={isPrivateForm} onChange={handlePrivateToggle} />
                 </InputWithLabel>
 
                 <p className="text-xs text-input-tip">
-                  {formInfo.isPrivate
+                  {formInfo.access_code
                     ? '비밀번호는 폼 발행 시 확인할 수 있습니다.'
                     : '비밀번호 생성 시 비공개 폼으로 전환됩니다.'}
                 </p>
@@ -215,19 +239,19 @@ export default function FormCreate() {
                 onClick={() => setSelectedQuestionId(question.id)}
                 isSelected={selectedQuestionId === question.id}
               >
-                {question.type === 'SHORT_ANSWER' && (
+                {question.layout_type === '단답형' && (
                   <ShortAnswer
                     data={question}
                     onUpdate={updates => handleUpdateQuestion(question.id, updates)}
                   />
                 )}
-                {question.type === 'LONG_ANSWER' && (
+                {question.layout_type === '장문형' && (
                   <LongAnswer
                     data={question}
                     onUpdate={updates => handleUpdateQuestion(question.id, updates)}
                   />
                 )}
-                {question.type === 'CHECKBOX' && (
+                {question.layout_type === '체크박스' && (
                   <CheckboxAnswer
                     data={question}
                     onUpdate={updates => handleUpdateQuestion(question.id, updates)}
@@ -245,26 +269,24 @@ export default function FormCreate() {
                 <InputWithLabel>
                   <Label text="질문 유형" />
                   <Select
-                    value={selectedQuestion.type}
-                    onChange={e => handleQuestionTypeChange(e.target.value)}
-                    options={QUESTION_TYPES.map(type => ({
-                      value: type.value,
-                      label: type.label,
-                    }))}
+                    value={selectedQuestion.layout_type}
+                    onChange={e => handleQuestionTypeChange(e.target.value as QuestionType)}
+                    options={QUESTION_TYPES}
                   />
                 </InputWithLabel>
 
                 <InputWithLabel direction="row" className="h-10">
                   <Label text="필수" />
                   <Switch
-                    checked={selectedQuestion.required}
+                    checked={selectedQuestion.is_required}
                     onChange={isChecked =>
-                      handleUpdateQuestion(selectedQuestion.id, { required: isChecked })
+                      handleUpdateQuestion(selectedQuestion.id, { is_required: isChecked })
                     }
                   />
                 </InputWithLabel>
 
-                {(selectedQuestion.type === 'CHECKBOX' || selectedQuestion.type === 'RADIO') && (
+                {(selectedQuestion.layout_type === '체크박스' ||
+                  selectedQuestion.layout_type === '라디오') && (
                   <InputWithLabel direction="row" className="h-10">
                     <Label text="기타 옵션" />
                     <Switch
@@ -276,7 +298,7 @@ export default function FormCreate() {
                   </InputWithLabel>
                 )}
 
-                {selectedQuestion.type === 'FILE_UPLOAD' && (
+                {selectedQuestion.layout_type === '파일업로드' && (
                   <InputWithLabel>
                     <Label text="허용할 파일 유형" />
                     <Select
