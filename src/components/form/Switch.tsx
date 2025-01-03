@@ -1,20 +1,29 @@
-interface SwitchProps {
-  name?: string;
-  id?: string;
-  checked?: boolean;
-  onChange?: (checked: boolean) => void;
+interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+  checked: boolean;
+  onChange: (isChecked: boolean) => void;
 }
 
-export default function Switch({ name, id, checked = false, onChange }: SwitchProps) {
+export default function Switch({
+  checked = false,
+  onChange,
+  'aria-label': ariaLabel,
+  ...props
+}: SwitchProps) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.checked);
+  };
+
   return (
     <label className="inline-block">
       <input
         type="checkbox"
-        name={name}
-        id={id}
         checked={checked}
-        onChange={e => onChange?.(e.target.checked)}
+        onChange={handleChange}
         className="hidden peer"
+        aria-label={ariaLabel}
+        role="switch"
+        aria-checked={checked}
+        {...props}
       />
       <span
         className="block relative w-7 h-4 border border-pollloop-brown-01 rounded-full bg-pollloop-light-beige cursor-pointer

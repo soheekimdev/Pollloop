@@ -3,16 +3,23 @@ import FormsInput from '@/components/forms/FormsInput';
 import Textarea from '@/components/form/Textarea';
 
 interface LongAnswerProps {
-  questionIndex: number;
-  required?: boolean;
+  data?: {
+    title: string;
+    required?: boolean;
+  };
+  onUpdate?: (updates: { title: string }) => void;
 }
 
-export default function LongAnswer({ required }: LongAnswerProps) {
+export default function LongAnswer({ data, onUpdate }: LongAnswerProps) {
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onUpdate?.({ title: e.target.value });
+  };
+
   return (
     <>
       <div className="flex flex-col gap-2">
         <FormsLabel text="장문형" />
-        <FormsInput required={required} />
+        <FormsInput required={data?.required} value={data?.title} onChange={handleTitleChange} />
       </div>
 
       <Textarea readOnly />

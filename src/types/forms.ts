@@ -1,3 +1,7 @@
+import { FILE_TYPES } from '@/constants/forms';
+
+export type FileType = (typeof FILE_TYPES)[number]['value'];
+
 export type QuestionType =
   | 'SHORT_ANSWER' // 단답형
   | 'LONG_ANSWER' // 장문형
@@ -41,6 +45,8 @@ export interface Question {
   title: string;
   required: boolean;
   options?: Option[];
+  hasEtcOption?: boolean;
+  fileTypes?: FileType[];
 }
 
 export interface FormData {
