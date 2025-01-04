@@ -1,9 +1,9 @@
 import { cva, VariantProps } from 'class-variance-authority';
 import { ButtonHTMLAttributes } from 'react';
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 
 const buttonVariants = cva(
-  'flex-none flex items-center justify-center rounded-lg transition-colors',
+  'flex-none flex items-center gap-1 justify-center rounded-lg transition-colors focus-visible:outline-pollloop-brown-01',
   {
     variants: {
       size: {
@@ -36,6 +36,6 @@ interface ButtonProps
 
 export default function Button({ size, variant, fullWidth, className, ...props }: ButtonProps) {
   return (
-    <button className={clsx(buttonVariants({ size, variant, fullWidth }), className)} {...props} />
+    <button className={cn(buttonVariants({ size, variant, fullWidth }), className)} {...props} />
   );
 }
