@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 
 type Direction = 'row' | 'col';
 
@@ -15,7 +15,7 @@ export default function InputWithLabel({
 }: InputWithLabelProps) {
   return (
     <div
-      className={clsx(
+      className={cn(
         `flex ${direction === 'row' ? 'flex-row items-center justify-between' : 'flex-col'} gap-2`,
         className,
       )}

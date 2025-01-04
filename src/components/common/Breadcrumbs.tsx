@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 import { ChevronRight } from 'lucide-react';
 
 interface BreadcrumbsProps {
@@ -8,7 +8,7 @@ interface BreadcrumbsProps {
 
 export default function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   return (
-    <div className={clsx('flex gap-1', className)}>
+    <div className={cn('flex gap-1', className)}>
       {items.map((item, index) => (
         <div key={item} className="flex items-center gap-1 text-13">
           <span className="leading-3">{item}</span>
