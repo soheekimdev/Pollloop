@@ -1,21 +1,18 @@
 import { useState } from 'react';
 import Breadcrumbs from '@/components/common/Breadcrumbs.tsx';
+import Button from '@/components/common/Button.tsx';
 import InputWithLabel from '@/components/form/InputWithLabel';
 import Label from '@/components/form/Label';
 import Input from '@/components/form/Input';
 import Switch from '@/components/form/Switch.tsx';
-import Button from '@/components/common/Button.tsx';
+import Select from '@/components/form/Select';
+import Section from '@/components/forms/Section';
+import SectionTitle from '@/components/forms/SectionTitle';
 import QuestionCard from '@/components/forms/QuestionCard';
 import FormCover from '@/components/forms/FormCover';
 import ShortAnswer from '@/components/forms/ShortAnswer';
 import LongAnswer from '@/components/forms/LongAnswer';
 import CheckboxAnswer from '@/components/forms/CheckboxAnswer';
-import { cn } from '@/utils/cn';
-import Select from '@/components/form/Select';
-import { Plus } from 'lucide-react';
-import { FileType, FormInfo, Question, QuestionType } from '@/types/forms';
-import { formatFileSize } from '@/utils/format';
-import { FILE_SIZE_LIMIT, FILE_TYPES, QUESTION_TYPES } from '@/constants/forms';
 import NumberAnswer from '@/components/forms/NumberAnswer';
 import EmailAnswer from '@/components/forms/EmailAnswer';
 import DateAnswer from '@/components/forms/DateAnswer';
@@ -25,29 +22,10 @@ import FileUploadAnswer from '@/components/forms/FileUploadAnswer';
 import RangeAnswer from '@/components/forms/RangeAnswer';
 import StarRatingAnswer from '@/components/forms/StarRatingAnswer';
 import ImageSelectAnswer from '@/components/forms/ImageSelectAnswer';
-
-interface SectionProps {
-  title?: React.ReactNode;
-  children?: React.ReactNode;
-  className?: string;
-}
-
-function Section({ children, className }: SectionProps) {
-  return (
-    <section className={cn('flex flex-col gap-4 p-6 bg-pollloop-bg-02 rounded-2xl', className)}>
-      {children}
-    </section>
-  );
-}
-
-function SectionTitle({ title, children }: SectionProps) {
-  return (
-    <div className="flex items-center justify-between gap-4 flex-wrap min-h-10">
-      <p className="font-medium text-lg">{title}</p>
-      {children && <div className="flex gap-2 flex-wrap">{children}</div>}
-    </div>
-  );
-}
+import { Plus } from 'lucide-react';
+import { FileType, FormInfo, Question, QuestionType } from '@/types/forms';
+import { FILE_SIZE_LIMIT, FILE_TYPES, QUESTION_TYPES } from '@/constants/forms';
+import { formatFileSize } from '@/utils/format';
 
 export default function FormCreate() {
   const breadcrumbsItems = ['홈', '나의 폼', '폼 만들기'];
@@ -62,10 +40,8 @@ export default function FormCreate() {
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
-
-  const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
-
   const [isPrivateForm, setIsPrivateForm] = useState(false);
+  const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
 
   const handlePrivateToggle = (isChecked: boolean) => {
     setIsPrivateForm(isChecked);
@@ -154,7 +130,7 @@ export default function FormCreate() {
       <form className="flex flex-col gap-4 px-4 md:px-8 lg:px-10 pb-10">
         <div className="flex flex-col gap-6 md:flex-row">
           {/* 기본 정보 섹션 */}
-          <Section title="기본 정보" className="flex-1 md:max-w-[304px]">
+          <Section className="flex-1 md:max-w-[304px]">
             <SectionTitle title="기본 정보" />
 
             <fieldset className="flex flex-col gap-4">
