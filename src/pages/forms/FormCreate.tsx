@@ -10,12 +10,21 @@ import FormCover from '@/components/forms/FormCover';
 import ShortAnswer from '@/components/forms/ShortAnswer';
 import LongAnswer from '@/components/forms/LongAnswer';
 import CheckboxAnswer from '@/components/forms/CheckboxAnswer';
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 import Select from '@/components/form/Select';
 import { Plus } from 'lucide-react';
 import { FileType, FormInfo, Question, QuestionType } from '@/types/forms';
 import { formatFileSize } from '@/utils/format';
 import { FILE_SIZE_LIMIT, FILE_TYPES, QUESTION_TYPES } from '@/constants/forms';
+import NumberAnswer from '@/components/forms/NumberAnswer';
+import EmailAnswer from '@/components/forms/EmailAnswer';
+import DateAnswer from '@/components/forms/DateAnswer';
+import DropdownAnswer from '@/components/forms/DropdownAnswer';
+import RadioAnswer from '@/components/forms/RadioAnswer';
+import FileUploadAnswer from '@/components/forms/FileUploadAnswer';
+import RangeAnswer from '@/components/forms/RangeAnswer';
+import StarRatingAnswer from '@/components/forms/StarRatingAnswer';
+import ImageSelectAnswer from '@/components/forms/ImageSelectAnswer';
 
 interface SectionProps {
   title?: React.ReactNode;
@@ -25,7 +34,7 @@ interface SectionProps {
 
 function Section({ children, className }: SectionProps) {
   return (
-    <section className={clsx('flex flex-col gap-4 p-6 bg-pollloop-bg-02 rounded-2xl', className)}>
+    <section className={cn('flex flex-col gap-4 p-6 bg-pollloop-bg-02 rounded-2xl', className)}>
       {children}
     </section>
   );
@@ -192,6 +201,7 @@ export default function FormCreate() {
               <InputWithLabel>
                 <Label text="마감 일자" />
                 <Input
+                  type="date"
                   onChange={e =>
                     setFormInfo(prev => ({
                       ...prev,
@@ -209,7 +219,7 @@ export default function FormCreate() {
                 </InputWithLabel>
 
                 <p className="text-xs text-input-tip">
-                  {formInfo.access_code
+                  {isPrivateForm
                     ? '비밀번호는 폼 발행 시 확인할 수 있습니다.'
                     : '비밀번호 생성 시 비공개 폼으로 전환됩니다.'}
                 </p>
@@ -253,6 +263,60 @@ export default function FormCreate() {
                 )}
                 {question.layout_type === '체크박스' && (
                   <CheckboxAnswer
+                    data={question}
+                    onUpdate={updates => handleUpdateQuestion(question.id, updates)}
+                  />
+                )}
+                {question.layout_type === '라디오' && (
+                  <RadioAnswer
+                    data={question}
+                    onUpdate={updates => handleUpdateQuestion(question.id, updates)}
+                  />
+                )}
+                {question.layout_type === '드롭다운' && (
+                  <DropdownAnswer
+                    data={question}
+                    onUpdate={updates => handleUpdateQuestion(question.id, updates)}
+                  />
+                )}
+                {question.layout_type === '범위선택' && (
+                  <RangeAnswer
+                    data={question}
+                    onUpdate={updates => handleUpdateQuestion(question.id, updates)}
+                  />
+                )}
+                {question.layout_type === '별점' && (
+                  <StarRatingAnswer
+                    data={question}
+                    onUpdate={updates => handleUpdateQuestion(question.id, updates)}
+                  />
+                )}
+                {question.layout_type === '이미지선택' && (
+                  <ImageSelectAnswer
+                    data={question}
+                    onUpdate={updates => handleUpdateQuestion(question.id, updates)}
+                  />
+                )}
+                {question.layout_type === '숫자' && (
+                  <NumberAnswer
+                    data={question}
+                    onUpdate={updates => handleUpdateQuestion(question.id, updates)}
+                  />
+                )}
+                {question.layout_type === '이메일' && (
+                  <EmailAnswer
+                    data={question}
+                    onUpdate={updates => handleUpdateQuestion(question.id, updates)}
+                  />
+                )}
+                {question.layout_type === '날짜' && (
+                  <DateAnswer
+                    data={question}
+                    onUpdate={updates => handleUpdateQuestion(question.id, updates)}
+                  />
+                )}
+                {question.layout_type === '파일업로드' && (
+                  <FileUploadAnswer
                     data={question}
                     onUpdate={updates => handleUpdateQuestion(question.id, updates)}
                   />

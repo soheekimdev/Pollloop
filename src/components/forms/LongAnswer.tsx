@@ -10,7 +10,7 @@ interface LongAnswerProps {
 
 export default function LongAnswer({ data, onUpdate }: LongAnswerProps) {
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onUpdate?.({ question: e.target.value });
+    onUpdate({ question: e.target.value });
   };
 
   return (
@@ -18,13 +18,13 @@ export default function LongAnswer({ data, onUpdate }: LongAnswerProps) {
       <div className="flex flex-col gap-2">
         <FormsLabel text="장문형" />
         <FormsInput
-          required={data?.is_required}
-          value={data?.question}
+          required={data.is_required}
+          value={data.question}
           onChange={handleQuestionChange}
         />
       </div>
 
-      <Textarea readOnly />
+      <Textarea disabled />
     </>
   );
 }

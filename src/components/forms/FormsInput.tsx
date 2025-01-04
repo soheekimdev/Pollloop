@@ -8,7 +8,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const formsInputVariants = cva(
-  'w-full bg-transparent placeholder:text-input-placeholder border-b border-transparent focus-visible:outline-none focus-visible:border-pollloop-brown-01',
+  'w-full bg-transparent placeholder:text-input-placeholder border-b border-transparent hover:border-input-border focus-visible:outline-none focus-visible:border-pollloop-brown-01',
   {
     variants: {
       variant: {
