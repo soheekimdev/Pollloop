@@ -10,6 +10,7 @@ import FormCreate from './pages/forms/FormCreate';
 import FormDetail from './pages/forms/FormDetail';
 import AccountLayout from './layouts/AccountLayout';
 import PasswordRetrieval from './pages/auth/PasswordRetrieval';
+import Profile from './pages/auth/Profile';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
 
         <Route element={<HomeLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
 
         <Route element={<DashboardLayout />}>

@@ -32,7 +32,7 @@ export default {
         'neutral-text': '#85582B',
         'danger-bg': '#C63B00',
         'danger-text': '#FFFBEB',
-        'ghost-bg-active': '#85582BD9',
+        'ghost-bg-active': '#85582B26',
       },
       input: {
         bg: '#FFFBEB',
@@ -71,8 +71,8 @@ export default {
         22: '1.375rem',
       },
       boxShadow: {
-        'primary': '0px 0px 5px 1px #FF8D1A',
-      }
+        primary: '0px 0px 5px 1px #FF8D1A',
+      },
     },
   },
   plugins: [

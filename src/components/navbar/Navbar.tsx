@@ -1,6 +1,12 @@
+import { ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import MenuModal from './MenuModal';
 
 export default function Navbar() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => setIsModalOpen(prev => !prev);
   return (
     <header className="h-[80px] px-5 xs:px-10 py-5 text-pollloop-brown-01 flex justify-between items-center">
       <div className="flex items-center gap-6 md:gap-[104px] xs:gap-14">
@@ -19,7 +25,8 @@ export default function Navbar() {
           className="w-8 h-8 rounded-2xl"
         />
         <p className="text-sm font-bold hidden md:block">formformppulin@gmail.com</p>
-        <p className="hidden md:block">\/</p>
+        <ChevronDown className="hidden md:block hover:cursor-pointer" onClick={toggleModal} />
+        {isModalOpen && <MenuModal />}
       </aside>
     </header>
   );
