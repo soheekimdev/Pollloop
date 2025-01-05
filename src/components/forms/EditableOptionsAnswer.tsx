@@ -6,7 +6,6 @@ import { Option, Question } from '@/types/forms';
 import { useOptions } from '@/hooks/useOptions';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/utils/cn';
-import { useState } from 'react';
 
 interface EditableOptionsAnswerProps {
   data: Question;
@@ -42,38 +41,8 @@ export function EditableOptionsAnswer({ data, onUpdate, type }: EditableOptionsA
 
   const isEtcOption = (option: Option) => option.isEtcOption;
 
-  const getDefaultOptionText = (option: Option) => {
-    const nonEtcOptions = options.filter(opt => !opt.isEtcOption);
-    const optionIndex = nonEtcOptions.findIndex(opt => opt.option_number === option.option_number);
-    return `옵션 ${optionIndex + 1}`;
-  };
-
-  const [focusedInputs, setFocusedInputs] = useState<Record<string, boolean>>({});
-
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>, optionNumber: string) => {
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     e.target.select();
-
-    setFocusedInputs(prev => ({
-      ...prev,
-      [optionNumber]: true,
-    }));
-  };
-
-  const handleBlur = (index: number, option: Option) => {
-    setFocusedInputs(prev => ({
-      ...prev,
-      [option.option_number]: false,
-    }));
-
-    if (!option.option_context.trim() && !option.isEtcOption) {
-      handleChangeOption(index, getDefaultOptionText(option));
-    }
-  };
-
-  const getDisplayValue = (option: Option) => {
-    if (isEtcOption(option)) return option.option_context;
-    if (focusedInputs[option.option_number]) return option.option_context;
-    return option.option_context || getDefaultOptionText(option);
   };
 
   return (
@@ -101,14 +70,9 @@ export function EditableOptionsAnswer({ data, onUpdate, type }: EditableOptionsA
                   isEtcOption(option) ? 'cursor-default' : 'cursor-pointer',
                 )}
                 placeholder="옵션"
-                value={getDisplayValue(option)}
+                value={option.option_context}
+                onFocus={handleFocus}
                 onChange={e => handleChangeOption(index, e.target.value)}
-                onFocus={e => {
-                  handleFocus(e, option.option_number);
-                }}
-                onBlur={() => {
-                  handleBlur(index, option);
-                }}
                 disabled={isEtcOption(option)}
               />
               {!isEtcOption(option) && (

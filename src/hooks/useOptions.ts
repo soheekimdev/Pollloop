@@ -21,7 +21,7 @@ export function useOptions(
     return [
       {
         option_number: '1',
-        option_context: '옵션 1',
+        option_context: '',
         isEtcOption: false,
       },
     ];
