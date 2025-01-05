@@ -32,6 +32,7 @@ export function EditableOptionsAnswer({ data, onUpdate, type }: EditableOptionsA
   const { options, handleAddOption, handleChangeOption, handleDeleteOption } = useOptions(
     data.options_of_questions,
     onUpdate,
+    data.hasEtcOption,
   );
 
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
