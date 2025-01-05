@@ -14,7 +14,20 @@ export function useOptions(
   onUpdate: (updates: Partial<Question>) => void,
   hasEtcOption: boolean = false,
 ): UseOptionsResult {
-  const [options, setOptions] = useState<Option[]>(initialOptions);
+  const getInitialOptions = useCallback(() => {
+    if (initialOptions.length > 0) {
+      return initialOptions;
+    }
+    return [
+      {
+        option_number: '1',
+        option_context: '옵션 1',
+        isEtcOption: false,
+      },
+    ];
+  }, [initialOptions]);
+
+  const [options, setOptions] = useState<Option[]>(getInitialOptions());
 
   const findEtcOptionIndex = useCallback(
     () => options.findIndex(option => option.isEtcOption),
@@ -35,9 +48,13 @@ export function useOptions(
   }, []);
 
   const handleAddOption = () => {
+    const nonEtcOptionsCount = options.filter(opt => !opt.isEtcOption).length;
+    const nextOptionNumber = nonEtcOptionsCount + 1;
+
     const newOption = {
-      option_number: (options.length + 1).toString(),
+      option_number: nextOptionNumber.toString(),
       option_context: '',
+      isEtcOption: false,
     };
 
     const updatedOptions = sortOptionsWithEtcLast([...options, newOption]);
@@ -46,12 +63,16 @@ export function useOptions(
   };
 
   const handleChangeOption = (index: number, value: string) => {
-    const updatedOptions = options.map((option, i) =>
-      i === index ? { ...option, option_context: value } : option,
-    );
+    const updatedOptions = options.map((option, i) => {
+      if (i === index) {
+        return { ...option, option_context: value };
+      }
+      return option;
+    });
+
     const sortedOptions = sortOptionsWithEtcLast(updatedOptions);
     setOptions(sortedOptions);
-    onUpdate({ options_of_questions: updatedOptions });
+    onUpdate({ options_of_questions: sortedOptions });
   };
 
   const handleDeleteOption = (index: number) => {
