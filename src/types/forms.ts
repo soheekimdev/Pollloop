@@ -16,16 +16,18 @@ export type QuestionType =
   | '이메일'
   | '파일업로드';
 
+export interface Option {
+  option_number: string;
+  option_context: string;
+}
+
 export interface Question {
   id: string;
   layout_type: QuestionType;
   question: string;
   question_order: number;
   is_required: boolean;
-  options_of_questions?: Array<{
-    option_number: string;
-    option_context: string;
-  }>;
+  options_of_questions?: Array<Option>;
   hasEtcOption?: boolean;
   fileTypes?: FileType[];
 }

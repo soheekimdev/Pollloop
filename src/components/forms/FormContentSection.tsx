@@ -40,7 +40,9 @@ export default function FormContentSection({
           발행하기
         </Button>
       </SectionTitle>
+
       <FormCover />
+
       {questions.map(question => (
         <QuestionCard
           key={question.id}

@@ -29,6 +29,7 @@ export default function FormQuestionSection({
               options={QUESTION_TYPES}
             />
           </InputWithLabel>
+
           <InputWithLabel direction="row" className="h-10">
             <Label text="필수" />
             <Switch
@@ -71,6 +72,7 @@ export default function FormQuestionSection({
           )}
         </div>
       )}
+
       <Button type="button" onClick={onAddQuestion}>
         <Plus size={16} /> 질문 추가
       </Button>

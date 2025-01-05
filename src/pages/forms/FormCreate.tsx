@@ -16,9 +16,9 @@ export default function FormCreate() {
     access_code: '',
   });
 
+  const [isPrivateForm, setIsPrivateForm] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
-  const [isPrivateForm, setIsPrivateForm] = useState(false);
   const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
 
   const handlePrivateToggle = (isChecked: boolean) => {
@@ -45,11 +45,7 @@ export default function FormCreate() {
                   ? []
                   : undefined,
               hasEtcOption:
-                questionType === '체크박스' ||
-                questionType === '라디오' ||
-                questionType === '드롭다운'
-                  ? false
-                  : undefined,
+                questionType === '체크박스' || questionType === '라디오' ? false : undefined,
               fileTypes: questionType === '파일업로드' ? [] : undefined,
             }
           : q,
