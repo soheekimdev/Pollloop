@@ -19,6 +19,7 @@ export type QuestionType =
 export interface Option {
   option_number: string;
   option_context: string;
+  isEtcOption?: boolean;
 }
 
 export interface Question {

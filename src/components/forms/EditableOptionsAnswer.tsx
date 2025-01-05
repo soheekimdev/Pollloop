@@ -2,7 +2,7 @@ import Button from '@/components/common/Button';
 import FormsLabel from '@/components/forms/FormsLabel';
 import FormsInput from '@/components/forms/FormsInput';
 import { Plus, X } from 'lucide-react';
-import { Question } from '@/types/forms';
+import { Option, Question } from '@/types/forms';
 import { useOptions } from '@/hooks/useOptions';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/utils/cn';
@@ -39,6 +39,8 @@ export function EditableOptionsAnswer({ data, onUpdate, type }: EditableOptionsA
     onUpdate({ question: e.target.value });
   };
 
+  const isEtcOption = (option: Option) => option.isEtcOption;
+
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -59,19 +61,25 @@ export function EditableOptionsAnswer({ data, onUpdate, type }: EditableOptionsA
             >
               <div className={cn(optionIconVariants({ type }))} />
               <input
-                className="flex-1 bg-transparent text-sm placeholder:text-input-placeholder focus-visible:outline-none cursor-pointer"
+                className={cn(
+                  'flex-1 bg-transparent text-sm placeholder:text-input-placeholder focus-visible:outline-none',
+                  isEtcOption(option) ? 'cursor-default' : 'cursor-pointer',
+                )}
                 placeholder="옵션"
                 value={option.option_context}
                 onChange={e => handleChangeOption(index, e.target.value)}
+                disabled={isEtcOption(option)}
               />
-              <button
-                type="button"
-                onClick={() => handleDeleteOption(index)}
-                className="hover:text-tag-default-text/65"
-                aria-label="옵션 삭제"
-              >
-                <X size={16} />
-              </button>
+              {!isEtcOption(option) && (
+                <button
+                  type="button"
+                  onClick={() => handleDeleteOption(index)}
+                  className="hover:text-tag-default-text/65"
+                  aria-label="옵션 삭제"
+                >
+                  <X size={16} />
+                </button>
+              )}
             </label>
           ))}
         </div>
