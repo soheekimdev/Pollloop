@@ -105,11 +105,11 @@ export default function FormCreate() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 h-full">
       <Breadcrumbs items={breadcrumbsItems} className="px-4 md:px-8 lg:px-10" />
 
-      <form className="flex flex-col gap-4 px-4 md:px-8 lg:px-10 pb-10">
-        <div className="flex flex-col gap-6 md:flex-row">
+      <form className="flex-1 flex md:px-8 lg:px-10 pb-10">
+        <div className="flex-1 flex flex-col gap-6 md:flex-row">
           <FormBasicSection
             formInfo={formInfo}
             setFormInfo={setFormInfo}

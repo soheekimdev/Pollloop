@@ -66,10 +66,10 @@ export function EditableOptionsAnswer({ data, onUpdate, type }: EditableOptionsA
               <button
                 type="button"
                 onClick={() => handleDeleteOption(index)}
-                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                className="hover:text-tag-default-text/65"
                 aria-label="옵션 삭제"
               >
-                <X size={16} className="text-pollloop-brown-01" />
+                <X size={16} />
               </button>
             </label>
           ))}
