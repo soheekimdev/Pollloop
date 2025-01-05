@@ -51,3 +51,33 @@ export interface FormInfo {
   form_description?: string;
   uuid?: string;
 }
+
+export interface FormSectionBaseProps {
+  className?: string;
+  children?: React.ReactNode;
+}
+
+export interface FormBasicSectionProps {
+  formInfo: FormInfo;
+  setFormInfo: React.Dispatch<React.SetStateAction<FormInfo>>;
+  isPrivateForm: boolean;
+  onPrivateToggle: (isChecked: boolean) => void;
+}
+
+export interface FormContentSectionProps {
+  formInfo: FormInfo;
+  questions: Question[];
+  selectedQuestionId: string | null;
+  onQuestionSelect: (id: string) => void;
+  onQuestionDelete: (id: string) => void;
+  onQuestionUpdate: (id: string, updates: Partial<Question>) => void;
+  onSave: () => void;
+  onPublish: () => void;
+}
+
+export interface FormQuestionSectionProps {
+  selectedQuestion: Question | undefined;
+  onQuestionTypeChange: (type: QuestionType) => void;
+  onQuestionUpdate: (id: string, updates: Partial<Question>) => void;
+  onAddQuestion: () => void;
+}

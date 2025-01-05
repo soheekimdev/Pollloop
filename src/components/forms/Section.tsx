@@ -1,8 +1,8 @@
+import { FormSectionBaseProps } from '@/types/forms';
 import { cn } from '@/utils/cn';
 
-interface SectionProps {
-  children?: React.ReactNode;
-  className?: string;
+interface SectionProps extends FormSectionBaseProps {
+  title?: React.ReactNode;
 }
 
 export default function Section({ children, className }: SectionProps) {
