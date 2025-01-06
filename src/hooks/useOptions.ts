@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Option, Question } from '@/types/forms';
+import { Option, Question } from '@/types/forms/forms.types';
 
 interface UseOptionsResult {
   options: Option[];

@@ -7,7 +7,7 @@ import Section from '@/components/forms/Section';
 import SectionTitle from '@/components/forms/SectionTitle';
 import { Plus } from 'lucide-react';
 import { FILE_SIZE_LIMIT, FILE_TYPES, QUESTION_TYPES } from '@/constants/forms';
-import { FileType, FormQuestionSectionProps, QuestionType } from '@/types/forms';
+import { FileType, FormQuestionSectionProps, QuestionType } from '@/types/forms/forms.types';
 import { formatFileSize } from '@/utils/format';
 
 export default function FormQuestionSection({

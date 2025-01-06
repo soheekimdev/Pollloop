@@ -3,7 +3,7 @@ import Breadcrumbs from '@/components/common/Breadcrumbs.tsx';
 import FormBasicSection from '@/components/forms/FormBasicSection';
 import FormContentSection from '@/components/forms/FormContentSection';
 import FormQuestionSection from '@/components/forms/FormQuestionSection';
-import { FormInfo, Question, QuestionType } from '@/types/forms';
+import { FormInfo, Question, QuestionType } from '@/types/forms/forms.types';
 
 export default function FormCreate() {
   const breadcrumbsItems = ['홈', '나의 폼', '폼 만들기'];

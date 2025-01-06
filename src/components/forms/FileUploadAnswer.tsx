@@ -1,7 +1,7 @@
 import Button from '@/components/common/Button';
 import FormsLabel from '@/components/forms/FormsLabel';
 import FormsInput from '@/components/forms/FormsInput';
-import { Question } from '@/types/forms';
+import { Question } from '@/types/forms/forms.types';
 
 interface FileUploadAnswerProps {
   data: Question;

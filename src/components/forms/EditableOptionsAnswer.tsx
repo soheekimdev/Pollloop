@@ -2,7 +2,7 @@ import Button from '@/components/common/Button';
 import FormsLabel from '@/components/forms/FormsLabel';
 import FormsInput from '@/components/forms/FormsInput';
 import { Plus, X } from 'lucide-react';
-import { Option, Question } from '@/types/forms';
+import { Option, Question } from '@/types/forms/forms.types';
 import { useOptions } from '@/hooks/useOptions';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/utils/cn';

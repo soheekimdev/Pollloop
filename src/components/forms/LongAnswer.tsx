@@ -1,7 +1,7 @@
 import FormsLabel from '@/components/forms/FormsLabel';
 import FormsInput from '@/components/forms/FormsInput';
 import Textarea from '@/components/form/Textarea';
-import { Question } from '@/types/forms';
+import { Question } from '@/types/forms/forms.types';
 
 interface LongAnswerProps {
   data: Question;

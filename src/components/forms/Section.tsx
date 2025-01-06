@@ -1,4 +1,4 @@
-import { FormSectionBaseProps } from '@/types/forms';
+import { FormSectionBaseProps } from '@/types/forms/forms.types';
 import { cn } from '@/utils/cn';
 
 interface SectionProps extends FormSectionBaseProps {

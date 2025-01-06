@@ -3,7 +3,7 @@ import Input from '@/components/form/Input';
 import FormsLabel from '@/components/forms/FormsLabel';
 import FormsInput from '@/components/forms/FormsInput';
 import { Plus, X } from 'lucide-react';
-import { Question } from '@/types/forms';
+import { Question } from '@/types/forms/forms.types';
 import { useOptions } from '@/hooks/useOptions';
 
 interface DropdownAnswerProps {

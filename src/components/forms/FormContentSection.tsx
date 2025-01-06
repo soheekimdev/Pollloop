@@ -15,7 +15,7 @@ import RadioAnswer from '@/components/forms/RadioAnswer';
 import RangeAnswer from '@/components/forms/RangeAnswer';
 import ShortAnswer from '@/components/forms/ShortAnswer';
 import StarRatingAnswer from '@/components/forms/StarRatingAnswer';
-import { FormContentSectionProps } from '@/types/forms';
+import { FormContentSectionProps } from '@/types/forms/forms.types';
 
 export default function FormContentSection({
   formInfo,

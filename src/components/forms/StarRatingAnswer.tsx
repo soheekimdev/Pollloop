@@ -1,7 +1,7 @@
 import FormsLabel from '@/components/forms/FormsLabel';
 import FormsInput from '@/components/forms/FormsInput';
 import { Star } from 'lucide-react';
-import { Question } from '@/types/forms';
+import { Question } from '@/types/forms/forms.types';
 
 interface StarRatingAnswerProps {
   data: Question;

@@ -4,7 +4,7 @@ import Input from '@/components/form/Input';
 import Switch from '@/components/form/Switch';
 import Section from '@/components/forms/Section';
 import SectionTitle from '@/components/forms/SectionTitle';
-import { FormBasicSectionProps, FormInfo } from '@/types/forms';
+import { FormBasicSectionProps, FormInfo } from '@/types/forms/forms.types';
 
 export default function FormBasicSection({
   formInfo,

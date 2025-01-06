@@ -1,4 +1,4 @@
-import { QuestionType } from '@/types/forms';
+import { QuestionType } from '@/types/forms/forms.types';
 
 export const FILE_TYPES = [
   { value: 'image', label: '이미지(jpg, jpeg, png, gif)' },

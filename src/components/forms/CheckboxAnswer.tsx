@@ -1,5 +1,5 @@
 import { EditableOptionsAnswer } from '@/components/forms/EditableOptionsAnswer';
-import { Question } from '@/types/forms';
+import { Question } from '@/types/forms/forms.types';
 
 interface CheckboxAnswerProps {
   data: Question;
