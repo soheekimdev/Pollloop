@@ -50,73 +50,73 @@ export default function FormContentSection({
           onDelete={() => onQuestionDelete(question.id)}
           isSelected={selectedQuestionId === question.id}
         >
-          {question.layout_type === '단답형' && (
+          {question.layout_type === 'SHORT_TYPE' && (
             <ShortAnswer
               data={question}
               onUpdate={updates => onQuestionUpdate(question.id, updates)}
             />
           )}
-          {question.layout_type === '장문형' && (
+          {question.layout_type === 'LONG_TYPE' && (
             <LongAnswer
               data={question}
               onUpdate={updates => onQuestionUpdate(question.id, updates)}
             />
           )}
-          {question.layout_type === '체크박스' && (
+          {question.layout_type === 'CHECKBOX_TYPE' && (
             <CheckboxAnswer
               data={question}
               onUpdate={updates => onQuestionUpdate(question.id, updates)}
             />
           )}
-          {question.layout_type === '라디오' && (
+          {question.layout_type === 'RADIO_TYPE' && (
             <RadioAnswer
               data={question}
               onUpdate={updates => onQuestionUpdate(question.id, updates)}
             />
           )}
-          {question.layout_type === '드롭다운' && (
+          {question.layout_type === 'DROPDOWN_TYPE' && (
             <DropdownAnswer
               data={question}
               onUpdate={updates => onQuestionUpdate(question.id, updates)}
             />
           )}
-          {question.layout_type === '범위선택' && (
+          {question.layout_type === 'RANGE_TYPE' && (
             <RangeAnswer
               data={question}
               onUpdate={updates => onQuestionUpdate(question.id, updates)}
             />
           )}
-          {question.layout_type === '별점' && (
+          {question.layout_type === 'STAR_RATING_TYPE' && (
             <StarRatingAnswer
               data={question}
               onUpdate={updates => onQuestionUpdate(question.id, updates)}
             />
           )}
-          {question.layout_type === '이미지선택' && (
+          {question.layout_type === 'IMAGE_SELECT_TYPE' && (
             <ImageSelectAnswer
               data={question}
               onUpdate={updates => onQuestionUpdate(question.id, updates)}
             />
           )}
-          {question.layout_type === '숫자' && (
+          {question.layout_type === 'NUMBER_TYPE' && (
             <NumberAnswer
               data={question}
               onUpdate={updates => onQuestionUpdate(question.id, updates)}
             />
           )}
-          {question.layout_type === '이메일' && (
-            <EmailAnswer
-              data={question}
-              onUpdate={updates => onQuestionUpdate(question.id, updates)}
-            />
-          )}
-          {question.layout_type === '날짜' && (
+          {question.layout_type === 'DATE_TYPE' && (
             <DateAnswer
               data={question}
               onUpdate={updates => onQuestionUpdate(question.id, updates)}
             />
           )}
-          {question.layout_type === '파일업로드' && (
+          {question.layout_type === 'EMAIL_TYPE' && (
+            <EmailAnswer
+              data={question}
+              onUpdate={updates => onQuestionUpdate(question.id, updates)}
+            />
+          )}
+          {question.layout_type === 'FILE_UPLOAD_TYPE' && (
             <FileUploadAnswer
               data={question}
               onUpdate={updates => onQuestionUpdate(question.id, updates)}

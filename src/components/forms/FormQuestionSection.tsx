@@ -40,8 +40,8 @@ export default function FormQuestionSection({
             />
           </InputWithLabel>
 
-          {(selectedQuestion.layout_type === '체크박스' ||
-            selectedQuestion.layout_type === '라디오') && (
+          {(selectedQuestion.layout_type === 'CHECKBOX_TYPE' ||
+            selectedQuestion.layout_type === 'RADIO_TYPE') && (
             <InputWithLabel direction="row" className="h-10">
               <Label text="기타 옵션" />
               <Switch
@@ -53,7 +53,7 @@ export default function FormQuestionSection({
             </InputWithLabel>
           )}
 
-          {selectedQuestion.layout_type === '파일업로드' && (
+          {selectedQuestion.layout_type === 'FILE_UPLOAD_TYPE' && (
             <InputWithLabel>
               <Label text="허용할 파일 유형" />
               <Select

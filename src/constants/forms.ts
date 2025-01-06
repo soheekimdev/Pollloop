@@ -14,16 +14,16 @@ type QuestionTypeOption = {
 };
 
 export const QUESTION_TYPES: QuestionTypeOption[] = [
-  { value: '단답형', label: '단답형' },
-  { value: '장문형', label: '장문형' },
-  { value: '체크박스', label: '체크박스' },
-  { value: '라디오', label: '라디오' },
-  { value: '드롭다운', label: '드롭다운' },
-  { value: '범위선택', label: '범위 선택' },
-  { value: '별점', label: '별점' },
-  { value: '이미지선택', label: '이미지 선택' },
-  { value: '숫자', label: '숫자' },
-  { value: '날짜', label: '날짜' },
-  { value: '이메일', label: '이메일' },
-  { value: '파일업로드', label: '파일 업로드' },
+  { value: 'SHORT_TYPE', label: '단답형' },
+  { value: 'LONG_TYPE', label: '장문형' },
+  { value: 'CHECKBOX_TYPE', label: '체크박스' },
+  { value: 'RADIO_TYPE', label: '라디오' },
+  { value: 'DROPDOWN_TYPE', label: '드롭다운' },
+  { value: 'RANGE_TYPE', label: '범위 선택' },
+  { value: 'STAR_RATING_TYPE', label: '별점' },
+  { value: 'IMAGE_SELECT_TYPE', label: '이미지 선택' },
+  { value: 'NUMBER_TYPE', label: '숫자' },
+  { value: 'DATE_TYPE', label: '날짜' },
+  { value: 'EMAIL_TYPE', label: '이메일' },
+  { value: 'FILE_UPLOAD_TYPE', label: '파일 업로드' },
 ];

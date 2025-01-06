@@ -39,14 +39,14 @@ export default function FormCreate() {
               ...q,
               layout_type: questionType,
               options_of_questions:
-                questionType === '체크박스' ||
-                questionType === '라디오' ||
-                questionType === '드롭다운'
+                questionType === 'CHECKBOX_TYPE' ||
+                questionType === 'RADIO_TYPE' ||
+                questionType === 'DROPDOWN_TYPE'
                   ? []
                   : undefined,
               hasEtcOption:
-                questionType === '체크박스' || questionType === '라디오' ? false : undefined,
-              fileTypes: questionType === '파일업로드' ? [] : undefined,
+                questionType === 'CHECKBOX_TYPE' || questionType === 'RADIO_TYPE' ? false : undefined,
+              fileTypes: questionType === 'FILE_UPLOAD_TYPE' ? [] : undefined,
             }
           : q,
       ),
@@ -56,7 +56,7 @@ export default function FormCreate() {
   const handleAddQuestion = () => {
     const newQuestion: Question = {
       id: Date.now().toString(), // 임시 ID
-      layout_type: '단답형',
+      layout_type: 'SHORT_TYPE',
       question: '',
       question_order: questions.length + 1,
       is_required: false,
