@@ -8,7 +8,6 @@ interface overviewDataProps {
   title: string;
   completion: number;
   target_entries: number;
-  entries: number;
   submissions: number;
 }
 
@@ -21,7 +20,6 @@ const overviewData: overviewDataProps = {
   title: '오즈_만족도조사_6기_14주',
   completion: 0.98,
   target_entries: 100,
-  entries: 100,
   submissions: 98,
 };
 
@@ -40,7 +38,6 @@ export default function FormDetail() {
   const statisticsItems = [
     { key: '완료율', value: overviewData.completion },
     { key: '입장', value: overviewData.target_entries },
-    { key: '시작', value: overviewData.entries },
     { key: '제출', value: overviewData.submissions },
   ];
 

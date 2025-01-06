@@ -1,4 +1,5 @@
-import ScrollableList from '../../common/ScrollableList';
+import ScrollableContainer from '../../common/ScrollableContainer';
+
 import {
   ShortAnswerComponent,
   LongAnswerComponent,
@@ -59,88 +60,98 @@ export default function Question({ questionItem }: QuestionProps) {
       case 'SHORT_ANSWER':
         return (
           <div className="">
-            <p className="text-sm text-right">답변 수 : {results.length}</p>
-            <ScrollableList height={190} className="space-y-2">
+            <p className="text-sm text-right">참여자 수 : {results.length}</p>
+            <ScrollableContainer height={190} className="space-y-2">
               {results.map((result, index) => (
                 <ShortAnswerComponent key={index} result={result as ShortAnswerResultType} />
               ))}
-            </ScrollableList>
+            </ScrollableContainer>
           </div>
         );
       case 'LONG_ANSWER':
         return (
-          <div className="">
-            <p className="text-sm text-right">답변 수 : {results.length}</p>
-            <ScrollableList height={190} className="space-y-2">
+          <>
+            <p className="text-sm text-right">참여자 수 : {results.length}</p>
+            <ScrollableContainer height={190} className="space-y-2">
               {results.map((result, index) => (
                 <LongAnswerComponent key={index} result={result as LongAnswerResultType} />
               ))}
-            </ScrollableList>
-          </div>
+            </ScrollableContainer>
+          </>
         );
+
       case 'CHECKBOX':
         return (
-          <ul className="flex flex-col gap-2">
-            {results.map((result, index) => (
-              <CheckboxComponent key={index} result={result as CheckboxResultType} />
-            ))}
-          </ul>
+          <>
+            <p className="text-sm text-right">참여자 수 : {results.length}</p>
+            <ScrollableContainer height="auto">
+              <CheckboxComponent results={results as CheckboxResultType[]} />
+            </ScrollableContainer>
+          </>
         );
+
       case 'RADIO':
         return (
-          <ul className="flex flex-col gap-2">
-            {results.map((result, index) => (
-              <RadioComponent key={index} result={result as RadioResultType} />
-            ))}
-          </ul>
+          <>
+            <p className="text-sm text-right">참여자 수 : {results.length}</p>
+            <ScrollableContainer height="auto">
+              <RadioComponent results={results as RadioResultType[]} />
+            </ScrollableContainer>
+          </>
         );
       case 'DROPDOWN':
         return (
-          <ul className="flex flex-col gap-2">
-            {results.map((result, index) => (
-              <DropdownComponent key={index} result={result as DropdownResultType} />
-            ))}
-          </ul>
+          <>
+            <p className="text-sm text-right">참여자 수 : {results.length}</p>
+            <ScrollableContainer height="auto">
+              <DropdownComponent results={results as DropdownResultType[]} />
+            </ScrollableContainer>
+          </>
         );
       case 'RANGE':
         return (
-          <ul className="flex flex-col gap-2">
-            {results.map((result, index) => (
-              <RangeComponent key={index} result={result as RangeResultType} />
-            ))}
-          </ul>
+          <>
+            <p className="text-sm text-right">참여자 수 : {results.length}</p>
+            <ScrollableContainer height="auto">
+              <RangeComponent results={results as RangeResultType[]} />
+            </ScrollableContainer>
+          </>
         );
       case 'STAR':
         return (
-          <ul className="flex flex-col gap-2">
-            {results.map((result, index) => (
-              <StarComponent key={index} result={result as StarResultType} />
-            ))}
-          </ul>
+          <>
+            <p className="text-sm text-right">참여자 수 : {results.length}</p>
+            <ScrollableContainer height="auto">
+              <StarComponent results={results as StarResultType[]} />
+            </ScrollableContainer>
+          </>
         );
       case 'IMAGE_SELECT':
         return (
-          <ul className="flex flex-col gap-2">
-            {results.map((result, index) => (
-              <ImageSelectComponent key={index} result={result as ImageSelectResultType} />
-            ))}
-          </ul>
+          <>
+            <p className="text-sm text-right">참여자 수 : {results.length}</p>
+            <ScrollableContainer height="auto">
+              <ImageSelectComponent results={results as ImageSelectResultType[]} />
+            </ScrollableContainer>
+          </>
         );
       case 'NUMBER':
         return (
-          <ul className="flex flex-col gap-2">
-            {results.map((result, index) => (
-              <NumberComponent key={index} result={result as NumberResultType} />
-            ))}
-          </ul>
+          <>
+            <p className="text-sm text-right">참여자 수 : {results.length}</p>
+            <ScrollableContainer height="auto">
+              <NumberComponent results={results as NumberResultType[]} />
+            </ScrollableContainer>
+          </>
         );
       case 'DATE':
         return (
-          <ul className="flex flex-col gap-2">
-            {results.map((result, index) => (
-              <DateComponent key={index} result={result as DateResultType} />
-            ))}
-          </ul>
+          <>
+            <p className="text-sm text-right">참여자 수 : {results.length}</p>
+            <ScrollableContainer height="auto">
+              <DateComponent results={results as DateResultType[]} />
+            </ScrollableContainer>
+          </>
         );
       case 'EMAIL':
         return (
