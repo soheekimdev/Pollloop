@@ -1,6 +1,84 @@
 {
   "_comments": "users: 회원정보 / forms: 폼 생성정보 / formDetails: 폼 상세정보 / participants: 참여자 목록 / asks: 애스크 정보",
-  "users": [],
+  "users": [
+    {
+      "id": 111,
+      "email": "example1@email.com",
+      "name": "일일일"
+    },
+    {
+      "id": 222,
+      "email": "example2@email.com",
+      "name": "이이이"
+    },
+    {
+      "id": 333,
+      "email": "example3@email.com",
+      "name": "삼삼삼"
+    }
+  ],
+  "home": [
+    {
+      "forms": [
+        {
+          "author_id": 111,
+          "id": 124,
+          "title": "오즈_만족도조사_6기_14주",
+          "tag": "6기만족도",
+          "end_at": "20260116",
+          "status": "발행",
+          "target_count": 100,
+          "actual_count": 56
+        },
+        {
+          "author_id": 111,
+          "id": 125,
+          "title": "오즈_만족도조사_6기_15주",
+          "tag": "6기만족도",
+          "end_at": "20250116",
+          "status": "발행",
+          "target_count": 100,
+          "actual_count": 56
+        },
+        {
+          "author_id": 111,
+          "id": 131,
+          "title": "오즈_만족도조사_6기_16주",
+          "tag": "6기만족도",
+          "end_at": "20250116",
+          "status": "종료",
+          "target_count": 100,
+          "actual_count": 94
+        }
+      ],
+      "asks": [
+        {
+          "author_id": 111,
+          "id": 211,
+          "title": "첫 번째 애스크",
+          "tag": "6기만족도",
+          "is_closed": false,
+          "access_code": "ABC123"
+        },
+        {
+          "author_id": 111,
+          "id": 212,
+          "title": "두 번째 애스크",
+          "tag": "6기",
+          "is_closed": false,
+          "access_code": "ABC123"
+        },
+        {
+          "author_id": 111,
+          "id": 222,
+          "title": "세 번째 애스크",
+          "tag": "6기만족도",
+          "is_closed": true,
+          "access_code": "ABC123"
+        }
+      ]
+    }
+  ],
   "forms": [],
   "formDetails": [],
   "participants": [],
