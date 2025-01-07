@@ -14,10 +14,19 @@
 - [팀 소개](#-팀-소개)
 - [프로젝트 산출물](#-프로젝트-산출물)
 - [실행 방법](#-실행-방법)
+- [Git 규칙](#-Git-규칙)
+- [체인지로그](#-체인지로그)
 
 ## 📝 프로젝트 소개
 
 Pollloop은 동적으로 업데이트되는 설문 & QnA 플랫폼입니다. 사용자는 다양한 유형의 설문을 쉽게 생성하고 관리할 수 있으며, 실시간성 소통이 가능한 애스크 보드를 운영할 수 있습니다.
+
+### 배포
+- 배포 환경: Vercel
+- 배포 방법: Vercel의 자체 CI/CD 파이프라인을 통한 자동 배포
+  - main 브랜치 push 시 자동 배포
+  - PR 생성 시 프리뷰 배포
+- 배포 주소: [https://pollloop.vercel.app/](https://pollloop.vercel.app/)
 
 ### 개발 기간
 
@@ -128,3 +137,44 @@ feat: 로그인 기능 구현
 - 로그인 API 연동
 - 로그인 후 토큰 저장 구현
 ```
+
+## ✨ 체인지로그
+<details>
+  <summary><strong>[1주차] 2024-12-26 ~ 2025-01-03</strong></summary>
+  
+  <details>  
+  <summary><strong>[폼 만들기] 김소희</strong></summary>
+  
+  ### ✅ Done
+  
+  - 프로젝트 초기 환경 구성
+    - React + TypeScript + Vite 기본 세팅
+    - 기본 라이브러리 설치 및 설정
+    - 폴더 구조 설정
+    - React Router 라우팅 설정
+    - Tailwind CSS 설정
+    - README.md 작성
+  - 공통 컴포넌트 제작 및 css 설정
+    - Layout 컴포넌트 초기 구조 구현 및 라우팅 설정
+    - Input, Button, Switch, Checkbox, Select, Textarea, Label, InputWithLabel, Breadcrumbs
+    - 공통 css 및 tailwind.config.js 설정
+    - 폰트 설정
+  - 폼 만들기 UI 및 기능 구현
+    - 기본 UI 레이아웃 구현
+    - 질문 카드 유형 별 UI 구현
+    - 질문 추가 기능 구현
+  
+  ### ⚙️ in Progress
+  
+  - 폼 만들기 기능 구현
+    - 폼 데이터 전역 상태 관리
+    - 발행 기능 구현
+    - 임시 저장 기능 구현
+
+  ### 📚 Next
+  
+  - 미리 보기 기능 구현
+  - 참여 폼 구현
+  
+  </details>
+</details>
