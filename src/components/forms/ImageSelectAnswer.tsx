@@ -55,7 +55,7 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
 
     // 새로운 이미지 옵션 추가
     const newImage: Option = {
-      option_number: (images.length + 1).toString(),
+      option_number: images.length + 1,
       option_context: `${file.name}|${imageUrl}`,
       imageUrl,
     };
@@ -76,7 +76,7 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
     const updatedImages = images.filter((_, i) => i !== index);
     const reorderedImages = updatedImages.map((img, i) => ({
       ...img,
-      option_number: (i + 1).toString(),
+      option_number: i + 1,
     }));
 
     setImages(reorderedImages);
@@ -109,7 +109,7 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
           <div key={image.option_number} className="relative group min-w-36 max-w-xs select-none">
             <div className="relative aspect-square rounded-lg overflow-hidden">
               <img
-                src={image.imageUrl}
+                src={image.imageUrl ?? '/api/placeholder/144/144'} // placeholder 이미지
                 alt={`${image.option_number}번`}
                 className="w-full h-full object-cover cursor-default"
               />

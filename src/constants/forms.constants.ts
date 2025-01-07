@@ -1,12 +1,30 @@
-import { QuestionType } from '@/types/forms/forms.types';
+import { FileType, QuestionType } from '@/types/forms/forms.types';
 
-export const FILE_TYPES = [
+// 파일 관련 상수
+export const FILE_SIZE_LIMIT = 10 * 1024 * 1024; // 10MB
+
+// 옵션 번호 상수
+export const OPTION_NUMBERS = {
+  ETC: 99,
+  MIN_LABEL: 100,
+  MAX_LABEL: 200,
+} as const;
+
+// 옵션이 필요 없는 질문 타입들
+export const NO_OPTIONS_TYPES: QuestionType[] = [
+  'SHORT_TYPE',
+  'LONG_TYPE',
+  'NUMBER_TYPE',
+  'DATE_TYPE',
+  'EMAIL_TYPE',
+] as const;
+
+// UI에서 사용하는 옵션 목록들
+export const FILE_TYPES: Array<{ value: FileType; label: string }> = [
   { value: 'image', label: '이미지(jpg, jpeg, png, gif)' },
   { value: 'pdf', label: 'PDF' },
   { value: 'spreadsheet', label: '스프레드시트(xlsx, xls, csv)' },
 ];
-
-export const FILE_SIZE_LIMIT = 10 * 1024 * 1024; // 10MB;
 
 type QuestionTypeOption = {
   value: QuestionType;

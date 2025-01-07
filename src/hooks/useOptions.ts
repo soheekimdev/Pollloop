@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Option, Question } from '@/types/forms/forms.types';
+import { OPTION_NUMBERS } from '@/constants/forms.constants';
 
 interface UseOptionsResult {
   options: Option[];
@@ -20,7 +21,7 @@ export function useOptions(
     }
     return [
       {
-        option_number: '1',
+        option_number: 1,
         option_context: '',
         isEtcOption: false,
       },
@@ -41,7 +42,7 @@ export function useOptions(
     const sortedOptions = [...nonEtcOptions, ...(etcOption ? [etcOption] : [])].map(
       (option, index) => ({
         ...option,
-        option_number: (index + 1).toString(),
+        option_number: index + 1,
       }),
     );
     return sortedOptions;
@@ -52,7 +53,7 @@ export function useOptions(
     const nextOptionNumber = nonEtcOptionsCount + 1;
 
     const newOption = {
-      option_number: nextOptionNumber.toString(),
+      option_number: nextOptionNumber,
       option_context: '',
       isEtcOption: false,
     };
@@ -85,33 +86,27 @@ export function useOptions(
   const handleEtcOption = useCallback(
     (hasEtc: boolean) => {
       let updatedOptions;
-      const etcIndex = findEtcOptionIndex();
+      const etcIndex = options.findIndex(opt => opt.option_number === OPTION_NUMBERS.ETC);
 
       if (hasEtc && etcIndex === -1) {
         updatedOptions = [
           ...options,
           {
-            option_number: (options.length + 1).toString(),
+            option_number: OPTION_NUMBERS.ETC,
             option_context: '기타',
             isEtcOption: true,
           },
         ];
       } else if (!hasEtc && etcIndex !== -1) {
-        updatedOptions = options
-          .filter((_, i) => i !== etcIndex)
-          .map((option, i) => ({
-            ...option,
-            option_number: (i + 1).toString(),
-          }));
+        updatedOptions = options.filter(opt => opt.option_number !== OPTION_NUMBERS.ETC);
       } else {
         return;
       }
 
-      const sortedOptions = sortOptionsWithEtcLast(updatedOptions);
-      setOptions(sortedOptions);
-      onUpdate({ options_of_questions: sortedOptions });
+      setOptions(updatedOptions);
+      onUpdate({ options_of_questions: updatedOptions });
     },
-    [options, findEtcOptionIndex, onUpdate, sortOptionsWithEtcLast],
+    [options, onUpdate],
   );
 
   useEffect(() => {

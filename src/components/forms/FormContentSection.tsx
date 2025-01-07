@@ -24,6 +24,7 @@ export default function FormContentSection({
   onQuestionSelect,
   onQuestionDelete,
   onQuestionUpdate,
+  onFormInfoUpdate,
   onSave,
   onPublish,
 }: FormContentSectionProps) {
@@ -41,7 +42,12 @@ export default function FormContentSection({
         </Button>
       </SectionTitle>
 
-      <FormCover />
+      <FormCover
+        title={formInfo.subtitle}
+        description={formInfo.form_description}
+        onTitleChange={value => onFormInfoUpdate({ subtitle: value })}
+        onDescriptionChange={value => onFormInfoUpdate({ form_description: value })}
+      />
 
       {questions.map(question => (
         <QuestionCard

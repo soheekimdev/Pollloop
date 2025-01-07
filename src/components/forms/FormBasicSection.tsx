@@ -9,7 +9,6 @@ import { FormBasicSectionProps, FormInfo } from '@/types/forms/forms.types';
 export default function FormBasicSection({
   formInfo,
   setFormInfo,
-  isPrivateForm,
   onPrivateToggle,
 }: FormBasicSectionProps) {
   return (
@@ -49,11 +48,11 @@ export default function FormBasicSection({
           <Label text="참여 인원" />
           <Input
             type="number"
-            value={formInfo.user}
+            value={formInfo.target_count}
             onChange={e =>
               setFormInfo((prev: FormInfo) => ({
                 ...prev,
-                maxParticipants: e.target.value,
+                target_count: Number(e.target.value),
               }))
             }
             placeholder="0~50"
@@ -68,7 +67,7 @@ export default function FormBasicSection({
             onChange={e =>
               setFormInfo((prev: FormInfo) => ({
                 ...prev,
-                dueDate: e.target.value,
+                end_at: e.target.value,
               }))
             }
             placeholder="YYYY-MM-DD"
@@ -78,11 +77,11 @@ export default function FormBasicSection({
         <div className="flex flex-col gap-2">
           <InputWithLabel direction="row">
             <Label text="비밀번호 생성" />
-            <Switch checked={isPrivateForm} onChange={onPrivateToggle} />
+            <Switch checked={formInfo.is_private} onChange={onPrivateToggle} />
           </InputWithLabel>
 
           <p className="text-xs text-input-tip">
-            {isPrivateForm
+            {formInfo.is_private
               ? '비밀번호는 폼 발행 시 확인할 수 있습니다.'
               : '비밀번호 생성 시 비공개 폼으로 전환됩니다.'}
           </p>

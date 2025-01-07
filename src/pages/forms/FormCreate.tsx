@@ -3,7 +3,8 @@ import Breadcrumbs from '@/components/common/Breadcrumbs.tsx';
 import FormBasicSection from '@/components/forms/FormBasicSection';
 import FormContentSection from '@/components/forms/FormContentSection';
 import FormQuestionSection from '@/components/forms/FormQuestionSection';
-import { FormInfo, Question, QuestionType } from '@/types/forms/forms.types';
+import { FormInfo, Option, Question, QuestionType } from '@/types/forms/forms.types';
+import { NO_OPTIONS_TYPES } from '@/constants/forms.constants';
 
 export default function FormCreate() {
   const breadcrumbsItems = ['홈', '나의 폼', '폼 만들기'];
@@ -12,50 +13,57 @@ export default function FormCreate() {
     title: '',
     tag: '',
     end_at: '',
-    is_closed: false,
-    access_code: '',
+    target_count: 0,
+    is_closed: 'TEMP',
+    is_private: false,
+    is_bookmark: false,
   });
 
-  const [isPrivateForm, setIsPrivateForm] = useState(false);
+  // const [isPrivateForm, setIsPrivateForm] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
   const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
 
   const handlePrivateToggle = (isChecked: boolean) => {
-    setIsPrivateForm(isChecked);
+    setFormInfo(prev => ({
+      ...prev,
+      is_private: isChecked,
+      access_code: isChecked ? prev.access_code : '',
+    }));
+  };
 
-    if (!isChecked) {
-      setFormInfo(prev => ({ ...prev, access_code: '' }));
-    }
+  const handleFormInfoUpdate = (updates: Partial<FormInfo>) => {
+    setFormInfo(prev => ({
+      ...prev,
+      ...updates,
+    }));
   };
 
   const handleQuestionTypeChange = (questionType: QuestionType) => {
     if (!selectedQuestionId) return;
 
     setQuestions(prev =>
-      prev.map(q =>
-        q.id === selectedQuestionId
-          ? {
-              ...q,
-              layout_type: questionType,
-              options_of_questions:
-                questionType === 'CHECKBOX_TYPE' ||
-                questionType === 'RADIO_TYPE' ||
-                questionType === 'DROPDOWN_TYPE'
-                  ? []
-                  : undefined,
-              hasEtcOption:
-                questionType === 'CHECKBOX_TYPE' || questionType === 'RADIO_TYPE' ? false : undefined,
-              fileTypes: questionType === 'FILE_UPLOAD_TYPE' ? [] : undefined,
-            }
-          : q,
-      ),
+      prev.map(q => {
+        if (q.id === selectedQuestionId) {
+          let defaultOptions: Option[] = [];
+          if (!NO_OPTIONS_TYPES.includes(questionType)) {
+            defaultOptions = [{ option_number: 1, option_context: '' }];
+          }
+
+          return {
+            ...q,
+            layout_type: questionType,
+            options_of_questions: defaultOptions,
+          };
+        }
+        return q;
+      }),
     );
   };
 
   const handleAddQuestion = () => {
     const newQuestion: Question = {
-      id: Date.now().toString(), // 임시 ID
+      id: Date.now().toString(),
       layout_type: 'SHORT_TYPE',
       question: '',
       question_order: questions.length + 1,
@@ -86,14 +94,17 @@ export default function FormCreate() {
   const handleSubmit = async (isPublishing: boolean) => {
     const formData = {
       ...formInfo,
-      access_code: !isPublishing && isPrivateForm ? formInfo.access_code : '',
-      is_closed: !isPublishing,
+      is_closed: isPublishing ? ('PUBLISHED' as const) : ('TEMP' as const),
       questions: questions.map((q, index) => ({
         layout_type: q.layout_type,
         question: q.question,
         question_order: index + 1,
         is_required: q.is_required,
-        options_of_questions: q.options_of_questions,
+        options_of_questions:
+          q.options_of_questions?.map((opt, i) => ({
+            option_number: i + 1,
+            option_context: opt.option_context,
+          })) || [],
       })),
     };
 
@@ -113,7 +124,6 @@ export default function FormCreate() {
           <FormBasicSection
             formInfo={formInfo}
             setFormInfo={setFormInfo}
-            isPrivateForm={isPrivateForm}
             onPrivateToggle={handlePrivateToggle}
           />
 
@@ -126,6 +136,7 @@ export default function FormCreate() {
             onQuestionUpdate={handleUpdateQuestion}
             onSave={() => handleSubmit(false)}
             onPublish={() => handleSubmit(true)}
+            onFormInfoUpdate={handleFormInfoUpdate}
           />
 
           <FormQuestionSection

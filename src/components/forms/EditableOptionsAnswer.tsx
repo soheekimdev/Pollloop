@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Button from '@/components/common/Button';
 import FormsLabel from '@/components/forms/FormsLabel';
 import FormsInput from '@/components/forms/FormsInput';
@@ -29,10 +30,12 @@ const optionIconVariants = cva(
 );
 
 export function EditableOptionsAnswer({ data, onUpdate, type }: EditableOptionsAnswerProps) {
+  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
+
   const { options, handleAddOption, handleChangeOption, handleDeleteOption } = useOptions(
     data.options_of_questions,
     onUpdate,
-    data.hasEtcOption,
+    data._frontend?.hasEtcOption ?? false,
   );
 
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +44,8 @@ export function EditableOptionsAnswer({ data, onUpdate, type }: EditableOptionsA
 
   const isEtcOption = (option: Option) => option.isEtcOption;
 
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>, index: number) => {
+    setFocusedIndex(index);
     e.target.select();
   };
 
@@ -61,20 +65,38 @@ export function EditableOptionsAnswer({ data, onUpdate, type }: EditableOptionsA
           {options.map((option, index) => (
             <label
               key={option.option_number}
-              className="flex items-center gap-2 min-w-40 w-full bg-pollloop-bg-02 p-2 rounded-lg cursor-pointer group"
+              className="flex items-center gap-2 min-w-40 h-10 w-full bg-pollloop-bg-02 p-2 rounded-lg cursor-pointer group"
             >
               <div className={cn(optionIconVariants({ type }))} />
-              <input
-                className={cn(
-                  'flex-1 bg-transparent text-sm placeholder:text-input-placeholder focus-visible:outline-none',
-                  isEtcOption(option) ? 'cursor-default' : 'cursor-pointer',
+              <div className="flex-1 flex gap-2 items-center relative">
+                <input
+                  className={cn(
+                    'flex-1 bg-transparent text-sm placeholder:text-input-placeholder focus-visible:outline-none',
+                    isEtcOption(option) ? 'cursor-default' : 'cursor-pointer',
+                  )}
+                  placeholder="옵션"
+                  value={option.option_context}
+                  maxLength={255}
+                  onFocus={e => handleFocus(e, index)}
+                  onBlur={() => setFocusedIndex(null)}
+                  onChange={e => handleChangeOption(index, e.target.value)}
+                  disabled={isEtcOption(option)}
+                />
+
+                {!isEtcOption(option) && focusedIndex === index && (
+                  <div
+                    className={cn(
+                      'text-xs',
+                      option.option_context.length >= 230
+                        ? 'text-status-red-text'
+                        : 'text-input-tip',
+                    )}
+                  >
+                    {option.option_context.length}/255
+                  </div>
                 )}
-                placeholder="옵션"
-                value={option.option_context}
-                onFocus={handleFocus}
-                onChange={e => handleChangeOption(index, e.target.value)}
-                disabled={isEtcOption(option)}
-              />
+              </div>
+
               {!isEtcOption(option) && (
                 <button
                   type="button"

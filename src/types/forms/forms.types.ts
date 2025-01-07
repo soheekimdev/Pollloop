@@ -1,26 +1,28 @@
-import { FILE_TYPES } from '@/constants/forms';
-
-export type FileType = (typeof FILE_TYPES)[number]['value'];
+// 기본 타입 정의
+export type FileType = 'image' | 'pdf' | 'spreadsheet';
 
 export type QuestionType =
-  | 'SHORT_TYPE' // 단답형
-  | 'LONG_TYPE' // 장문형
-  | 'CHECKBOX_TYPE' // 체크박스
-  | 'RADIO_TYPE' // 라디오
-  | 'DROPDOWN_TYPE' // 드롭다운
-  | 'RANGE_TYPE' // 범위 선택
-  | 'STAR_RATING_TYPE' // 별점
-  | 'IMAGE_SELECT_TYPE' // 이미지 선택
-  | 'NUMBER_TYPE' // 숫자
-  | 'DATE_TYPE' // 날짜
-  | 'EMAIL_TYPE' // 이메일
-  | 'FILE_UPLOAD_TYPE'; // 파일 업로드
+  | 'SHORT_TYPE'
+  | 'LONG_TYPE'
+  | 'CHECKBOX_TYPE'
+  | 'RADIO_TYPE'
+  | 'DROPDOWN_TYPE'
+  | 'RANGE_TYPE'
+  | 'STAR_RATING_TYPE'
+  | 'IMAGE_SELECT_TYPE'
+  | 'NUMBER_TYPE'
+  | 'DATE_TYPE'
+  | 'EMAIL_TYPE'
+  | 'FILE_UPLOAD_TYPE';
 
+export type FormStatus = 'TEMP' | 'PUBLISHED' | 'CLOSED';
+
+// 데이터 모델 인터페이스
 export interface Option {
-  option_number: string;
+  option_number: number;
   option_context: string;
-  isEtcOption?: boolean;
   imageUrl?: string;
+  isEtcOption?: boolean;
 }
 
 export interface Question {
@@ -29,18 +31,13 @@ export interface Question {
   question: string;
   question_order: number;
   is_required: boolean;
-  options_of_questions?: Array<Option>;
-  hasEtcOption?: boolean;
-  fileTypes?: FileType[];
-}
-
-export interface FormData {
-  title: string;
-  tag: string;
-  maxParticipants: number;
-  deadline: string;
-  isPrivate: boolean;
-  questions: Question[];
+  options_of_questions: Option[];
+  _frontend?: {
+    hasEtcOption?: boolean;
+    fileType?: FileType;
+    minLabel?: string;
+    maxLabel?: string;
+  };
 }
 
 export interface FormInfo {
@@ -49,13 +46,16 @@ export interface FormInfo {
   tag?: string;
   create_at?: string;
   end_at: string;
-  is_closed: boolean;
+  is_closed?: FormStatus;
+  target_count: number;
+  is_bookmark?: boolean;
+  is_private: boolean;
   access_code?: string;
   subtitle?: string;
   form_description?: string;
-  uuid?: string;
 }
 
+// 컴포넌트 Props 인터페이스
 export interface FormSectionBaseProps {
   className?: string;
   children?: React.ReactNode;
@@ -64,7 +64,6 @@ export interface FormSectionBaseProps {
 export interface FormBasicSectionProps {
   formInfo: FormInfo;
   setFormInfo: React.Dispatch<React.SetStateAction<FormInfo>>;
-  isPrivateForm: boolean;
   onPrivateToggle: (isChecked: boolean) => void;
 }
 
@@ -75,6 +74,7 @@ export interface FormContentSectionProps {
   onQuestionSelect: (id: string) => void;
   onQuestionDelete: (id: string) => void;
   onQuestionUpdate: (id: string, updates: Partial<Question>) => void;
+  onFormInfoUpdate: (updates: Partial<FormInfo>) => void;
   onSave: () => void;
   onPublish: () => void;
 }

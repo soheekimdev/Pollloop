@@ -5,6 +5,7 @@ import Input from '@/components/form/Input';
 import FormsLabel from '@/components/forms/FormsLabel';
 import FormsInput from '@/components/forms/FormsInput';
 import { Question } from '@/types/forms/forms.types';
+import { OPTION_NUMBERS } from '@/constants/forms.constants';
 
 interface RangeAnswerProps {
   data: Question;
@@ -32,6 +33,23 @@ export default function RangeAnswer({ data, onUpdate }: RangeAnswerProps) {
     { value: '10', label: '10' },
   ];
 
+  const handleLabelChange = (type: 'min' | 'max', value: string) => {
+    const optionNumber = type === 'min' ? OPTION_NUMBERS.MIN_LABEL : OPTION_NUMBERS.MAX_LABEL;
+    const newOptions = [...data.options_of_questions];
+    const labelIndex = newOptions.findIndex(opt => opt.option_number === optionNumber);
+
+    if (labelIndex === -1) {
+      newOptions.push({
+        option_number: optionNumber,
+        option_context: value,
+      });
+    } else {
+      newOptions[labelIndex].option_context = value;
+    }
+
+    onUpdate({ options_of_questions: newOptions });
+  };
+
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -53,11 +71,11 @@ export default function RangeAnswer({ data, onUpdate }: RangeAnswerProps) {
         <div className="flex gap-4 w-full">
           <InputWithLabel className="flex-1">
             <Label text="최솟값 라벨" />
-            <Input />
+            <Input onChange={e => handleLabelChange('min', e.target.value)} />
           </InputWithLabel>
           <InputWithLabel className="flex-1">
             <Label text="최댓값 라벨" />
-            <Input />
+            <Input onChange={e => handleLabelChange('max', e.target.value)} />
           </InputWithLabel>
         </div>
       </div>

@@ -6,7 +6,12 @@ import Switch from '@/components/form/Switch';
 import Section from '@/components/forms/Section';
 import SectionTitle from '@/components/forms/SectionTitle';
 import { Plus } from 'lucide-react';
-import { FILE_SIZE_LIMIT, FILE_TYPES, QUESTION_TYPES } from '@/constants/forms';
+import {
+  FILE_SIZE_LIMIT,
+  FILE_TYPES,
+  OPTION_NUMBERS,
+  QUESTION_TYPES,
+} from '@/constants/forms.constants';
 import { FileType, FormQuestionSectionProps, QuestionType } from '@/types/forms/forms.types';
 import { formatFileSize } from '@/utils/format';
 
@@ -45,9 +50,11 @@ export default function FormQuestionSection({
             <InputWithLabel direction="row" className="h-10">
               <Label text="기타 옵션" />
               <Switch
-                checked={selectedQuestion.hasEtcOption ?? false}
+                checked={selectedQuestion._frontend?.hasEtcOption ?? false}
                 onChange={isChecked =>
-                  onQuestionUpdate(selectedQuestion.id, { hasEtcOption: isChecked })
+                  onQuestionUpdate(selectedQuestion.id, {
+                    _frontend: { ...selectedQuestion._frontend, hasEtcOption: isChecked },
+                  })
                 }
               />
             </InputWithLabel>
@@ -57,12 +64,17 @@ export default function FormQuestionSection({
             <InputWithLabel>
               <Label text="허용할 파일 유형" />
               <Select
-                value={selectedQuestion.fileTypes?.[0] ?? 'image'}
-                onChange={e =>
+                value={selectedQuestion._frontend?.fileType ?? 'image'}
+                onChange={e => {
+                  const fileType = e.target.value as FileType;
                   onQuestionUpdate(selectedQuestion.id, {
-                    fileTypes: [e.target.value as FileType],
-                  })
-                }
+                    _frontend: { ...selectedQuestion._frontend, fileType },
+                    options_of_questions: [
+                      { option_number: 1, option_context: '' },
+                      { option_number: OPTION_NUMBERS.ETC, option_context: fileType },
+                    ],
+                  });
+                }}
                 options={FILE_TYPES}
               />
               <p className="text-xs text-input-tip">
