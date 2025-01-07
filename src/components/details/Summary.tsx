@@ -1,17 +1,7 @@
+import { SummaryData } from '../../types/form-details.types';
 import Question from './summary/Question';
 
-interface SummaryDataProps {
-  id: number;
-  title: string;
-  questions: {
-    id: number;
-    type: string;
-    question: string;
-    results: any[];
-  }[];
-}
-
-const summaryData: SummaryDataProps = {
+const summaryData: SummaryData = {
   id: 123,
   title: '프론트엔드 6기 만족도 조사 15주차',
   questions: [
@@ -232,7 +222,7 @@ const summaryData: SummaryDataProps = {
   ],
 };
 
-export default function Summary() {
+export default function Summary({ formId }: { formId: string }) {
   return (
     <ul className="flex flex-col w-full gap-4">
       {summaryData.questions.map(question => (

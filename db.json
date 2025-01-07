@@ -4,47 +4,66 @@
   "forms": [],
   "formDetails": [
     {
-      "id": 123,
+      "user": 1,
+      "uuid": "f4f86d3e59954b57afe0b28bfc0fd8ad",
+      "title": "설문조사 생성 테스트1",
+      "tag": "설문조사생성1 태그",
+      "subtitle": "이렇게 표지~",
+      "form_description": "여기에 상세 설명",
+      "create_at": "2025-01-06",
+      "end_at": "2025-01-31",
+      "user_count": 10,
+      "completed_count": 8,
+      "target_count": 100,
+      "is_closed": "TEMP",
+      "is_private": true,
+      "access_code": "12345"
+    }
+  ],
+  "summary": [
+    {
+      "uuid": "f4f86d3e59954b57afe0b28bfc0fd8ad",
       "title": "프론트엔드 6기 만족도 조사 15주차",
       "questions": [
         {
           "id": 1,
-          "type": "SHORT_ANSWER",
+          "layout_type": "SHORT_TYPE",
+          "is_required": true,
           "question": "이름을 입력해 주세요",
           "results": [
-            { "answer": "김철수" },
-            { "answer": "이영희" },
-            { "answer": "박지민" },
-            { "answer": "최동훈" },
-            { "answer": "정서연" },
-            { "answer": "김철수2" },
-            { "answer": "이영희2" },
-            { "answer": "박지민2" },
-            { "answer": "최동훈2" },
-            {
-              "answer": "정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2정서연2"
-            }
+            { "value": "김철수" },
+            { "value": "이영희" },
+            { "value": "박지민" },
+            { "value": "최동훈" },
+            { "value": "정서연" },
+            { "value": "김철수2" },
+            { "value": "이영희2" },
+            { "value": "박지민2" },
+            { "value": "최동훈2" },
+            { "value": "정서연2" }
           ]
         },
         {
           "id": 2,
-          "type": "LONG_ANSWER",
+          "layout_type": "LONG_TYPE",
+          "is_required": true,
           "question": "이번 주 학습 내용 중 가장 기억에 남는 것과 그 이유를 작성해 주세요",
           "results": [
             {
-              "answer": "TypeScript의 제네릭 개념이 어려웠지만 이해하고 나니 코드의 안정성이 높아져서 좋았습니다."
+              "value": "TypeScript의 제네릭 개념이 어려웠지만 이해하고 나니 코드의 안정성이 높아져서 좋았습니다."
             },
             {
-              "answer": "React의 상태관리 패턴을 배우면서 데이터 흐름을 더 잘 이해하게 되었습니다. React의 상태관리 패턴을 배우면서 데이터 흐름을 더 잘 이해하게 되었습니다. React의 상태관리 패턴을 배우면서 데이터 흐름을 더 잘 이해하게 되었습니다. React의 상태관리 패턴을 배우면서 데이터 흐름을 더 잘 이해하게 되었습니다. React의 상태관리 패턴을 배우면서 데이터 흐름을 더 잘 이해하게 되었습니다."
+              "value": "React의 상태관리 패턴을 배우면서 데이터 흐름을 더 잘 이해하게 되었습니다. React의 상태관리 패턴을 배우면서 데이터 흐름을 더 잘 이해하게 되었습니다. React의 상태관리 패턴을 배우면서 데이터 흐름을 더 잘 이해하게 되었습니다. React의 상태관리 패턴을 배우면서 데이터 흐름을 더 잘 이해하게 되었습니다. React의 상태관리 패턴을 배우면서 데이터 흐름을 더 잘 이해하게 되었습니다."
             },
-            { "answer": "커스텀 훅을 만들어보면서 코드 재사용성의 중요성을 깨달았습니다." },
-            { "answer": "최적화 기법들을 배우면서 성능 개선의 실제 사례를 경험할 수 있었습니다." },
-            { "answer": "팀 프로젝트에서 git 충돌 해결하는 방법을 배워서 유익했습니다." }
+            { "value": "커스텀 훅을 만들어보면서 코드 재사용성의 중요성을 깨달았습니다." },
+            { "value": "최적화 기법들을 배우면서 성능 개선의 실제 사례를 경험할 수 있었습니다." },
+            { "value": "팀 프로젝트에서 git 충돌 해결하는 방법을 배워서 유익했습니다." }
           ]
         },
         {
           "id": 3,
-          "type": "CHECKBOX",
+          "layout_type": "CHECKBOX_TYPE",
+          "is_required": true,
           "question": "이번 주에 어려웠던 내용을 모두 선택해주세요",
           "results": [
             {
@@ -56,7 +75,8 @@
         },
         {
           "id": 4,
-          "type": "RADIO",
+          "layout_type": "RADIO_TYPE",
+          "is_required": true,
           "question": "선호하는 학습 방식은 무엇인가요?",
           "results": [
             { "label": "이론 강의", "count": 30 },
@@ -70,7 +90,8 @@
         },
         {
           "id": 5,
-          "type": "DROPDOWN",
+          "layout_type": "DROPDOWN_TYPE",
+          "is_required": true,
           "question": "소속 트랙을 선택해주세요",
           "results": [
             { "label": "프론트엔드", "count": 50 },
@@ -79,36 +100,41 @@
         },
         {
           "id": 6,
-          "type": "RANGE",
+          "layout_type": "RANGE_TYPE",
+          "is_required": true,
           "question": "이번 주 학습 난이도는 어떠셨나요? (1-10)",
+          "min_label": "1",
+          "max_label": "10",
           "results": [
-            { "value": 1, "count": 20 },
-            { "value": 2, "count": 35 },
-            { "value": 3, "count": 25 },
-            { "value": 4, "count": 15 },
-            { "value": 5, "count": 3 },
-            { "value": 6, "count": 35 },
-            { "value": 7, "count": 25 },
-            { "value": 8, "count": 15 },
-            { "value": 9, "count": 3 },
-            { "value": 10, "count": 3 }
+            { "label": 1, "count": 20 },
+            { "label": 2, "count": 35 },
+            { "label": 3, "count": 25 },
+            { "label": 4, "count": 15 },
+            { "label": 5, "count": 3 },
+            { "label": 6, "count": 35 },
+            { "label": 7, "count": 25 },
+            { "label": 8, "count": 15 },
+            { "label": 9, "count": 3 },
+            { "label": 10, "count": 3 }
           ]
         },
         {
           "id": 7,
-          "type": "STAR",
+          "layout_type": "STAR_RATING_TYPE",
+          "is_required": true,
           "question": "이번 주 수업 만족도를 평가해주세요",
           "results": [
-            { "value": 1, "count": 0 },
-            { "value": 2, "count": 0 },
-            { "value": 3, "count": 10 },
-            { "value": 4, "count": 38 },
-            { "value": 5, "count": 50 }
+            { "label": 1, "count": 0 },
+            { "label": 2, "count": 0 },
+            { "label": 3, "count": 10 },
+            { "label": 4, "count": 38 },
+            { "label": 5, "count": 50 }
           ]
         },
         {
           "id": 8,
-          "type": "IMAGE_SELECT",
+          "layout_type": "IMAGE_SELECT_TYPE",
+          "is_required": true,
           "question": "이번 주 수업 중 가장 인상 깊었던 부분의 이미지를 선택해주세요",
           "results": [
             {
@@ -139,7 +165,8 @@
         },
         {
           "id": 9,
-          "type": "NUMBER",
+          "layout_type": "NUMBER_TYPE",
+          "is_required": true,
           "question": "이번 주 학습에 투자한 시간은 몇 시간인가요?",
           "results": [
             { "value": 15, "count": 10 },
@@ -156,65 +183,68 @@
         },
         {
           "id": 10,
-          "type": "DATE",
+          "layout_type": "DATE_TYPE",
+          "is_required": true,
           "question": "다음 오프라인 모임이 가능한 날짜를 선택해주세요",
           "results": [
-            { "answer": "2022-12-25" },
-            { "answer": "2023-12-26" },
-            { "answer": "2024-12-25" },
-            { "answer": "2024-12-27" },
-            { "answer": "2024-12-26" },
-            { "answer": "2025-02-25" },
-            { "answer": "2025-08-26" },
-            { "answer": "2025-11-25" },
-            { "answer": "2025-11-27" },
-            { "answer": "2025-12-26" },
-            { "answer": "2025-11-25" },
-            { "answer": "2025-11-27" },
-            { "answer": "2025-12-26" },
-            { "answer": "2025-11-25" },
-            { "answer": "2025-11-27" },
-            { "answer": "2025-12-26" },
-            { "answer": "2025-11-25" },
-            { "answer": "2025-11-27" },
-            { "answer": "2025-12-26" },
-            { "answer": "2025-11-25" },
-            { "answer": "2025-11-27" },
-            { "answer": "2025-12-26" },
-            { "answer": "2026-11-06" },
-            { "answer": "2027-11-06" },
-            { "answer": "2028-11-06" },
-            { "answer": "2029-11-06" },
-            { "answer": "2030-11-06" },
-            { "answer": "2031-11-06" },
-            { "answer": "2032-11-06" },
-            { "answer": "2033-11-06" },
-            { "answer": "2034-11-06" },
-            { "answer": "2026-11-06" }
+            { "value": "2022-12-25" },
+            { "value": "2023-12-26" },
+            { "value": "2024-12-25" },
+            { "value": "2024-12-27" },
+            { "value": "2024-12-26" },
+            { "value": "2025-02-25" },
+            { "value": "2025-08-26" },
+            { "value": "2025-11-25" },
+            { "value": "2025-11-27" },
+            { "value": "2025-12-26" },
+            { "value": "2025-11-25" },
+            { "value": "2025-11-27" },
+            { "value": "2025-12-26" },
+            { "value": "2025-11-25" },
+            { "value": "2025-11-27" },
+            { "value": "2025-12-26" },
+            { "value": "2025-11-25" },
+            { "value": "2025-11-27" },
+            { "value": "2025-12-26" },
+            { "value": "2025-11-25" },
+            { "value": "2025-11-27" },
+            { "value": "2025-12-26" },
+            { "value": "2026-11-06" },
+            { "value": "2027-11-06" },
+            { "value": "2028-11-06" },
+            { "value": "2029-11-06" },
+            { "value": "2030-11-06" },
+            { "value": "2031-11-06" },
+            { "value": "2032-11-06" },
+            { "value": "2033-11-06" },
+            { "value": "2034-11-06" },
+            { "value": "2026-11-06" }
           ]
         },
         {
           "id": 11,
-          "type": "EMAIL",
+          "layout_type": "EMAIL_TYPE",
+          "is_required": true,
           "question": "피드백 받으실 이메일을 입력해주세요",
           "results": [
-            { "answer": "user1@example.com" },
-            { "answer": "user2@example.com" },
-            { "answer": "user3@example.com" },
-            { "answer": "user4@example.com" },
-            { "answer": "user5@example.com" }
+            { "value": "user1@example.com" },
+            { "value": "user2@example.com" },
+            { "value": "user3@example.com" },
+            { "value": "user4@example.com" },
+            { "value": "user5@example.com" }
           ]
         },
         {
           "id": 12,
-          "type": "FILE_UPLOAD",
+          "layout_type": "FILE_UPLOAD_TYPE",
+          "is_required": true,
           "question": "이번 주 과제를 제출해주세요",
           "results": [
-            { "answer": "assignment1.pdf", "link": "https://example.com/db/1" },
-            { "answer": "assignment2.pdf", "link": "https://example.com/db/1" },
-            { "answer": "assignment3.pdf", "link": "https://example.com/db/1" },
-            { "answer": "assignment4.pdf", "link": "https://example.com/db/1" },
-            { "answer": "assignment5.pdf", "link": "https://example.com/db/1" }
+            { "value": "assignment1.pdf", "link": "https://example.com/db/1" },
+            { "value": "assignment2.pdf", "link": "https://example.com/db/1" },
+            { "value": "assignment3.pdf", "link": "https://example.com/db/1" },
+            { "value": "assignment4.pdf", "link": "https://example.com/db/1" },
+            { "value": "assignment5.pdf", "link": "https://example.com/db/1" }
           ]
         }
       ]
