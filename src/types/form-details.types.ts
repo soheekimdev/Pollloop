@@ -1,5 +1,8 @@
+import { QuestionType } from './forms';
+
 type FormStatus = 'CLOSED' | 'OPEN' | 'TEMP';
 
+// 폼 기본 상세정보 타입 정의
 export interface OverviewData {
   user: number;
   uuid: string;
@@ -17,15 +20,92 @@ export interface OverviewData {
   access_code: string;
 }
 
+// 폼 요약정보 타입 정의
 export interface SummaryData {
-  id: number;
+  uuid: string;
   title: string;
-  questions: {
-    id: number;
-    type: string;
-    question: string;
-    results: any[];
-  }[];
+  data: QuestionResultType[];
 }
 
-// 하단에 참여자 목록에서 사용될 데이터 타입 정의 (ParticipantsData)
+export interface ShortResultType {
+  value: string;
+}
+
+export interface LongResultType {
+  value: string;
+}
+
+export interface CheckboxResultType {
+  label: string;
+  count: number;
+}
+
+export interface RadioResultType {
+  label: string;
+  count: number;
+}
+
+export interface DropdownResultType {
+  label: string;
+  count: number;
+}
+
+export interface RangeResultType {
+  label: number;
+  count: number;
+}
+
+export interface StarRatingResultType {
+  label: number;
+  count: number;
+}
+
+export interface ImageSelectResultType {
+  imageId: string;
+  imageUrl: string;
+  label: string;
+  count: number;
+}
+
+export interface NumberResultType {
+  value: number;
+  count: number;
+}
+
+export interface DateResultType {
+  value: string;
+}
+
+export interface EmailResultType {
+  value: string;
+}
+
+export interface FileUploadResultType {
+  value: string;
+  link: string;
+}
+
+export interface QuestionResultType {
+  id: number;
+  layout_type: QuestionType;
+  is_required: boolean;
+  question: string;
+  results: (
+    | ShortResultType
+    | LongResultType
+    | CheckboxResultType
+    | RadioResultType
+    | DropdownResultType
+    | RangeResultType
+    | StarRatingResultType
+    | ImageSelectResultType
+    | NumberResultType
+    | DateResultType
+    | EmailResultType
+    | FileUploadResultType
+  )[];
+  min_label?: string; // RANGE_TYPE
+  max_label?: string; // RANGE_TYPE
+}
+
+// 참여자 목록 타입 정의

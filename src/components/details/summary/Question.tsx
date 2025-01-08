@@ -1,3 +1,18 @@
+import {
+  CheckboxResultType,
+  DateResultType,
+  DropdownResultType,
+  EmailResultType,
+  FileUploadResultType,
+  ImageSelectResultType,
+  LongResultType,
+  NumberResultType,
+  QuestionResultType,
+  RadioResultType,
+  RangeResultType,
+  ShortResultType,
+  StarRatingResultType,
+} from '../../../types/form-details.types';
 import ScrollableContainer from '../../common/ScrollableContainer';
 
 import {
@@ -15,72 +30,35 @@ import {
   FileUploadComponent,
 } from './QuestionComponents';
 
-import {
-  ShortAnswerResultType,
-  LongAnswerResultType,
-  CheckboxResultType,
-  RadioResultType,
-  DropdownResultType,
-  RangeResultType,
-  StarResultType,
-  ImageSelectResultType,
-  NumberResultType,
-  DateResultType,
-  EmailResultType,
-  FileUploadResultType,
-} from './QuestionComponents';
-
-interface QuestionProps {
-  questionItem: {
-    id: number;
-    type: string;
-    question: string;
-    results: (
-      | ShortAnswerResultType
-      | LongAnswerResultType
-      | CheckboxResultType
-      | RadioResultType
-      | DropdownResultType
-      | RangeResultType
-      | StarResultType
-      | ImageSelectResultType
-      | NumberResultType
-      | DateResultType
-      | EmailResultType
-      | FileUploadResultType
-    )[];
-  };
-}
-
-export default function Question({ questionItem }: QuestionProps) {
-  const { type, question, results } = questionItem;
+export default function Question({ questionItem }: { questionItem: QuestionResultType }) {
+  const { layout_type, question, results } = questionItem;
 
   const renderResults = () => {
-    switch (type) {
-      case 'SHORT_ANSWER':
+    switch (layout_type) {
+      case 'SHORT_TYPE':
         return (
           <div className="">
             <p className="text-sm text-right">참여자 수 : {results.length}</p>
             <ScrollableContainer height={190} className="space-y-2">
               {results.map((result, index) => (
-                <ShortAnswerComponent key={index} result={result as ShortAnswerResultType} />
+                <ShortAnswerComponent key={index} result={result as ShortResultType} />
               ))}
             </ScrollableContainer>
           </div>
         );
-      case 'LONG_ANSWER':
+      case 'LONG_TYPE':
         return (
           <>
             <p className="text-sm text-right">참여자 수 : {results.length}</p>
             <ScrollableContainer height={190} className="space-y-2">
               {results.map((result, index) => (
-                <LongAnswerComponent key={index} result={result as LongAnswerResultType} />
+                <LongAnswerComponent key={index} result={result as LongResultType} />
               ))}
             </ScrollableContainer>
           </>
         );
 
-      case 'CHECKBOX':
+      case 'CHECKBOX_TYPE':
         return (
           <>
             <p className="text-sm text-right">참여자 수 : {results.length}</p>
@@ -90,7 +68,7 @@ export default function Question({ questionItem }: QuestionProps) {
           </>
         );
 
-      case 'RADIO':
+      case 'RADIO_TYPE':
         return (
           <>
             <p className="text-sm text-right">참여자 수 : {results.length}</p>
@@ -99,7 +77,7 @@ export default function Question({ questionItem }: QuestionProps) {
             </ScrollableContainer>
           </>
         );
-      case 'DROPDOWN':
+      case 'DROPDOWN_TYPE':
         return (
           <>
             <p className="text-sm text-right">참여자 수 : {results.length}</p>
@@ -108,7 +86,7 @@ export default function Question({ questionItem }: QuestionProps) {
             </ScrollableContainer>
           </>
         );
-      case 'RANGE':
+      case 'RANGE_TYPE':
         return (
           <>
             <p className="text-sm text-right">참여자 수 : {results.length}</p>
@@ -117,16 +95,16 @@ export default function Question({ questionItem }: QuestionProps) {
             </ScrollableContainer>
           </>
         );
-      case 'STAR':
+      case 'STAR_RATING_TYPE':
         return (
           <>
             <p className="text-sm text-right">참여자 수 : {results.length}</p>
             <ScrollableContainer height="auto">
-              <StarComponent results={results as StarResultType[]} />
+              <StarComponent results={results as StarRatingResultType[]} />
             </ScrollableContainer>
           </>
         );
-      case 'IMAGE_SELECT':
+      case 'IMAGE_SELECT_TYPE':
         return (
           <>
             <p className="text-sm text-right">참여자 수 : {results.length}</p>
@@ -135,7 +113,7 @@ export default function Question({ questionItem }: QuestionProps) {
             </ScrollableContainer>
           </>
         );
-      case 'NUMBER':
+      case 'NUMBER_TYPE':
         return (
           <>
             <p className="text-sm text-right">참여자 수 : {results.length}</p>
@@ -144,7 +122,7 @@ export default function Question({ questionItem }: QuestionProps) {
             </ScrollableContainer>
           </>
         );
-      case 'DATE':
+      case 'DATE_TYPE':
         return (
           <>
             <p className="text-sm text-right">참여자 수 : {results.length}</p>
@@ -153,7 +131,7 @@ export default function Question({ questionItem }: QuestionProps) {
             </ScrollableContainer>
           </>
         );
-      case 'EMAIL':
+      case 'EMAIL_TYPE':
         return (
           <ul className="flex flex-col gap-2">
             {results.map((result, index) => (
@@ -161,7 +139,7 @@ export default function Question({ questionItem }: QuestionProps) {
             ))}
           </ul>
         );
-      case 'FILE_UPLOAD':
+      case 'FILE_UPLOAD_TYPE':
         return (
           <ul className="flex flex-col gap-2">
             {results.map((result, index) => (

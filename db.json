@@ -24,7 +24,7 @@
     {
       "uuid": "f4f86d3e59954b57afe0b28bfc0fd8ad",
       "title": "프론트엔드 6기 만족도 조사 15주차",
-      "questions": [
+      "data": [
         {
           "id": 1,
           "layout_type": "SHORT_TYPE",

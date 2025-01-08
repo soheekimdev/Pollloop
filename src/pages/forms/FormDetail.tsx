@@ -23,7 +23,7 @@ export default function FormDetail() {
       try {
         setIsLoading(true);
         const data = await fetchOverviewData(formId);
-        console.log('API 응답 데이터:', data);
+        // console.log('API 응답 데이터:', data);
         setOverviewData(data[0] as OverviewData);
       } catch (err) {
         console.error('데이터 로딩 중 에러:', err);

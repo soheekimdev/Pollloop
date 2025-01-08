@@ -17,84 +17,40 @@ import {
   TooltipProps,
   ScatterChart,
   Scatter,
-  ScatterProps,
 } from 'recharts';
 import useWindowSize from '../../../hooks/useWindowSize';
 import { Star } from 'lucide-react';
+import {
+  ShortResultType,
+  LongResultType,
+  CheckboxResultType,
+  RadioResultType,
+  DropdownResultType,
+  RangeResultType,
+  StarRatingResultType,
+  ImageSelectResultType,
+  NumberResultType,
+  DateResultType,
+  EmailResultType,
+  FileUploadResultType,
+} from '../../../types/form-details.types';
 
 const POLLLOOP_BROWN_01 = '#85582B';
 const POLLLOOP_PURPLE_01 = '#8884d8';
 const STAR_COLOR = '#FFD700';
 
-export interface ShortAnswerResultType {
-  answer: string;
-}
-
-export interface LongAnswerResultType {
-  answer: string;
-}
-
-export interface CheckboxResultType {
-  label: string;
-  count: number;
-}
-
-export interface RadioResultType {
-  label: string;
-  count: number;
-}
-
-export interface DropdownResultType {
-  label: string;
-  count: number;
-}
-
-export interface RangeResultType {
-  value: number;
-  count: number;
-}
-
-export interface StarResultType {
-  value: number;
-  count: number;
-}
-
-export interface ImageSelectResultType {
-  imageId: string;
-  imageUrl: string;
-  label: string;
-  count: number;
-}
-
-export interface NumberResultType {
-  value: number;
-  count: number;
-}
-
-export interface DateResultType {
-  answer: string;
-}
-
-export interface EmailResultType {
-  answer: string;
-}
-
-export interface FileUploadResultType {
-  answer: string;
-}
-
-const ShortAnswerComponent: React.FC<{ result: ShortAnswerResultType }> = ({ result }) => {
+const ShortAnswerComponent: React.FC<{ result: ShortResultType }> = ({ result }) => {
   return (
     <li className="px-3 py-1 text-sm border rounded-lg border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15">
-      {result.answer}
+      {result.value}
     </li>
   );
 };
 
-const LongAnswerComponent: React.FC<{ result: LongAnswerResultType }> = ({ result }) => {
+const LongAnswerComponent: React.FC<{ result: LongResultType }> = ({ result }) => {
   return (
     <li className="px-3 py-1 text-sm border rounded-lg border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15">
-      {result.answer}
+      {result.value}
     </li>
   );
 };
@@ -422,7 +378,7 @@ const RangeComponent: React.FC<{ results: RangeResultType[] }> = ({ results }) =
   );
 };
 
-const StarComponent: React.FC<{ results: StarResultType[] }> = ({ results }) => {
+const StarComponent: React.FC<{ results: StarRatingResultType[] }> = ({ results }) => {
   const renderStars = (rating: number) => {
     return (
       <foreignObject x="-60" y="10" width="120" height="40">
@@ -445,7 +401,7 @@ const StarComponent: React.FC<{ results: StarResultType[] }> = ({ results }) => 
     <div className="min-w-[600px] w-full">
       <ResponsiveContainer width="100%" height={350}>
         <BarChart
-          data={results as StarResultType[]}
+          data={results as StarRatingResultType[]}
           margin={{
             top: 30,
             right: 50,
@@ -634,7 +590,7 @@ const DateComponent: React.FC<{ results: DateResultType[] }> = ({ results }) => 
     const countMap: { [key: string]: number } = {};
     // 날짜별 카운트
     results.forEach(result => {
-      countMap[result.answer] = (countMap[result.answer] || 0) + 1;
+      countMap[result.value] = (countMap[result.value] || 0) + 1;
     });
 
     // 데이터 구조화
@@ -724,11 +680,11 @@ const DateComponent: React.FC<{ results: DateResultType[] }> = ({ results }) => 
 };
 
 const EmailComponent: React.FC<{ result: EmailResultType }> = ({ result }) => {
-  return <li>{result.answer}</li>;
+  return <li>{result.value}</li>;
 };
 
 const FileUploadComponent: React.FC<{ result: FileUploadResultType }> = ({ result }) => {
-  return <li>{result.answer}</li>;
+  return <li>{result.value}</li>;
 };
 
 export {
