@@ -6,6 +6,7 @@ import FormsLabel from '@/components/forms/FormsLabel';
 import FormsInput from '@/components/forms/FormsInput';
 import { Question } from '@/types/forms/forms.types';
 import { OPTION_NUMBERS } from '@/constants/forms.constants';
+import { useEffect, useState } from 'react';
 
 interface RangeAnswerProps {
   data: Question;
@@ -13,6 +14,9 @@ interface RangeAnswerProps {
 }
 
 export default function RangeAnswer({ data, onUpdate }: RangeAnswerProps) {
+  const [minValue, setMinValue] = useState('0');
+  const [maxValue, setMaxValue] = useState('5');
+
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdate({ question: e.target.value });
   };
@@ -21,34 +25,125 @@ export default function RangeAnswer({ data, onUpdate }: RangeAnswerProps) {
     { value: '0', label: '0' },
     { value: '1', label: '1' },
   ];
-  const maxOptions = [
-    { value: '2', label: '2' },
-    { value: '3', label: '3' },
-    { value: '4', label: '4' },
-    { value: '5', label: '5' },
-    { value: '6', label: '6' },
-    { value: '7', label: '7' },
-    { value: '8', label: '8' },
-    { value: '9', label: '9' },
-    { value: '10', label: '10' },
-  ];
 
-  const handleLabelChange = (type: 'min' | 'max', value: string) => {
-    const optionNumber = type === 'min' ? OPTION_NUMBERS.MIN_LABEL : OPTION_NUMBERS.MAX_LABEL;
-    const newOptions = [...data.options_of_questions];
-    const labelIndex = newOptions.findIndex(opt => opt.option_number === optionNumber);
+  const maxOptions = Array.from({ length: 9 }, (_, i) => ({
+    value: String(i + 2),
+    label: String(i + 2),
+  }));
 
-    if (labelIndex === -1) {
-      newOptions.push({
-        option_number: optionNumber,
-        option_context: value,
-      });
+  const updateOptions = () => {
+    const min = parseInt(minValue);
+    const max = parseInt(maxValue);
+
+    // 숫자 옵션 생성 - option_number를 실제 값과 일치시킴
+    const numberOptions = Array.from({ length: max - min + 1 }, (_, i) => ({
+      option_number: min + i, // 0부터 시작
+      option_context: String(min + i),
+    }));
+
+    // 현재 라벨 찾기
+    const minLabel =
+      data.options_of_questions?.find(opt => opt.option_number === OPTION_NUMBERS.MIN_LABEL)
+        ?.option_context || '';
+    const maxLabel =
+      data.options_of_questions?.find(opt => opt.option_number === OPTION_NUMBERS.MAX_LABEL)
+        ?.option_context || '';
+
+    // 전체 옵션 구성 - 라벨에 정확한 option_number 적용
+    const allOptions = [
+      ...numberOptions,
+      {
+        option_number: OPTION_NUMBERS.MIN_LABEL,
+        option_context: minLabel,
+      },
+      {
+        option_number: OPTION_NUMBERS.MAX_LABEL,
+        option_context: maxLabel,
+      },
+    ];
+
+    onUpdate({ options_of_questions: allOptions });
+  };
+
+  const handleRangeChange = (type: 'min' | 'max', value: string) => {
+    const newMin = type === 'min' ? value : minValue;
+    const newMax = type === 'max' ? value : maxValue;
+
+    if (type === 'min') {
+      setMinValue(value);
     } else {
-      newOptions[labelIndex].option_context = value;
+      setMaxValue(value);
     }
 
-    onUpdate({ options_of_questions: newOptions });
+    const numberOptions = Array.from(
+      { length: parseInt(newMax) - parseInt(newMin) + 1 },
+      (_, i) => ({
+        option_number: parseInt(newMin) + i,
+        option_context: String(parseInt(newMin) + i),
+      }),
+    );
+
+    const minLabel =
+      data.options_of_questions?.find(opt => opt.option_number === OPTION_NUMBERS.MIN_LABEL)
+        ?.option_context || '';
+
+    const maxLabel =
+      data.options_of_questions?.find(opt => opt.option_number === OPTION_NUMBERS.MAX_LABEL)
+        ?.option_context || '';
+
+    onUpdate({
+      options_of_questions: [
+        ...numberOptions,
+        {
+          option_number: OPTION_NUMBERS.MIN_LABEL,
+          option_context: minLabel,
+        },
+        {
+          option_number: OPTION_NUMBERS.MAX_LABEL,
+          option_context: maxLabel,
+        },
+      ],
+    });
   };
+
+  const handleLabelChange = (type: 'min' | 'max', value: string) => {
+    const min = parseInt(minValue);
+    const max = parseInt(maxValue);
+
+    // 숫자 옵션 생성
+    const numberOptions = Array.from({ length: max - min + 1 }, (_, i) => ({
+      option_number: min + i,
+      option_context: String(min + i),
+    }));
+
+    // 현재 다른 라벨 찾기
+    const otherLabel =
+      data.options_of_questions?.find(
+        opt =>
+          opt.option_number ===
+          (type === 'min' ? OPTION_NUMBERS.MAX_LABEL : OPTION_NUMBERS.MIN_LABEL),
+      )?.option_context || '';
+
+    // 전체 옵션 구성
+    const allOptions = [
+      ...numberOptions,
+      {
+        option_number: OPTION_NUMBERS.MIN_LABEL,
+        option_context: type === 'min' ? value : otherLabel,
+      },
+      {
+        option_number: OPTION_NUMBERS.MAX_LABEL,
+        option_context: type === 'max' ? value : otherLabel,
+      },
+    ];
+
+    onUpdate({ options_of_questions: allOptions });
+  };
+
+  useEffect(() => {
+    // 초기 옵션 설정
+    updateOptions();
+  }, []);
 
   return (
     <>
@@ -63,19 +158,43 @@ export default function RangeAnswer({ data, onUpdate }: RangeAnswerProps) {
 
       <div className="flex flex-col gap-4 items-start">
         <div className="flex items-center gap-2">
-          <Select options={minOptions} className="w-20" />
+          <Select
+            options={minOptions}
+            value={minValue}
+            onChange={e => handleRangeChange('min', e.target.value)}
+            className="w-20"
+          />
           ~
-          <Select options={maxOptions} defaultValue="5" className="w-20" />
+          <Select
+            options={maxOptions}
+            value={maxValue}
+            onChange={e => handleRangeChange('max', e.target.value)}
+            className="w-20"
+          />
         </div>
 
         <div className="flex gap-4 w-full">
           <InputWithLabel className="flex-1">
             <Label text="최솟값 라벨" />
-            <Input onChange={e => handleLabelChange('min', e.target.value)} />
+            <Input
+              onChange={e => handleLabelChange('min', e.target.value)}
+              value={
+                data.options_of_questions?.find(
+                  opt => opt.option_number === OPTION_NUMBERS.MIN_LABEL,
+                )?.option_context || ''
+              }
+            />
           </InputWithLabel>
           <InputWithLabel className="flex-1">
             <Label text="최댓값 라벨" />
-            <Input onChange={e => handleLabelChange('max', e.target.value)} />
+            <Input
+              onChange={e => handleLabelChange('max', e.target.value)}
+              value={
+                data.options_of_questions?.find(
+                  opt => opt.option_number === OPTION_NUMBERS.MAX_LABEL,
+                )?.option_context || ''
+              }
+            />
           </InputWithLabel>
         </div>
       </div>
