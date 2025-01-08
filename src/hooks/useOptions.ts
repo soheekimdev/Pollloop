@@ -39,12 +39,21 @@ export function useOptions(
     const nonEtcOptions = opts.filter(opt => !opt.isEtcOption);
     const etcOption = opts.find(opt => opt.isEtcOption);
 
-    const sortedOptions = [...nonEtcOptions, ...(etcOption ? [etcOption] : [])].map(
-      (option, index) => ({
+    const sortedOptions = [
+      ...nonEtcOptions.map((option, index) => ({
         ...option,
         option_number: index + 1,
-      }),
-    );
+      })),
+      ...(etcOption
+        ? [
+            {
+              ...etcOption,
+              option_number: OPTION_NUMBERS.ETC,
+            },
+          ]
+        : []),
+    ];
+
     return sortedOptions;
   }, []);
 

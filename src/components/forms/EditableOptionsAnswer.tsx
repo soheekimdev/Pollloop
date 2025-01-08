@@ -72,7 +72,7 @@ export function EditableOptionsAnswer({ data, onUpdate, type }: EditableOptionsA
                 <input
                   className={cn(
                     'flex-1 bg-transparent text-sm placeholder:text-input-placeholder focus-visible:outline-none',
-                    isEtcOption(option) ? 'cursor-default' : 'cursor-pointer',
+                    isEtcOption(option) ? 'cursor-default' : 'cursor-auto',
                   )}
                   placeholder="옵션"
                   value={option.option_context}
