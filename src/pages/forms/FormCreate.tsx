@@ -19,7 +19,6 @@ export default function FormCreate() {
     is_bookmark: false,
   });
 
-  // const [isPrivateForm, setIsPrivateForm] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
   const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
@@ -101,8 +100,8 @@ export default function FormCreate() {
         question_order: index + 1,
         is_required: q.is_required,
         options_of_questions:
-          q.options_of_questions?.map((opt, i) => ({
-            option_number: i + 1,
+          q.options_of_questions?.map(opt => ({
+            option_number: opt.option_number,
             option_context: opt.option_context,
           })) || [],
       })),
