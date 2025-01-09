@@ -22,6 +22,7 @@ export default {
         'bg-02': '#FFE3B6',
         'bg-03': '#EAD8BB',
         'light-beige': '#FFFBEB',
+        'purple-01': '#928fd7',
       },
       button: {
         'primary-bg': '#FFA632',
@@ -71,8 +72,8 @@ export default {
         22: '1.375rem',
       },
       boxShadow: {
-        'primary': '0px 0px 5px 1px #FF8D1A',
-      }
+        primary: '0px 0px 5px 1px #FF8D1A',
+      },
     },
   },
   plugins: [

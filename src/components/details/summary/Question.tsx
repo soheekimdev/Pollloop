@@ -1,3 +1,4 @@
+import { QUESTION_COMPONENTS } from '../../../constants/form-details';
 import {
   CheckboxResultType,
   DateResultType,
@@ -5,157 +6,71 @@ import {
   EmailResultType,
   FileUploadResultType,
   ImageSelectResultType,
+  LayoutType,
   LongResultType,
   NumberResultType,
   QuestionResultType,
   RadioResultType,
   RangeResultType,
+  RangeResultsWithNumType,
   ShortResultType,
   StarRatingResultType,
 } from '../../../types/form-details.types';
-import ScrollableContainer from '../../common/ScrollableContainer';
 
-import {
-  ShortAnswerComponent,
-  LongAnswerComponent,
-  CheckboxComponent,
-  RadioComponent,
-  DropdownComponent,
-  RangeComponent,
-  StarComponent,
-  ImageSelectComponent,
-  NumberComponent,
-  DateComponent,
-  EmailComponent,
-  FileUploadComponent,
-} from './QuestionComponents';
+interface QuestionProps {
+  questionItem: QuestionResultType;
+}
 
-export default function Question({ questionItem }: { questionItem: QuestionResultType }) {
-  const { layout_type, question, results } = questionItem;
+export default function Question({ questionItem }: QuestionProps) {
+  const { layout_type, question, results, min_label, max_label } = questionItem;
 
-  const renderResults = () => {
+  const ResultComponent = QUESTION_COMPONENTS[layout_type as LayoutType];
+  if (!ResultComponent) return null;
+
+  const getTypedResults = () => {
     switch (layout_type) {
       case 'SHORT_TYPE':
-        return (
-          <div className="">
-            <p className="text-sm text-right">참여자 수 : {results.length}</p>
-            <ScrollableContainer height={190} className="space-y-2">
-              {results.map((result, index) => (
-                <ShortAnswerComponent key={index} result={result as ShortResultType} />
-              ))}
-            </ScrollableContainer>
-          </div>
-        );
+        return results as ShortResultType[];
       case 'LONG_TYPE':
-        return (
-          <>
-            <p className="text-sm text-right">참여자 수 : {results.length}</p>
-            <ScrollableContainer height={190} className="space-y-2">
-              {results.map((result, index) => (
-                <LongAnswerComponent key={index} result={result as LongResultType} />
-              ))}
-            </ScrollableContainer>
-          </>
-        );
-
+        return results as LongResultType[];
       case 'CHECKBOX_TYPE':
-        return (
-          <>
-            <p className="text-sm text-right">참여자 수 : {results.length}</p>
-            <ScrollableContainer height="auto">
-              <CheckboxComponent results={results as CheckboxResultType[]} />
-            </ScrollableContainer>
-          </>
-        );
-
+        return results as CheckboxResultType[];
       case 'RADIO_TYPE':
-        return (
-          <>
-            <p className="text-sm text-right">참여자 수 : {results.length}</p>
-            <ScrollableContainer height="auto">
-              <RadioComponent results={results as RadioResultType[]} />
-            </ScrollableContainer>
-          </>
-        );
+        return results as RadioResultType[];
       case 'DROPDOWN_TYPE':
-        return (
-          <>
-            <p className="text-sm text-right">참여자 수 : {results.length}</p>
-            <ScrollableContainer height="auto">
-              <DropdownComponent results={results as DropdownResultType[]} />
-            </ScrollableContainer>
-          </>
-        );
+        return results as DropdownResultType[];
       case 'RANGE_TYPE':
-        return (
-          <>
-            <p className="text-sm text-right">참여자 수 : {results.length}</p>
-            <ScrollableContainer height="auto">
-              <RangeComponent results={results as RangeResultType[]} />
-            </ScrollableContainer>
-          </>
-        );
+        if (!min_label || !max_label) return results as RangeResultType[];
+        const resultsWithNum: RangeResultsWithNumType = {
+          min_label: min_label,
+          max_label: max_label,
+          results: results as RangeResultType[],
+        };
+        return resultsWithNum;
       case 'STAR_RATING_TYPE':
-        return (
-          <>
-            <p className="text-sm text-right">참여자 수 : {results.length}</p>
-            <ScrollableContainer height="auto">
-              <StarComponent results={results as StarRatingResultType[]} />
-            </ScrollableContainer>
-          </>
-        );
+        return results as StarRatingResultType[];
       case 'IMAGE_SELECT_TYPE':
-        return (
-          <>
-            <p className="text-sm text-right">참여자 수 : {results.length}</p>
-            <ScrollableContainer height="auto">
-              <ImageSelectComponent results={results as ImageSelectResultType[]} />
-            </ScrollableContainer>
-          </>
-        );
+        return results as ImageSelectResultType[];
       case 'NUMBER_TYPE':
-        return (
-          <>
-            <p className="text-sm text-right">참여자 수 : {results.length}</p>
-            <ScrollableContainer height="auto">
-              <NumberComponent results={results as NumberResultType[]} />
-            </ScrollableContainer>
-          </>
-        );
+        return results as NumberResultType[];
       case 'DATE_TYPE':
-        return (
-          <>
-            <p className="text-sm text-right">참여자 수 : {results.length}</p>
-            <ScrollableContainer height="auto">
-              <DateComponent results={results as DateResultType[]} />
-            </ScrollableContainer>
-          </>
-        );
+        return results as DateResultType[];
       case 'EMAIL_TYPE':
-        return (
-          <ul className="flex flex-col gap-2">
-            {results.map((result, index) => (
-              <EmailComponent key={index} result={result as EmailResultType} />
-            ))}
-          </ul>
-        );
+        return results as EmailResultType[];
       case 'FILE_UPLOAD_TYPE':
-        return (
-          <ul className="flex flex-col gap-2">
-            {results.map((result, index) => (
-              <FileUploadComponent key={index} result={result as FileUploadResultType} />
-            ))}
-          </ul>
-        );
+        return results as FileUploadResultType[];
       default:
-        return null;
+        return results;
     }
   };
 
+  const typedResults = getTypedResults();
+
   return (
     <div className="flex flex-col justify-start gap-6 p-10 rounded-lg bg-pollloop-light-beige">
-      <p className="text-xl font-medium">{question}</p>
-      {renderResults()}
+      <p className="pl-2 text-xl font-medium border-l-4 border-pollloop-brown-01">{question}</p>
+      <p className="text-sm text-right">{/* 상세 정보 추가 */}</p>
+      <ResultComponent results={typedResults as any} />
     </div>
   );
 }

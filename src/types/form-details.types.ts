@@ -1,6 +1,21 @@
+import { QUESTION_COMPONENTS } from '../constants/form-details';
 import { QuestionType } from './forms';
 
 type FormStatus = 'CLOSED' | 'OPEN' | 'TEMP';
+type FormResultType =
+  | ShortResultType
+  | LongResultType
+  | CheckboxResultType
+  | RadioResultType
+  | DropdownResultType
+  | RangeResultType
+  | StarRatingResultType
+  | ImageSelectResultType
+  | NumberResultType
+  | DateResultType
+  | EmailResultType
+  | FileUploadResultType;
+export type LayoutType = keyof typeof QUESTION_COMPONENTS;
 
 // 폼 기본 상세정보 타입 정의
 export interface OverviewData {
@@ -21,6 +36,7 @@ export interface OverviewData {
 }
 
 // 폼 요약정보 타입 정의
+
 export interface SummaryData {
   uuid: string;
   title: string;
@@ -37,16 +53,19 @@ export interface LongResultType {
 
 export interface CheckboxResultType {
   label: string;
+  values?: string[];
   count: number;
 }
 
 export interface RadioResultType {
   label: string;
+  values?: string[];
   count: number;
 }
 
 export interface DropdownResultType {
   label: string;
+  values?: string[];
   count: number;
 }
 
@@ -55,21 +74,24 @@ export interface RangeResultType {
   count: number;
 }
 
+export interface RangeResultsWithNumType {
+  min_label: string;
+  max_label: string;
+  results: RangeResultType[];
+}
+
 export interface StarRatingResultType {
   label: number;
   count: number;
 }
 
 export interface ImageSelectResultType {
-  imageId: string;
-  imageUrl: string;
   label: string;
   count: number;
 }
 
 export interface NumberResultType {
   value: number;
-  count: number;
 }
 
 export interface DateResultType {
@@ -82,7 +104,6 @@ export interface EmailResultType {
 
 export interface FileUploadResultType {
   value: string;
-  link: string;
 }
 
 export interface QuestionResultType {
@@ -90,20 +111,7 @@ export interface QuestionResultType {
   layout_type: QuestionType;
   is_required: boolean;
   question: string;
-  results: (
-    | ShortResultType
-    | LongResultType
-    | CheckboxResultType
-    | RadioResultType
-    | DropdownResultType
-    | RangeResultType
-    | StarRatingResultType
-    | ImageSelectResultType
-    | NumberResultType
-    | DateResultType
-    | EmailResultType
-    | FileUploadResultType
-  )[];
+  results: FormResultType[];
   min_label?: string; // RANGE_TYPE
   max_label?: string; // RANGE_TYPE
 }

@@ -15,7 +15,7 @@ export default function Summary({ formId }: { formId: string }) {
         setIsLoading(true);
         const data = await fetchSummaryData(formId);
         // console.log('/API 응답 데이터:', data);
-        console.log(data[0]);
+        // console.log(data[0]);
         setSummaryData(data[0] as SummaryData);
       } catch (err) {
         console.error('데이터 로딩 중 에러:', err);
@@ -31,7 +31,7 @@ export default function Summary({ formId }: { formId: string }) {
   if (!summaryData) return <div>데이터가 없습니다</div>;
 
   return (
-    <ul className="flex flex-col w-full gap-4">
+    <ul className="flex flex-col w-full gap-4 min-w-[360px]">
       {summaryData.data.map(question => (
         <Question key={question.id} questionItem={question} />
       ))}

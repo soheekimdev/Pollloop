@@ -58,24 +58,25 @@ export default function FormDetail() {
   const complete_rate = getCompleteRate(completed_count, user_count);
 
   return (
-    <div className="flex flex-col gap-4 px-10 ">
+    <div className="flex flex-col gap-4 px-10 min-w-[480px]">
       <Breadcrumbs items={['홈', '나의 홈', '프론트엔드 6기 만족도 조사 15주차']} />
 
       <div className="relative flex flex-col w-full gap-10 p-10 bg-pollloop-bg-02 rounded-2xl">
-        <Button
-          onClick={copyToClipboard(
-            'domain.com/forms/' + uuid,
-            '참여 링크가 클립보드에 복사되었습니다.',
-          )}
-          type="button"
-          variant="primary"
-          size="md"
-          className="absolute w-40 top-10 right-10 "
-          aria-label="폼 참여 링크 복사하기"
-        >
-          참여 링크 공유하기
-        </Button>
-        <h2 className="font-semibold text-22">{title}</h2>
+        <section className="flex flex-col justify-between w-full gap-4 md:flex-row-reverse">
+          <Button
+            onClick={() =>
+              copyToClipboard('domain.com/forms/' + uuid, '참여 링크가 클립보드에 복사되었습니다.')
+            }
+            type="button"
+            variant="primary"
+            size="md"
+            className="w-full md:w-40 "
+            aria-label="폼 참여 링크 복사하기"
+          >
+            참여 링크 공유하기
+          </Button>
+          <h2 className="font-semibold text-22">{title}</h2>
+        </section>
         <section className="flex flex-col gap-4" aria-labelledby="statistics-title">
           <h3 id="statistics-title" className="font-semibold text-22">
             통계
@@ -126,7 +127,7 @@ export default function FormDetail() {
               aria-selected={activeIndex === 0}
               aria-controls="summary-panel"
               id="summary-tab"
-              className={`font-semibold text-22 ${
+              className={`transition-smooth font-semibold text-22 ${
                 activeIndex === 0
                   ? 'text-pollloop-brown-01 underline underline-offset-8'
                   : 'text-pollloop-brown-01/60'
@@ -141,7 +142,7 @@ export default function FormDetail() {
               aria-selected={activeIndex === 1}
               aria-controls="participants-panel"
               id="participants-tab"
-              className={`font-semibold text-22 ${
+              className={`transition-smooth font-semibold text-22 ${
                 activeIndex === 1
                   ? 'text-pollloop-brown-01 underline underline-offset-8'
                   : 'text-pollloop-brown-01/60'
