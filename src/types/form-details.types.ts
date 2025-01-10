@@ -1,5 +1,5 @@
 import { QUESTION_COMPONENTS } from '../constants/form-details';
-import { QuestionType } from './forms';
+import { QuestionType } from '../types/forms/forms.types';
 
 type FormStatus = 'CLOSED' | 'OPEN' | 'TEMP';
 type FormResultType =
@@ -75,8 +75,8 @@ export interface RangeResultType {
 }
 
 export interface RangeResultsWithNumType {
-  min_label: string;
-  max_label: string;
+  //  min_label: string;
+  //  max_label: string;
   results: RangeResultType[];
 }
 

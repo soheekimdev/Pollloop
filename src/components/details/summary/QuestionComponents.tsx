@@ -33,6 +33,7 @@ import {
   EmailResultType,
   FileUploadResultType,
   RangeResultsWithNumType,
+  RangeResultType,
 } from '../../../types/form-details.types';
 import { copyToClipboard } from '../../../utils/copyToClipboard';
 import { useInView } from '../../../hooks/useInView';
@@ -165,7 +166,7 @@ const CheckboxComponent: React.FC<{ results: CheckboxResultType[] }> = ({ result
   };
 
   return (
-    <div ref={ref} className="scrollable">
+    <div ref={ref} className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div
         className="min-w-[600px] overflow-hidden w-full"
         style={{
@@ -268,10 +269,16 @@ const RadioComponent: React.FC<{ results: RadioResultType[] }> = ({ results }) =
   const { ref, isInView } = useInView<HTMLDivElement>();
 
   const RADIAN = Math.PI / 180;
+
+  const processedData = results.map(item => ({
+    ...item,
+    count: item.count === 0 ? 0.1 : item.count,
+  }));
+
   const CustomTooltip: React.FC<TooltipProps<string, string>> = ({ active, payload }) => {
     if (active && payload && payload.length) {
-      const { label, count, values } = payload[0].payload;
-
+      const { label, values } = payload[0].payload;
+      const actualCount = results.find(r => r.label === label)?.count || 0;
       return (
         <div
           className="hidden lg:block"
@@ -286,39 +293,46 @@ const RadioComponent: React.FC<{ results: RadioResultType[] }> = ({ results }) =
           }}
         >
           {label === '기타' ? (
-            <ul className="flex flex-col gap-2">
-              <li
-                className="list-disc scrollable"
-                style={{
-                  minWidth: '250px',
-                  maxWidth: '500px',
-                  maxHeight: '250px',
-                  overflowY: 'auto',
-                  padding: '4px',
-                  pointerEvents: 'auto',
-                }}
-                onWheel={e => {
-                  e.stopPropagation();
-                }}
-              >
-                {values
-                  .filter((value: string) => value !== '')
-                  .map((value: string, index: number) => (
-                    <p key={index} className="flex items-center pr-4">
-                      <span className="py-1 mr-2 text-sm text-pollloop-brown-01/50 ">{`#${index + 1}`}</span>
-                      <span>{value}</span>
-                    </p>
-                  ))}
-              </li>
-            </ul>
+            values?.filter((value: string) => value !== '').length > 0 ? (
+              <ul className="flex flex-col gap-2">
+                <li
+                  className="list-disc scrollable"
+                  style={{
+                    minWidth: '150px',
+                    maxWidth: '500px',
+                    minHeight: '30px',
+                    maxHeight: '250px',
+                    overflowY: 'auto',
+                    padding: '4px',
+                    pointerEvents: 'auto',
+                  }}
+                  onWheel={e => {
+                    e.stopPropagation();
+                  }}
+                >
+                  {values
+                    .filter((value: string) => value !== '')
+                    .map((value: string, index: number) => (
+                      <p key={index} className="flex items-center pr-4">
+                        <span className="py-1 mr-2 text-sm text-pollloop-brown-01/50 ">{`#${index + 1}`}</span>
+                        <span>{value}</span>
+                      </p>
+                    ))}
+                </li>
+              </ul>
+            ) : (
+              <p>기타</p>
+            )
           ) : (
             <p>{label}</p>
           )}
-          {label === '기타' ? (
-            <p className="mt-2 text-sm text-right text-pollloop-purple-01">{`참여자 수: ${count}명 | 기타 (내용없음): ${values?.filter((value: string) => value === '').length}`}</p>
-          ) : (
-            <p className="mt-2 text-sm text-right text-pollloop-purple-01">{`참여자 수: ${count}명`}</p>
-          )}
+          <p className="mt-2 text-sm text-right text-pollloop-purple-01">
+            {`참여자 수: ${actualCount}명${
+              label === '기타' && values?.filter((value: string) => value === '').length > 0
+                ? ` | 기타 (내용없음): ${values?.filter((value: string) => value === '').length}`
+                : ''
+            }`}
+          </p>
         </div>
       );
     }
@@ -349,8 +363,7 @@ const RadioComponent: React.FC<{ results: RadioResultType[] }> = ({ results }) =
 
     if (dataItem) {
       const { label, count } = dataItem;
-      // 화면 너비에 따라 동적으로 최대 글자 수 계산
-      const dynamicMaxLength = Math.max(10, Math.floor(width / 80)); // 최소 15자는 보장
+      const dynamicMaxLength = Math.max(10, Math.floor(width / 80));
       const displayText =
         label.length > dynamicMaxLength ? `${label.slice(0, dynamicMaxLength)}...` : label;
 
@@ -375,13 +388,13 @@ const RadioComponent: React.FC<{ results: RadioResultType[] }> = ({ results }) =
   };
 
   return (
-    <div ref={ref} className="scrollable">
+    <div ref={ref} className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div className="min-w-[600px] overflow-hidden pb-10">
         <ResponsiveContainer width="100%" height={350}>
           <PieChart>
             <Tooltip content={<CustomTooltip />} />
             <Pie
-              data={results}
+              data={processedData}
               cx="50%"
               cy="50%"
               labelLine={true}
@@ -410,10 +423,15 @@ const DropdownComponent: React.FC<{ results: DropdownResultType[] }> = ({ result
 
   const RADIAN = Math.PI / 180;
 
+  const processedData = results.map(item => ({
+    ...item,
+    count: item.count === 0 ? 0.1 : item.count,
+  }));
+
   const CustomTooltip: React.FC<TooltipProps<string, string>> = ({ active, payload }) => {
     if (active && payload && payload.length) {
-      const { label, count, values } = payload[0].payload;
-
+      const { label, values } = payload[0].payload;
+      const actualCount = results.find(r => r.label === label)?.count || 0;
       return (
         <div
           className="hidden lg:block"
@@ -428,39 +446,46 @@ const DropdownComponent: React.FC<{ results: DropdownResultType[] }> = ({ result
           }}
         >
           {label === '기타' ? (
-            <ul className="flex flex-col gap-2">
-              <li
-                className="list-disc scrollable"
-                style={{
-                  minWidth: '250px',
-                  maxWidth: '500px',
-                  maxHeight: '250px',
-                  overflowY: 'auto',
-                  padding: '4px',
-                  pointerEvents: 'auto',
-                }}
-                onWheel={e => {
-                  e.stopPropagation();
-                }}
-              >
-                {values
-                  .filter((value: string) => value !== '')
-                  .map((value: string, index: number) => (
-                    <p key={index} className="flex items-center pr-4">
-                      <span className="py-1 mr-2 text-sm text-pollloop-brown-01/50 ">{`#${index + 1}`}</span>
-                      <span>{value}</span>
-                    </p>
-                  ))}
-              </li>
-            </ul>
+            values?.filter((value: string) => value !== '').length > 0 ? (
+              <ul className="flex flex-col gap-2">
+                <li
+                  className="list-disc scrollable"
+                  style={{
+                    minWidth: '150px',
+                    maxWidth: '500px',
+                    minHeight: '30px',
+                    maxHeight: '250px',
+                    overflowY: 'auto',
+                    padding: '4px',
+                    pointerEvents: 'auto',
+                  }}
+                  onWheel={e => {
+                    e.stopPropagation();
+                  }}
+                >
+                  {values
+                    .filter((value: string) => value !== '')
+                    .map((value: string, index: number) => (
+                      <p key={index} className="flex items-center pr-4">
+                        <span className="py-1 mr-2 text-sm text-pollloop-brown-01/50 ">{`#${index + 1}`}</span>
+                        <span>{value}</span>
+                      </p>
+                    ))}
+                </li>
+              </ul>
+            ) : (
+              <p>기타</p>
+            )
           ) : (
             <p>{label}</p>
           )}
-          {label === '기타' ? (
-            <p className="mt-2 text-sm text-right text-pollloop-purple-01">{`참여자 수: ${count}명 | 기타 (내용없음): ${values?.filter((value: string) => value === '').length}`}</p>
-          ) : (
-            <p className="mt-2 text-sm text-right text-pollloop-purple-01">{`참여자 수: ${count}명`}</p>
-          )}
+          <p className="mt-2 text-sm text-right text-pollloop-purple-01">
+            {`참여자 수: ${actualCount}명${
+              label === '기타' && values?.filter((value: string) => value === '').length > 0
+                ? ` | 기타 (내용없음): ${values?.filter((value: string) => value === '').length}`
+                : ''
+            }`}
+          </p>
         </div>
       );
     }
@@ -491,7 +516,7 @@ const DropdownComponent: React.FC<{ results: DropdownResultType[] }> = ({ result
 
     if (dataItem) {
       const { label, count } = dataItem;
-      const dynamicMaxLength = Math.max(10, Math.floor(width / 80)); // 최소 15자는 보장
+      const dynamicMaxLength = Math.max(10, Math.floor(width / 80));
       const displayText =
         label.length > dynamicMaxLength ? `${label.slice(0, dynamicMaxLength)}...` : label;
 
@@ -516,13 +541,13 @@ const DropdownComponent: React.FC<{ results: DropdownResultType[] }> = ({ result
   };
 
   return (
-    <div ref={ref} className="scrollable">
+    <div ref={ref} className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div className="min-w-[600px] overflow-hidden pb-10">
         <ResponsiveContainer width="100%" height={350}>
           <PieChart>
             <Tooltip content={<CustomTooltip />} />
             <Pie
-              data={results}
+              data={processedData}
               cx="50%"
               cy="50%"
               labelLine={true}
@@ -545,24 +570,9 @@ const DropdownComponent: React.FC<{ results: DropdownResultType[] }> = ({ result
   );
 };
 
-const RangeComponent: React.FC<{ results: RangeResultsWithNumType }> = ({
-  results: resultsData,
-}) => {
+const RangeComponent: React.FC<{ results: RangeResultType[] }> = ({ results }) => {
   const { ref, isInView } = useInView<HTMLDivElement>();
   const { width } = useWindowSize();
-  const { results, min_label, max_label } = resultsData;
-
-  const minValue = parseInt(min_label);
-  const maxValue = parseInt(max_label);
-
-  const processedData = Array.from({ length: maxValue - minValue + 1 }, (_, index) => {
-    const value = minValue + index;
-    const existingData = results.find(item => item.label === value);
-    return {
-      value: value,
-      count: existingData ? existingData.count : 0,
-    };
-  });
 
   const CustomTooltip: React.FC<TooltipProps<string, string>> = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -589,11 +599,11 @@ const RangeComponent: React.FC<{ results: RangeResultsWithNumType }> = ({
   };
 
   return (
-    <div className="scrollable">
+    <div className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div ref={ref} className="min-w-[600px] overflow-hidden pb-10">
         <ResponsiveContainer width="100%" height={340}>
           <AreaChart
-            data={processedData}
+            data={results}
             margin={{
               top: TOP_SPACE,
               right: 30,
@@ -604,15 +614,13 @@ const RangeComponent: React.FC<{ results: RangeResultsWithNumType }> = ({
             <CartesianGrid strokeDasharray="3 3" stroke={POLLLOOP_BROWN_01} opacity={0.5} />
             <XAxis
               dy={DX_DY_SPACE}
-              dataKey="value"
-              domain={[minValue, maxValue]}
-              type="number"
+              dataKey="label"
               tick={{
                 fill: POLLLOOP_BROWN_01,
               }}
-              axisLine={{ stroke: POLLLOOP_BROWN_01 }}
-              tickCount={maxValue - minValue + 1}
+              domain={['dataMin', 'dataMax']}
               allowDataOverflow
+              axisLine={{ stroke: POLLLOOP_BROWN_01 }}
             />
             <YAxis
               label={{
@@ -683,7 +691,7 @@ const StarRatingComponent: React.FC<{ results: StarRatingResultType[] }> = ({ re
   };
 
   return (
-    <div ref={ref} className="scrollable">
+    <div ref={ref} className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div
         className="min-w-[600px] overflow-hidden w-full"
         style={{
@@ -781,7 +789,7 @@ const ImageSelectComponent: React.FC<{ results: ImageSelectResultType[] }> = ({ 
   };
 
   return (
-    <div ref={ref} className="scrollable">
+    <div ref={ref} className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div
         className="min-w-[600px] overflow-hidden w-full"
         style={{
@@ -904,7 +912,7 @@ const NumberComponent: React.FC<{ results: NumberResultType[] }> = ({ results })
   };
 
   return (
-    <div className="scrollable">
+    <div className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div ref={ref} className="min-w-[600px] overflow-hidden">
         <ResponsiveContainer width="100%" height={380}>
           <LineChart
@@ -1041,7 +1049,7 @@ const DateComponent: React.FC<{ results: DateResultType[] }> = ({ results }) => 
   };
 
   return (
-    <div className="scrollable">
+    <div className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div ref={ref} className="min-w-[600px] overflow-hidden pb-10">
         <ResponsiveContainer width="100%" height={500}>
           <ScatterChart

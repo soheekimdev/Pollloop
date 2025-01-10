@@ -40,13 +40,14 @@ export default function Question({ questionItem }: QuestionProps) {
       case 'DROPDOWN_TYPE':
         return results as DropdownResultType[];
       case 'RANGE_TYPE':
-        if (!min_label || !max_label) return results as RangeResultType[];
-        const resultsWithNum: RangeResultsWithNumType = {
-          min_label: min_label,
-          max_label: max_label,
-          results: results as RangeResultType[],
-        };
-        return resultsWithNum;
+        return results as RangeResultType[];
+      // if (!min_label || !max_label) return results as RangeResultType[];
+      // const resultsWithNum: RangeResultsWithNumType = {
+      //   min_label: min_label,
+      //   max_label: max_label,
+      //   results: results as RangeResultType[],
+      // };
+      // return resultsWithNum;
       case 'STAR_RATING_TYPE':
         return results as StarRatingResultType[];
       case 'IMAGE_SELECT_TYPE':

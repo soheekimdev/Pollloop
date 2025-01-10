@@ -5,16 +5,23 @@ import Participants from '../../components/details/Participants';
 import Summary from '../../components/details/Summary';
 import useTabs from '../../hooks/useTabs';
 import { OverviewData } from '../../types/form-details.types';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { fetchOverviewData } from '../../api/form-detail';
 import { copyToClipboard } from '../../utils/copyToClipboard';
 import { getCompleteRate } from '../../utils/getCompleteRate';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
+import { Tokens } from '../../types/auth';
 
 export default function FormDetail() {
+  const { user: loginUser } = useSelector((state: RootState) => state);
   const { formId } = useParams<{ formId: string }>();
   const [overviewData, setOverviewData] = useState<OverviewData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { activeIndex, changeTab } = useTabs(0);
+  const navigate = useNavigate();
+
+  const loginUserId = (loginUser as { tokens: Tokens }).tokens.access;
 
   useEffect(() => {
     if (!formId) return;
@@ -22,9 +29,18 @@ export default function FormDetail() {
     const loadOverviewData = async () => {
       try {
         setIsLoading(true);
+
         const data = await fetchOverviewData(formId);
-        // console.log('API 응답 데이터:', data);
-        setOverviewData(data[0] as OverviewData);
+
+        // 최종 배포 때 활성화 예정 (폼 작성자===로그인 유저만 접근 가능하도록)
+        // const userId = data.uuid;
+        // if (loginUserId !== userId) {
+        //   alert('접근 권한이 없습니다.'); // 추후 토스트 팝업으로 변경 예정
+        //   navigate(-1);
+        //   return;
+        // }
+
+        setOverviewData(data as OverviewData);
       } catch (err) {
         console.error('데이터 로딩 중 에러:', err);
       } finally {
@@ -33,7 +49,7 @@ export default function FormDetail() {
     };
 
     loadOverviewData();
-  }, [formId]);
+  }, [formId, loginUserId, navigate]);
 
   if (isLoading) return <div>로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중...</div>; // 로딩 컴포넌트 추가 예정
   if (!overviewData) return <div>데이터가 없습니다</div>;
