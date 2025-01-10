@@ -76,12 +76,9 @@ export default {
       boxShadow: {
         primary: '0px 0px 5px 1px #FF8D1A',
       },
-<<<<<<< HEAD
-=======
       width: {
         cardWidth: '400px',
       },
->>>>>>> test/develop
     },
   },
   plugins: [
