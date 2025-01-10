@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 
 export default function HomeLayout() {
   return (
-    <div className="flex flex-col gap-4 h-full bg-pollloop-bg-01">
+    <div className="flex flex-col h-full gap-4 bg-pollloop-bg-03">
       <Navbar />
       <main className="flex-1">
         <Outlet />
