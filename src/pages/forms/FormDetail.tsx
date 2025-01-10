@@ -57,9 +57,10 @@ export default function FormDetail() {
 
   const complete_rate = getCompleteRate(completed_count, user_count);
 
+  // 추후 참여 링크 공유하기 클릭시 토스트 팝업 대체 예정
   return (
     <div className="flex flex-col gap-4 px-10 min-w-[480px]">
-      <Breadcrumbs items={['홈', '나의 홈', '프론트엔드 6기 만족도 조사 15주차']} />
+      <Breadcrumbs items={['홈', '나의 폼', title]} />
 
       <div className="relative flex flex-col w-full gap-10 p-10 bg-pollloop-bg-02 rounded-2xl">
         <section className="flex flex-col justify-between w-full gap-4 md:flex-row-reverse">
