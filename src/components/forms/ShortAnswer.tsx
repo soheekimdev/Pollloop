@@ -1,7 +1,7 @@
 import FormsLabel from '@/components/forms/FormsLabel';
 import FormsInput from '@/components/forms/FormsInput';
 import Input from '@/components/form/Input';
-import { Question } from '@/types/forms';
+import { Question } from '@/types/forms/forms.types';
 
 interface ShortAnswerProps {
   data: Question;
@@ -10,7 +10,7 @@ interface ShortAnswerProps {
 
 export default function ShortAnswer({ data, onUpdate }: ShortAnswerProps) {
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onUpdate?.({ question: e.target.value });
+    onUpdate({ question: e.target.value });
   };
 
   return (
@@ -18,13 +18,13 @@ export default function ShortAnswer({ data, onUpdate }: ShortAnswerProps) {
       <div className="flex flex-col gap-2">
         <FormsLabel text="단답형" />
         <FormsInput
-          required={data?.is_required}
-          value={data?.question}
+          required={data.is_required}
+          value={data.question}
           onChange={handleQuestionChange}
         />
       </div>
 
-      <Input readOnly />
+      <Input disabled />
     </>
   );
 }

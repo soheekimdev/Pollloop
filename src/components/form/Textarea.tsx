@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { cn } from '@/utils/cn';
 import { TextareaHTMLAttributes } from 'react';
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -26,7 +26,7 @@ export default function Textarea({
       placeholder={placeholder}
       value={value}
       disabled={disabled}
-      className={clsx(
+      className={cn(
         'w-full h-20 p-3 rounded-lg bg-input-bg border border-input-border text-sm placeholder:text-input-placeholder focus-visible:outline-pollloop-brown-01 resize-none',
         className,
       )}

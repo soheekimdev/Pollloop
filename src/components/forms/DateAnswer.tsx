@@ -1,14 +1,14 @@
+import Input from '@/components/form/Input';
 import FormsLabel from '@/components/forms/FormsLabel';
 import FormsInput from '@/components/forms/FormsInput';
-import Textarea from '@/components/form/Textarea';
 import { Question } from '@/types/forms/forms.types';
 
-interface LongAnswerProps {
+interface DateAnswerProps {
   data: Question;
   onUpdate: (updates: Partial<Question>) => void;
 }
 
-export default function LongAnswer({ data, onUpdate }: LongAnswerProps) {
+export default function DateAnswer({ data, onUpdate }: DateAnswerProps) {
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdate({ question: e.target.value });
   };
@@ -16,7 +16,7 @@ export default function LongAnswer({ data, onUpdate }: LongAnswerProps) {
   return (
     <>
       <div className="flex flex-col gap-2">
-        <FormsLabel text="장문형" />
+        <FormsLabel text="날짜" />
         <FormsInput
           required={data.is_required}
           value={data.question}
@@ -24,7 +24,7 @@ export default function LongAnswer({ data, onUpdate }: LongAnswerProps) {
         />
       </div>
 
-      <Textarea disabled />
+      <Input type="date" disabled />
     </>
   );
 }
