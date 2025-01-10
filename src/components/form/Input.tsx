@@ -14,7 +14,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           type={type}
           className={cn(
-            'w-full h-10 px-3 rounded-lg bg-input-bg border text-sm placeholder:text-input-placeholder focus-visible:outline-pollloop-brown-01',
+            'w-full h-10 px-3 rounded-lg bg-input-bg border text-sm placeholder:text-input-placeholder focus-visible:outline-pollloop-brown-01 disabled:bg-button-ghost-bg-active',
             error ? 'border-status-red-text' : 'border-input-border',
           )}
           {...props}

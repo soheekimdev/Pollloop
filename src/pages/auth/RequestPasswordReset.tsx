@@ -1,19 +1,14 @@
+import { authAPI } from '@/api/auth';
 import FormActionButton from '@/components/auth/FormActionButton';
 import LogoWithTitle from '@/components/common/LogoWithTitle';
 import Input from '@/components/form/Input';
 import InputWithLabel from '@/components/form/InputWithLabel';
 import Label from '@/components/form/Label';
+import { FindPasswordFormValue, findPasswordSchema } from '@/schemas/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
-const findPasswordSchema = z.object({
-  email: z.string().nonempty('이메일을 입력해주세요.').email('유효한 이메일 형식이 아닙니다.'),
-});
-
-type FindPasswordFormValue = z.infer<typeof findPasswordSchema>;
-
-export default function PasswordRetrieval() {
+export default function RequestPasswordReset() {
   const {
     register,
     handleSubmit,
@@ -23,9 +18,13 @@ export default function PasswordRetrieval() {
     mode: 'onChange',
   });
 
-  const onSubmit = (data: FindPasswordFormValue) => {
-    alert('이메일 전송!');
-    console.log(data);
+  const onSubmit = async (data: FindPasswordFormValue) => {
+    try {
+      await authAPI.requestPasswordReset(data.email);
+      alert('이메일로 재설정 링크가 전송되었습니다).');
+    } catch (error) {
+      console.error('요청 실패', error);
+    }
   };
 
   return (
@@ -41,7 +40,11 @@ export default function PasswordRetrieval() {
             )}
           </InputWithLabel>
         </fieldset>
-        <FormActionButton submitButtonText="이메일로 찾기" linkButtonText="로그인" path="/login" />
+        <FormActionButton
+          submitButtonText="이메일로 찾기/재설정"
+          linkButtonText="로그인"
+          path="/login"
+        />
       </form>
     </div>
   );

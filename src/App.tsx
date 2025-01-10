@@ -9,27 +9,38 @@ import Forms from './pages/forms';
 import FormCreate from './pages/forms/FormCreate';
 import FormDetail from './pages/forms/FormDetail';
 import AccountLayout from './layouts/AccountLayout';
-import PasswordRetrieval from './pages/auth/PasswordRetrieval';
+import Profile from './pages/auth/Profile';
+import KakaoCallback from './pages/auth/KakaoCallback';
+import PublicLayout from './layouts/PublicLayout';
+import ProtectedLayout from './layouts/ProtectedLayout';
+import RequestPasswordReset from './pages/auth/RequestPasswordReset';
+import ResetPassword from './pages/auth/ResetPassword';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<AccountLayout />}>
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-          <Route path="password" element={<PasswordRetrieval />} />
+        <Route element={<PublicLayout />}>
+          <Route element={<AccountLayout />}>
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route path="password" element={<RequestPasswordReset />} />
+            <Route path="reset-password/:token" element={<ResetPassword />} />
+            <Route path="auth/kakao/callback" element={<KakaoCallback />} />
+          </Route>
         </Route>
+        <Route element={<ProtectedLayout />}>
+          <Route element={<HomeLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
 
-        <Route element={<HomeLayout />}>
-          <Route path="/" element={<Home />} />
-        </Route>
-
-        <Route element={<DashboardLayout />}>
-          <Route path="forms">
-            <Route index element={<Forms />} />
-            <Route path="create" element={<FormCreate />} />
-            <Route path=":formId" element={<FormDetail />} />
+          <Route element={<DashboardLayout />}>
+            <Route path="forms">
+              <Route index element={<Forms />} />
+              <Route path="create" element={<FormCreate />} />
+              <Route path=":formId" element={<FormDetail />} />
+            </Route>
           </Route>
         </Route>
       </Routes>

@@ -12,7 +12,8 @@ const buttonVariants = cva(
         lg: 'h-12 px-6 text-base',
       },
       variant: {
-        primary: 'bg-button-primary-bg text-button-primary-text hover:bg-button-primary-bg/90',
+        primary:
+          'bg-button-primary-bg text-button-primary-text hover:bg-button-primary-bg/90 disabled:bg-button-ghost-bg-active',
         secondary:
           'bg-button-secondary-bg text-button-secondary-text hover:bg-button-secondary-bg/90',
         neutral: 'bg-button-neutral-bg text-button-neutral-text hover:bg-button-neutral-bg/90',
