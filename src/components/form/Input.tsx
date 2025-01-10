@@ -11,7 +11,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           type={type}
-          className="w-full h-10 px-3 rounded-lg bg-input-bg border border-input-border text-sm placeholder:text-input-placeholder focus-visible:outline-pollloop-brown-01"
+          className="w-full h-10 px-3 rounded-lg bg-input-bg border border-input-border text-sm placeholder:text-input-placeholder focus-visible:outline-pollloop-brown-01 disabled:bg-button-ghost-bg-active"
           {...props}
         />
         {tip && <p className="mt-2 text-xs text-input-tip">{tip}</p>}

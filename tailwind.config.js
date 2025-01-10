@@ -12,6 +12,7 @@ export default {
       body: '#85582B',
       transparent: 'transparent',
       current: 'currentColor',
+      scrim: '#252525A3',
       pollloop: {
         orange: '#FFA632',
         coral: '#FFC082',
@@ -32,7 +33,7 @@ export default {
         'neutral-text': '#85582B',
         'danger-bg': '#C63B00',
         'danger-text': '#FFFBEB',
-        'ghost-bg-active': '#85582BD9',
+        'ghost-bg-active': '#85582B26',
       },
       input: {
         bg: '#FFFBEB',
@@ -71,8 +72,11 @@ export default {
         22: '1.375rem',
       },
       boxShadow: {
-        'primary': '0px 0px 5px 1px #FF8D1A',
-      }
+        primary: '0px 0px 5px 1px #FF8D1A',
+      },
+      width: {
+        cardWidth: '400px',
+      },
     },
   },
   plugins: [
