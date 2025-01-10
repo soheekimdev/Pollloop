@@ -22,6 +22,7 @@ export default {
         'bg-02': '#FFE3B6',
         'bg-03': '#EAD8BB',
         'light-beige': '#FFFBEB',
+        'purple-01': '#928fd7',
       },
       button: {
         'primary-bg': '#FFA632',

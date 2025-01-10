@@ -3,18 +3,18 @@ import { FILE_TYPES } from '@/constants/forms';
 export type FileType = (typeof FILE_TYPES)[number]['value'];
 
 export type QuestionType =
-  | '단답형'
-  | '장문형'
-  | '체크박스'
-  | '라디오'
-  | '드롭다운'
-  | '범위선택'
-  | '별점'
-  | '이미지선택'
-  | '숫자'
-  | '날짜'
-  | '이메일'
-  | '파일업로드';
+  | 'SHORT_TYPE' // 단답형
+  | 'LONG_TYPE' // 장문형
+  | 'CHECKBOX_TYPE' // 체크박스
+  | 'RADIO_TYPE' // 라디오
+  | 'DROPDOWN_TYPE' // 드롭다운
+  | 'RANGE_TYPE' // 범위 선택
+  | 'STAR_RATING_TYPE' // 별점
+  | 'IMAGE_SELECT_TYPE' // 이미지 선택
+  | 'NUMBER_TYPE' // 숫자
+  | 'DATE_TYPE' // 날짜
+  | 'EMAIL_TYPE' // 이메일
+  | 'FILE_UPLOAD_TYPE'; // 파일 업로드
 
 export interface Question {
   id: string;

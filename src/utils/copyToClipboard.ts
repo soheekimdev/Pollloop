@@ -1,9 +1,8 @@
-export const copyToClipboard = (text: string) => (event?: React.MouseEvent) => {
-  if (event) {
-    event.preventDefault();
-    event.stopPropagation();
+export const copyToClipboard = async (text: string, infoMessage: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    window.alert(infoMessage); // 추후: 토스트 팝업으로 대체
+  } catch (error) {
+    console.error('Failed to copy:', error);
   }
-
-  navigator.clipboard.writeText(text);
-  window.alert('비밀번호가 복사되었습니다.'); // 추후: 토스트 팝업으로 대체
 };
