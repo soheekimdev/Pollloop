@@ -12,6 +12,7 @@ export default {
       body: '#85582B',
       transparent: 'transparent',
       current: 'currentColor',
+      scrim: '#252525A3',
       pollloop: {
         orange: '#FFA632',
         coral: '#FFC082',
@@ -72,6 +73,9 @@ export default {
       },
       boxShadow: {
         primary: '0px 0px 5px 1px #FF8D1A',
+      },
+      width: {
+        cardWidth: '400px',
       },
     },
   },
