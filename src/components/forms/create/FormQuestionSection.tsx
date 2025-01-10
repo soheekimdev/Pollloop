@@ -3,8 +3,8 @@ import InputWithLabel from '@/components/form/InputWithLabel';
 import Label from '@/components/form/Label';
 import Select from '@/components/form/Select';
 import Switch from '@/components/form/Switch';
-import Section from '@/components/forms/Section';
-import SectionTitle from '@/components/forms/SectionTitle';
+import Section from '@/components/forms/create/Section';
+import SectionTitle from '@/components/forms/create/SectionTitle';
 import { Plus } from 'lucide-react';
 import {
   FILE_SIZE_LIMIT,

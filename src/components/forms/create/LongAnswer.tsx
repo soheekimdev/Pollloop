@@ -1,14 +1,14 @@
-import FormsLabel from '@/components/forms/FormsLabel';
-import FormsInput from '@/components/forms/FormsInput';
-import Input from '@/components/form/Input';
+import FormsLabel from '@/components/forms/create/FormsLabel';
+import FormsInput from '@/components/forms/create/FormsInput';
+import Textarea from '@/components/form/Textarea';
 import { Question } from '@/types/forms/forms.types';
 
-interface ShortAnswerProps {
+interface LongAnswerProps {
   data: Question;
   onUpdate: (updates: Partial<Question>) => void;
 }
 
-export default function ShortAnswer({ data, onUpdate }: ShortAnswerProps) {
+export default function LongAnswer({ data, onUpdate }: LongAnswerProps) {
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdate({ question: e.target.value });
   };
@@ -16,7 +16,7 @@ export default function ShortAnswer({ data, onUpdate }: ShortAnswerProps) {
   return (
     <>
       <div className="flex flex-col gap-2">
-        <FormsLabel text="단답형" />
+        <FormsLabel text="장문형" />
         <FormsInput
           required={data.is_required}
           value={data.question}
@@ -24,7 +24,7 @@ export default function ShortAnswer({ data, onUpdate }: ShortAnswerProps) {
         />
       </div>
 
-      <Input disabled />
+      <Textarea disabled />
     </>
   );
 }

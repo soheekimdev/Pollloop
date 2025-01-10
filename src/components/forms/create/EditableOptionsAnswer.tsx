@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Button from '@/components/common/Button';
-import FormsLabel from '@/components/forms/FormsLabel';
-import FormsInput from '@/components/forms/FormsInput';
+import FormsLabel from '@/components/forms/create/FormsLabel';
+import FormsInput from '@/components/forms/create/FormsInput';
 import { Plus, X } from 'lucide-react';
 import { Option, Question } from '@/types/forms/forms.types';
 import { useOptions } from '@/hooks/useOptions';

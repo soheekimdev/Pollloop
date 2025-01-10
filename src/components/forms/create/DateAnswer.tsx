@@ -1,14 +1,14 @@
-import Button from '@/components/common/Button';
-import FormsLabel from '@/components/forms/FormsLabel';
-import FormsInput from '@/components/forms/FormsInput';
+import Input from '@/components/form/Input';
+import FormsLabel from '@/components/forms/create/FormsLabel';
+import FormsInput from '@/components/forms/create/FormsInput';
 import { Question } from '@/types/forms/forms.types';
 
-interface FileUploadAnswerProps {
+interface DateAnswerProps {
   data: Question;
   onUpdate: (updates: Partial<Question>) => void;
 }
 
-export default function FileUploadAnswer({ data, onUpdate }: FileUploadAnswerProps) {
+export default function DateAnswer({ data, onUpdate }: DateAnswerProps) {
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdate({ question: e.target.value });
   };
@@ -16,7 +16,7 @@ export default function FileUploadAnswer({ data, onUpdate }: FileUploadAnswerPro
   return (
     <>
       <div className="flex flex-col gap-2">
-        <FormsLabel text="파일 업로드" />
+        <FormsLabel text="날짜" />
         <FormsInput
           required={data.is_required}
           value={data.question}
@@ -24,9 +24,7 @@ export default function FileUploadAnswer({ data, onUpdate }: FileUploadAnswerPro
         />
       </div>
 
-      <Button type="button" className="self-start">
-        파일 업로드
-      </Button>
+      <Input type="date" disabled />
     </>
   );
 }

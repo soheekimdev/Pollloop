@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import Breadcrumbs from '@/components/common/Breadcrumbs.tsx';
-import FormBasicSection from '@/components/forms/FormBasicSection';
-import FormContentSection from '@/components/forms/FormContentSection';
-import FormQuestionSection from '@/components/forms/FormQuestionSection';
+import FormBasicSection from '@/components/forms/create/FormBasicSection';
+import FormContentSection from '@/components/forms/create/FormContentSection';
+import FormQuestionSection from '@/components/forms/create/FormQuestionSection';
 import { FormInfo, Option, Question, QuestionType } from '@/types/forms/forms.types';
 import { NO_OPTIONS_TYPES } from '@/constants/forms.constants';
 

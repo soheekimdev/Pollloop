@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import FormsLabel from '@/components/forms/FormsLabel';
-import FormsInput from '@/components/forms/FormsInput';
-import FormsDescription from '@/components/forms/FormsDescription';
+import FormsLabel from '@/components/forms/create/FormsLabel';
+import FormsInput from '@/components/forms/create/FormsInput';
+import FormsDescription from '@/components/forms/create/FormsDescription';
 import { Plus, X } from 'lucide-react';
 import { Option, Question } from '@/types/forms/forms.types';
 

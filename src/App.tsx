@@ -2,12 +2,14 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import HomeLayout from './layouts/HomeLayout';
 import DashboardLayout from './layouts/DashboardLayout';
+import FormLayout from './layouts/FormLayout';
 import Home from './pages/Home';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import Forms from './pages/forms';
 import FormCreate from './pages/forms/FormCreate';
 import FormDetail from './pages/forms/FormDetail';
+import FormResponse from './pages/forms/FormResponse';
 import AccountLayout from './layouts/AccountLayout';
 import Profile from './pages/auth/Profile';
 import KakaoCallback from './pages/auth/KakaoCallback';
@@ -40,6 +42,12 @@ function App() {
               <Route index element={<Forms />} />
               <Route path="create" element={<FormCreate />} />
               <Route path=":formId" element={<FormDetail />} />
+            </Route>
+          </Route>
+
+          <Route element={<FormLayout />}>
+            <Route path="forms">
+              <Route path="response/:formId" element={<FormResponse />} />
             </Route>
           </Route>
         </Route>

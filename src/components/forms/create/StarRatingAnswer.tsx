@@ -1,5 +1,5 @@
-import FormsLabel from '@/components/forms/FormsLabel';
-import FormsInput from '@/components/forms/FormsInput';
+import FormsLabel from '@/components/forms/create/FormsLabel';
+import FormsInput from '@/components/forms/create/FormsInput';
 import { Star } from 'lucide-react';
 import { Question } from '@/types/forms/forms.types';
 
