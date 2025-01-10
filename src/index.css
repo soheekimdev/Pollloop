@@ -14,6 +14,18 @@
   }
 }
 
+@layer utilities {
+  .transition-smooth {
+    @apply transition duration-300 ease-in-out;
+  }
+  .scrollable {
+    @apply w-full overflow-x-auto scrollbar-thin scrollbar-thumb-pollloop-coral scrollbar-track-pollloop-brown-01/15 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:rounded-full;
+  }
+  .text-truncate {
+    @apply overflow-hidden text-ellipsis whitespace-nowrap;
+  }
+}
+
 /* Fonts */
 @font-face {
   font-family: 'Iowan';

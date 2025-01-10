@@ -23,6 +23,7 @@ export default {
         'bg-02': '#FFE3B6',
         'bg-03': '#EAD8BB',
         'light-beige': '#FFFBEB',
+        'purple-01': '#928fd7',
       },
       button: {
         'primary-bg': '#FFA632',
@@ -69,6 +70,7 @@ export default {
     extend: {
       fontSize: {
         13: '0.8125rem',
+        15: '0.9375rem',
         22: '1.375rem',
       },
       boxShadow: {
