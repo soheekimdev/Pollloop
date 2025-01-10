@@ -1,20 +1,29 @@
 import { forwardRef } from 'react';
+import { cn } from '@/utils/cn';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   tip?: string;
+  error?: string;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ type = 'text', tip, className, ...props }, ref) => {
+  ({ type = 'text', tip, error, className, ...props }, ref) => {
     return (
-      <div className={className}>
+      <div className={cn('flex flex-col gap-1', className)}>
         <input
           ref={ref}
           type={type}
-          className="w-full h-10 px-3 rounded-lg bg-input-bg border border-input-border text-sm placeholder:text-input-placeholder focus-visible:outline-pollloop-brown-01 disabled:bg-button-ghost-bg-active"
+          className={cn(
+            'w-full h-10 px-3 rounded-lg bg-input-bg border text-sm placeholder:text-input-placeholder focus-visible:outline-pollloop-brown-01 disabled:bg-button-ghost-bg-active',
+            error ? 'border-status-red-text' : 'border-input-border',
+          )}
           {...props}
         />
-        {tip && <p className="mt-2 text-xs text-input-tip">{tip}</p>}
+        {(error || tip) && (
+          <p className={cn('text-xs', error ? 'text-status-red-text' : 'text-input-tip')}>
+            {error || tip}
+          </p>
+        )}
       </div>
     );
   },
