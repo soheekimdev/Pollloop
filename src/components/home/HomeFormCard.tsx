@@ -18,13 +18,14 @@ export default function HomeFormCard({ item }: HomeFormCardProps) {
   const participationRate = getParticipationRate();
 
   return (
-    <li className=" w-full md:w-[calc(50%-0.5rem)] lg:w-[calc(25%-0.75rem)] h-[200px] ">
+    <li className=" w-full md:w-[calc(50%-0.5rem)] lg:w-[calc(25%-0.75rem)] h-[200px]  ">
       <Link
         to={`/forms/${form_id}`}
-        className="relative flex flex-col justify-between w-full h-full p-6 bg-pollloop-light-beige rounded-2xl"
+        className="relative flex flex-col justify-between w-full h-full p-6 bg-pollloop-light-beige rounded-2xl "
         aria-label={`${title} - ${status} 폼`}
       >
         <FormStatusBadge
+          options={{ countDday: true }}
           className="absolute top-6 right-6"
           status={status}
           end_at={end_at}
@@ -74,9 +75,7 @@ export default function HomeFormCard({ item }: HomeFormCardProps) {
           ) : (
             <p className="flex items-center gap-1 font-bold text-13 text-pollloop-brown-01 opacity-60 text-truncate">
               <Info size={16} className="flex-shrink-0" aria-hidden="true" />
-              <span>
-                {status === '임시 저장' ? '임시 저장된 폼입니다.' : '아직 참여자가 없습니다.'}
-              </span>
+              <span>{status === 'TEMP' ? '임시 저장된 폼입니다.' : '아직 참여자가 없습니다.'}</span>
             </p>
           )}
         </div>

@@ -21,7 +21,7 @@ export default function Home() {
         title: '오즈_만족도조사_6기_14주',
         tag: '6기만족도',
         end_at: '20260116',
-        status: '발행',
+        status: 'OPEN',
         target_count: 100,
         actual_count: 56,
       },
@@ -31,7 +31,7 @@ export default function Home() {
         title: '오즈_만족도조사_6기_15주',
         tag: '6기만족도',
         end_at: '20250116',
-        status: '발행',
+        status: 'OPEN',
         target_count: 100,
         actual_count: 56,
       },
@@ -41,7 +41,7 @@ export default function Home() {
         title: '오즈_만족도조사_6기_16주',
         tag: '6기만족도',
         end_at: '20250116',
-        status: '종료',
+        status: 'CLOSED',
         target_count: 100,
         actual_count: 94,
       },
@@ -96,7 +96,7 @@ export default function Home() {
 
   return (
     <div className=" bg-pollloop-bg-03">
-      <div className="m-auto w-full max-w-[1440px] min-w-[360px] px-8 flex flex-col gap-12">
+      <div className="m-auto w-full max-w-[1440px] min-w-[360px] px-8 flex flex-col gap-12 pb-10">
         <article className="bg-white border h-28 border-1">
           <p>매우 멋진 텍스트</p>
         </article>
