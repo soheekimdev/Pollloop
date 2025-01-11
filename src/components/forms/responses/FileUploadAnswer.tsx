@@ -2,7 +2,6 @@ import { useRef, useState } from 'react';
 import Button from '@/components/common/Button';
 import { Upload, X } from 'lucide-react';
 import { Question } from '@/types/forms/forms.types';
-import FormsDescription from '../create/FormsDescription';
 
 const FILE_SIZE_LIMIT = 1 * 1024 * 1024; // 1MB
 
@@ -105,8 +104,6 @@ export default function FileUploadAnswer({ data, onChange }: FileUploadAnswerPro
         required={data.is_required}
         className="hidden"
       />
-
-      <FormsDescription>파일은 최대 1개까지, 파일당 1MB 이하로 업로드 가능합니다.</FormsDescription>
     </div>
   );
 }

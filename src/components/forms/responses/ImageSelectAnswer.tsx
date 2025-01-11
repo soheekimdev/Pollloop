@@ -42,7 +42,7 @@ export default function ImageSelectAnswer({ data, onChange, value }: ImageSelect
             {value === option.option_number.toString() && (
               <>
                 <div className="absolute inset-0 bg-pollloop-brown-01/10" />
-                <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-pollloop-orange flex items-center justify-center z-10">
+                <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-pollloop-orange flex items-center justify-center z-10">
                   <Check className="w-4 h-4 text-pollloop-light-beige" />
                 </div>
               </>

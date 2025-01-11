@@ -14,6 +14,7 @@ import DateAnswer from '@/components/forms/responses/DateAnswer';
 import EmailAnswer from '@/components/forms/responses/EmailAnswer';
 import FileUploadAnswer from '@/components/forms/responses/FileUploadAnswer';
 import { useFormData } from '@/hooks/useFormData';
+import QuestionCard from '@/components/forms/responses/QuestionCard';
 
 type AnswerValue = string | string[];
 
@@ -56,134 +57,132 @@ export default function FormResponse() {
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 flex-1">
-        <div className="flex flex-col gap-2">
-          {formData.questions?.map(question => (
-            <div
-              key={question.question_order}
-              className="flex flex-col gap-8 relative bg-pollloop-light-beige rounded-lg p-6 md:p-10 xl:p-20"
-            >
-              <div className="flex gap-px">
-                {question.is_required && <span>*</span>}
-                <span className="w-full text-base font-semibold">{question.question}</span>
-              </div>
+        {formData.questions?.map(question => (
+          <QuestionCard
+            key={question.question_order}
+            question={question}
+            hasDescription={
+              question.layout_type === 'FILE_UPLOAD_TYPE'
+                ? '파일은 최대 1개까지, 파일당 1MB 이하로 업로드 가능합니다.'
+                : null
+            }
+          >
+            {question.layout_type === 'SHORT_TYPE' && (
+              <ShortAnswer
+                data={question}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'LONG_TYPE' && (
+              <LongAnswer
+                data={question}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'CHECKBOX_TYPE' && (
+              <CheckboxAnswer
+                data={question}
+                value={(answers[question.question_order] as string[]) || []}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'RADIO_TYPE' && (
+              <RadioAnswer
+                data={question}
+                value={
+                  Array.isArray(answers[question.question_order])
+                    ? undefined
+                    : (answers[question.question_order] as string)
+                }
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'DROPDOWN_TYPE' && (
+              <DropdownAnswer
+                data={question}
+                value={
+                  Array.isArray(answers[question.question_order])
+                    ? ''
+                    : (answers[question.question_order] as string) || ''
+                }
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'RANGE_TYPE' && (
+              <RangeAnswer
+                data={question}
+                value={
+                  Array.isArray(answers[question.question_order])
+                    ? undefined
+                    : (answers[question.question_order] as string)
+                }
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'STAR_RATING_TYPE' && (
+              <StarRatingAnswer
+                data={question}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'IMAGE_SELECT_TYPE' && (
+              <ImageSelectAnswer
+                data={question}
+                value={answers[question.question_order] as string}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'NUMBER_TYPE' && (
+              <NumberAnswer
+                data={question}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'DATE_TYPE' && (
+              <DateAnswer
+                data={question}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'EMAIL_TYPE' && (
+              <EmailAnswer
+                data={question}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'FILE_UPLOAD_TYPE' && (
+              <FileUploadAnswer
+                data={question}
+                onChange={async file => {
+                  if (!file) {
+                    handleAnswerChange(question.question_order, '');
+                    return;
+                  }
 
-              {question.layout_type === 'SHORT_TYPE' && (
-                <ShortAnswer
-                  data={question}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'LONG_TYPE' && (
-                <LongAnswer
-                  data={question}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'CHECKBOX_TYPE' && (
-                <CheckboxAnswer
-                  data={question}
-                  value={(answers[question.question_order] as string[]) || []}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'RADIO_TYPE' && (
-                <RadioAnswer
-                  data={question}
-                  value={
-                    Array.isArray(answers[question.question_order])
-                      ? undefined
-                      : (answers[question.question_order] as string)
-                  }
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'DROPDOWN_TYPE' && (
-                <DropdownAnswer
-                  data={question}
-                  value={
-                    Array.isArray(answers[question.question_order])
-                      ? ''
-                      : (answers[question.question_order] as string) || ''
-                  }
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'RANGE_TYPE' && (
-                <RangeAnswer
-                  data={question}
-                  value={
-                    Array.isArray(answers[question.question_order])
-                      ? undefined
-                      : (answers[question.question_order] as string)
-                  }
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'STAR_RATING_TYPE' && (
-                <StarRatingAnswer
-                  data={question}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'IMAGE_SELECT_TYPE' && (
-                <ImageSelectAnswer
-                  data={question}
-                  value={answers[question.question_order] as string}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'NUMBER_TYPE' && (
-                <NumberAnswer
-                  data={question}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'DATE_TYPE' && (
-                <DateAnswer
-                  data={question}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'EMAIL_TYPE' && (
-                <EmailAnswer
-                  data={question}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'FILE_UPLOAD_TYPE' && (
-                <FileUploadAnswer
-                  data={question}
-                  onChange={async file => {
-                    if (!file) {
-                      handleAnswerChange(question.question_order, '');
-                      return;
+                  try {
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    // TODO: API 호출하여 파일 업로드 (실제 엔드포인트로 수정 필요)
+                    const response = await fetch('/file/upload', {
+                      method: 'POST',
+                      body: formData,
+                    });
+
+                    if (!response.ok) {
+                      throw new Error('파일 업로드에 실패했습니다.');
                     }
 
-                    try {
-                      const formData = new FormData();
-                      formData.append('file', file);
-
-                      // TODO: API 호출하여 파일 업로드 (실제 엔드포인트로 수정 필요)
-                      const response = await fetch('/file/upload', {
-                        method: 'POST',
-                        body: formData,
-                      });
-
-                      if (!response.ok) {
-                        throw new Error('파일 업로드에 실패했습니다.');
-                      }
-
-                      const { fileUrl } = await response.json();
-                      handleAnswerChange(question.question_order, fileUrl);
-                    } catch (error) {
-                      console.error('File upload error:', error);
-                    }
-                  }}
-                />
-              )}
-            </div>
-          ))}
-        </div>
+                    const { fileUrl } = await response.json();
+                    handleAnswerChange(question.question_order, fileUrl);
+                  } catch (error) {
+                    console.error('File upload error:', error);
+                  }
+                }}
+              />
+            )}
+          </QuestionCard>
+        ))}
 
         <Button type="submit" variant="primary" size="lg" className="self-end">
           제출하기
