@@ -31,7 +31,9 @@ export default function CheckboxAnswer({ data, value = [], onChange }: CheckboxA
               className="flex items-center gap-2 min-w-40 h-10 w-full bg-pollloop-bg-02 p-2 rounded-lg cursor-pointer group"
             >
               <Checkbox
-                id={`checkbox-${data.id}-${option.option_number}`}
+                name={`question-${data.question_order}`}
+                id={`option-${data.question_order}-${option.option_number}`}
+                value={option.option_context}
                 checked={value.includes(optionId)}
                 onChange={() => handleChange(optionId)}
               />

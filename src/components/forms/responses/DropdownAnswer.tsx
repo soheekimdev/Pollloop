@@ -12,6 +12,7 @@ export default function DropdownAnswer({ data, value, onChange }: DropdownAnswer
     value: 'default',
     label: '선택',
     disabled: true,
+    defaultValue: true,
   };
 
   const convertedOptions = [
@@ -20,6 +21,7 @@ export default function DropdownAnswer({ data, value, onChange }: DropdownAnswer
       value: option.option_context,
       label: option.option_context,
       disabled: false,
+      defaultValue: false,
     })),
   ];
 

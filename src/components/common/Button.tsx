@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes } from 'react';
 import { cn } from '@/utils/cn';
 
 const buttonVariants = cva(
-  'flex-none flex items-center gap-1 justify-center rounded-lg transition-colors focus-visible:outline-pollloop-brown-01',
+  'flex-none flex items-center gap-1 justify-center rounded-lg transition-colors focus-visible:outline-pollloop-brown-01 disabled:bg-button-disabled-bg disabled:text- disabled:cursor-not-allowed',
   {
     variants: {
       size: {
@@ -12,8 +12,7 @@ const buttonVariants = cva(
         lg: 'h-12 px-6 text-base',
       },
       variant: {
-        primary:
-          'bg-button-primary-bg text-button-primary-text hover:bg-button-primary-bg/90 disabled:bg-button-ghost-bg-active',
+        primary: 'bg-button-primary-bg text-button-primary-text hover:bg-button-primary-bg/90',
         secondary:
           'bg-button-secondary-bg text-button-secondary-text hover:bg-button-secondary-bg/90',
         neutral: 'bg-button-neutral-bg text-button-neutral-text hover:bg-button-neutral-bg/90',

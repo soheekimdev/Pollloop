@@ -18,11 +18,11 @@ export default function RadioAnswer({ data, value, onChange }: RadioAnswerProps)
         {data.options_of_questions.map(option => (
           <label
             key={option.option_number}
-            className="flex items-center gap-2 min-w-40 h-10 w-full bg-pollloop-bg-02 p-2 rounded-lg cursor-pointer group"
+            className="flex items-center gap-2 min-w-40 min-h-10 w-full bg-pollloop-bg-02 p-2 rounded-lg cursor-pointer group"
           >
             <Radio
-              name={`question-${data.id}`}
-              id={`option-${option.option_number}`}
+              name={`question-${data.question_order}`}
+              id={`option-${data.question_order}-${option.option_number}`}
               value={option.option_context}
               checked={value === option.option_context}
               onChange={() => handleChange(option.option_number, option.option_context)}

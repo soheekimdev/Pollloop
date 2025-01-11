@@ -4,7 +4,7 @@ export default function Radio({
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement>) {
   return (
-    <label className="cursor-pointer">
+    <label className="cursor-pointer p-1">
       <input
         type="radio"
         className="hidden peer"

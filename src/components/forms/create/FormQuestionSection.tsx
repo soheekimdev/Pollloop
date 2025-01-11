@@ -39,9 +39,10 @@ export default function FormQuestionSection({
             <Label text="필수" />
             <Switch
               checked={selectedQuestion.is_required}
-              onChange={isChecked =>
-                onQuestionUpdate(selectedQuestion.id, { is_required: isChecked })
-              }
+              onChange={isChecked => {
+                if (!selectedQuestion.id) return;
+                onQuestionUpdate(selectedQuestion.id, { is_required: isChecked });
+              }}
             />
           </InputWithLabel>
 
@@ -51,11 +52,12 @@ export default function FormQuestionSection({
               <Label text="기타 옵션" />
               <Switch
                 checked={selectedQuestion._frontend?.hasEtcOption ?? false}
-                onChange={isChecked =>
+                onChange={isChecked => {
+                  if (!selectedQuestion.id) return;
                   onQuestionUpdate(selectedQuestion.id, {
                     _frontend: { ...selectedQuestion._frontend, hasEtcOption: isChecked },
-                  })
-                }
+                  });
+                }}
               />
             </InputWithLabel>
           )}
@@ -66,6 +68,7 @@ export default function FormQuestionSection({
               <Select
                 value={selectedQuestion._frontend?.fileType ?? 'image'}
                 onChange={e => {
+                  if (!selectedQuestion.id) return;
                   const fileType = e.target.value as FileType;
                   onQuestionUpdate(selectedQuestion.id, {
                     _frontend: { ...selectedQuestion._frontend, fileType },

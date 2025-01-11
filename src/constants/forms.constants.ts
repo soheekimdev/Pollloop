@@ -21,9 +21,9 @@ export const NO_OPTIONS_TYPES: QuestionType[] = [
 
 // UI에서 사용하는 옵션 목록들
 export const FILE_TYPES: Array<{ value: FileType; label: string }> = [
-  { value: 'image', label: '이미지(jpg, jpeg, png, gif)' },
+  { value: 'image', label: '이미지 (jpg, jpeg, png, gif)' },
   { value: 'pdf', label: 'PDF' },
-  { value: 'spreadsheet', label: '스프레드시트(xlsx, xls, csv)' },
+  { value: 'spreadsheet', label: '스프레드시트 (xlsx, xls, csv)' },
 ];
 
 type QuestionTypeOption = {
