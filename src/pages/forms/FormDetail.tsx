@@ -12,6 +12,7 @@ import { getCompleteRate } from '../../utils/getCompleteRate';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { Tokens } from '../../types/auth';
+import FormStatusBadge from '../../components/common/status-badge/FormStatusBadge';
 
 export default function FormDetail() {
   const { user: loginUser } = useSelector((state: RootState) => state);
@@ -92,7 +93,15 @@ export default function FormDetail() {
           >
             참여 링크 공유하기
           </Button>
-          <h2 className="font-semibold text-22">{title}</h2>
+          <header className="flex gap-2">
+            <h2 className="font-semibold text-22">{title}</h2>
+            <FormStatusBadge
+              className="absolute top-6 right-6"
+              status={is_closed}
+              end_at={end_at}
+              aria-label={`상태: ${is_closed === 'OPEN' ? '진행 중' : '종료'}`}
+            />
+          </header>
         </section>
         <section className="flex flex-col gap-4" aria-labelledby="statistics-title">
           <h3 id="statistics-title" className="font-semibold text-22">

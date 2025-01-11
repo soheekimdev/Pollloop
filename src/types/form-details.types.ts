@@ -74,12 +74,6 @@ export interface RangeResultType {
   count: number;
 }
 
-export interface RangeResultsWithNumType {
-  //  min_label: string;
-  //  max_label: string;
-  results: RangeResultType[];
-}
-
 export interface StarRatingResultType {
   label: number;
   count: number;

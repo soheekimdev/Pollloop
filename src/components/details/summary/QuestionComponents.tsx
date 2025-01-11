@@ -32,7 +32,6 @@ import {
   DateResultType,
   EmailResultType,
   FileUploadResultType,
-  RangeResultsWithNumType,
   RangeResultType,
 } from '../../../types/form-details.types';
 import { copyToClipboard } from '../../../utils/copyToClipboard';
@@ -576,7 +575,7 @@ const RangeComponent: React.FC<{ results: RangeResultType[] }> = ({ results }) =
 
   const CustomTooltip: React.FC<TooltipProps<string, string>> = ({ active, payload }) => {
     if (active && payload && payload.length) {
-      const { value, count } = payload[0].payload;
+      const { label, count } = payload[0].payload;
 
       return (
         <div
@@ -590,7 +589,7 @@ const RangeComponent: React.FC<{ results: RangeResultType[] }> = ({ results }) =
             maxWidth: width * 0.5,
           }}
         >
-          <p>{value}</p>
+          <p>{label}</p>
           <p className="mt-2 text-sm text-right text-pollloop-purple-01">{`참여자 수: ${count}명`}</p>
         </div>
       );

@@ -12,7 +12,6 @@ import {
   QuestionResultType,
   RadioResultType,
   RangeResultType,
-  RangeResultsWithNumType,
   ShortResultType,
   StarRatingResultType,
 } from '../../../types/form-details.types';
@@ -22,7 +21,7 @@ interface QuestionProps {
 }
 
 export default function Question({ questionItem }: QuestionProps) {
-  const { layout_type, question, results, min_label, max_label } = questionItem;
+  const { layout_type, question, results } = questionItem;
 
   const ResultComponent = QUESTION_COMPONENTS[layout_type as LayoutType];
   if (!ResultComponent) return null;
@@ -41,13 +40,6 @@ export default function Question({ questionItem }: QuestionProps) {
         return results as DropdownResultType[];
       case 'RANGE_TYPE':
         return results as RangeResultType[];
-      // if (!min_label || !max_label) return results as RangeResultType[];
-      // const resultsWithNum: RangeResultsWithNumType = {
-      //   min_label: min_label,
-      //   max_label: max_label,
-      //   results: results as RangeResultType[],
-      // };
-      // return resultsWithNum;
       case 'STAR_RATING_TYPE':
         return results as StarRatingResultType[];
       case 'IMAGE_SELECT_TYPE':
