@@ -54,7 +54,7 @@ export default function Summary({ formId }: { formId: string }) {
       {
         id: 3,
         layout_type: 'CHECKBOX_TYPE',
-        is_required: true,
+        is_required: false,
         question: '이번 주에 어려웠던 내용을 모두 선택해주세요',
         results: [
           {
