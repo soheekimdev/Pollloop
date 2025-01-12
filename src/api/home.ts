@@ -1,19 +1,11 @@
-import axios from 'axios';
 import { HomeUserData } from '../types/home/home.types';
+import { instance } from './axios';
 
-const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3001',
-  timeout: 5000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-export const fetchHomeData = async (userId: number) => {
+export const fetchHomeData = async (userId: string) => {
   try {
-    const response = await axiosInstance.get<HomeUserData[]>(`/home?userId=${userId}`);
+    const response = await instance.get<HomeUserData>(`/home?userId=${userId}`);
     // console.log(response);
-    return response.data[0];
+    return response.data;
   } catch (error) {
     throw error;
   }

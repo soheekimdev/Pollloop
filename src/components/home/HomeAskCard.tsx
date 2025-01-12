@@ -21,7 +21,10 @@ export default function HomeAskCard({ item }: HomeAskCardProps) {
   const ASK_STATUS = is_closed ? '종료된' : '진행 중인';
 
   return (
-    <li className="w-full min-h-[88px] rounded-2xl p-6 bg-pollloop-light-beige" role="article">
+    <li
+      className="hover:border-pollloop-orange hover:shadow-primary w-full min-h-[88px] rounded-2xl p-6 bg-pollloop-light-beige"
+      role="article"
+    >
       <Link
         to={`/asks/${ask_id}`}
         className="flex items-center h-full"

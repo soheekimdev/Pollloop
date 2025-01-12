@@ -6,9 +6,14 @@ interface AccessCodeButtonProps {
 }
 
 export default function AccessCodeButton({ access_code }: AccessCodeButtonProps) {
+  const handleCopy = (event: React.MouseEvent) => {
+    event.preventDefault();
+    copyToClipboard(access_code, '비밀번호가 복사되었습니다.');
+  };
+
   return (
     <button
-      onClick={copyToClipboard(access_code)}
+      onClick={handleCopy}
       className="flex items-center h-10 gap-2 px-4 py-2 ml-5 rounded-lg w-fit text-15 bg-button-ghost-bg-active/15 "
       type="button"
       aria-label="비밀번호 복사하기"

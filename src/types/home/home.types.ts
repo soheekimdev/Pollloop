@@ -1,5 +1,5 @@
-export type FormStatus = '발행' | '종료' | '임시 저장';
-export type AskStatus = '진행 중' | '종료';
+export type FormStatus = 'OPEN' | 'CLOSED' | 'TEMP';
+export type AskStatus = 'OPEN' | 'CLOSED';
 
 export interface FormDetails {
   author_id: number;
@@ -17,7 +17,7 @@ export interface AskDetails {
   id: number;
   title: string;
   tag: string;
-  is_closed: boolean;
+  is_closed: boolean; // 나중에 백엔드에서 AskStatus 형식으로 줄 수도 있음 (체크)
   access_code: string;
 }
 
