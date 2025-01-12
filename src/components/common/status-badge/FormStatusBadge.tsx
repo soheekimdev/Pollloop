@@ -1,18 +1,21 @@
 import { cva, VariantProps } from 'class-variance-authority';
 import clsx from 'clsx';
 
-const badgeVariants = cva('w-fit px-2 py-1 text-sm font-bold rounded-full', {
-  variants: {
-    status: {
-      TEMP: 'bg-status-yellow-bg text-status-yellow-text',
-      CLOSED: 'bg-status-red-bg text-status-red-text',
-      OPEN: 'bg-status-green-bg text-status-green-text',
+const badgeVariants = cva(
+  'w-fit px-2 py-1 text-sm font-bold rounded-full flex items-center h-fit flex-shrink-0',
+  {
+    variants: {
+      status: {
+        TEMP: 'bg-status-yellow-bg text-status-yellow-text',
+        CLOSED: 'bg-status-red-bg text-status-red-text',
+        OPEN: 'bg-status-green-bg text-status-green-text',
+      },
+    },
+    defaultVariants: {
+      status: 'OPEN',
     },
   },
-  defaultVariants: {
-    status: 'OPEN',
-  },
-});
+);
 
 interface FormStatusBadgeProps extends VariantProps<typeof badgeVariants> {
   status: 'OPEN' | 'CLOSED' | 'TEMP';

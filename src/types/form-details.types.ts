@@ -1,7 +1,6 @@
 import { QUESTION_COMPONENTS } from '../constants/form-details';
 import { QuestionType } from '../types/forms/forms.types';
 
-type FormStatus = 'CLOSED' | 'OPEN' | 'TEMP';
 type FormResultType =
   | ShortResultType
   | LongResultType
@@ -30,7 +29,7 @@ export interface OverviewData {
   user_count: number;
   completed_count: number;
   target_count: number;
-  is_closed: FormStatus;
+  is_closed: 'OPEN' | 'CLOSED';
   is_private: boolean;
   access_code: string;
 }
@@ -106,8 +105,4 @@ export interface QuestionResultType {
   is_required: boolean;
   question: string;
   results: FormResultType[];
-  min_label?: string; // RANGE_TYPE
-  max_label?: string; // RANGE_TYPE
 }
-
-// 참여자 목록 타입 정의

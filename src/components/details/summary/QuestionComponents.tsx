@@ -61,11 +61,8 @@ const ShortTypeComponent: React.FC<{ results: ShortResultType[] }> = ({ results 
             key={index}
             className="flex items-center justify-between gap-2 px-3 py-1 text-sm border rounded-lg cursor-pointer transition-smooth group hover:shadow-primary hover:border-pollloop-orange border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15"
           >
-            <p>{result.value}</p>
-            <Copy
-              size={14}
-              className="flex-shrink-0 transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100"
-            />
+            <p className="break-all">{result.value}</p>
+            <Copy size={14} className="flex-shrink-0 hidden ml-1 group-hover:block" />
           </li>
         ))}
       </ul>
@@ -83,7 +80,7 @@ const LongTypeComponent: React.FC<{ results: LongResultType[] }> = ({ results })
             key={index}
             className="flex items-center justify-between gap-2 px-3 py-1 text-sm border rounded-lg cursor-pointer transition-smooth group hover:shadow-primary hover:border-pollloop-orange border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15"
           >
-            <p>{result.value}</p>
+            <p className="break-all">{result.value}</p>
             <Copy size={14} className="flex-shrink-0 hidden ml-1 group-hover:block" />
           </li>
         ))}
@@ -399,7 +396,7 @@ const RadioComponent: React.FC<{ results: RadioResultType[] }> = ({ results }) =
               labelLine={true}
               label={renderCustomizedLabel}
               outerRadius={120}
-              fill="#8884d8"
+              fill={POLLLOOP_PURPLE_01}
               dataKey="count"
               isAnimationActive={isInView}
               animationDuration={800}
@@ -552,7 +549,7 @@ const DropdownComponent: React.FC<{ results: DropdownResultType[] }> = ({ result
               labelLine={true}
               label={renderCustomizedLabel}
               outerRadius={120}
-              fill="#8884d8"
+              fill={POLLLOOP_PURPLE_01}
               dataKey="count"
               isAnimationActive={isInView}
               animationDuration={800}
@@ -881,7 +878,7 @@ const NumberComponent: React.FC<{ results: NumberResultType[] }> = ({ results })
         <div
           className="hidden md:block"
           style={{
-            backgroundColor: '#fff',
+            backgroundColor: `${POLLLOOP_WHITE}`,
             border: `1px solid ${POLLLOOP_BROWN_01}`,
             borderRadius: '4px',
             padding: '15px',
@@ -890,7 +887,7 @@ const NumberComponent: React.FC<{ results: NumberResultType[] }> = ({ results })
           }}
         >
           <p>{value}</p>
-          <p className="mt-2 text-sm text-right text-[#8884d8]">{`참여자 수: ${count}명`}</p>
+          <p className="mt-2 text-sm text-right text-pollloop-purple-01">{`참여자 수: ${count}명`}</p>
         </div>
       );
     }
@@ -984,7 +981,7 @@ const NumberComponent: React.FC<{ results: NumberResultType[] }> = ({ results })
               key={isInView ? 'visible' : 'hidden'}
               type="monotone"
               dataKey="count"
-              stroke="#8884d8"
+              stroke={POLLLOOP_PURPLE_01}
               activeDot={{ r: 8 }}
               isAnimationActive={isInView}
               animationBegin={0}
@@ -1061,6 +1058,15 @@ const DateComponent: React.FC<{ results: DateResultType[] }> = ({ results }) => 
           >
             <CartesianGrid strokeDasharray="3 3" stroke={POLLLOOP_BROWN_01} opacity={0.5} />
             <XAxis
+              label={{
+                value: '년월 (YYYY.MM)',
+                position: 'bottom',
+                offset: 30,
+                style: {
+                  fill: POLLLOOP_BROWN_01,
+                  fontSize: '14px',
+                },
+              }}
               type="category"
               dataKey="yearMonth"
               name="년월"
@@ -1075,7 +1081,7 @@ const DateComponent: React.FC<{ results: DateResultType[] }> = ({ results }) => 
             />
             <YAxis
               label={{
-                value: '참여자 수(명)',
+                value: '날짜 (DD)',
                 angle: 0,
                 position: 'top',
                 offset: 30,
@@ -1148,11 +1154,8 @@ const EmailComponent: React.FC<{ results: EmailResultType[] }> = ({ results }) =
             key={index}
             className="flex items-center justify-between gap-2 px-3 py-1 text-sm border rounded-lg cursor-pointer group hover:shadow-primary hover:border-pollloop-orange border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15"
           >
-            <p>{result.value}</p>
-            <Copy
-              size={14}
-              className="flex-shrink-0 transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100"
-            />
+            <p className="break-all">{result.value}</p>
+            <Copy size={14} className="flex-shrink-0 hidden ml-1 group-hover:block" />
           </li>
         ))}
       </ul>
@@ -1180,11 +1183,8 @@ const FileUploadComponent: React.FC<{ results: FileUploadResultType[] }> = ({ re
               onClick={() => handleDownload(fileNameWithExtension, result.value)}
               className="flex items-center justify-between gap-2 px-3 py-1 text-sm border rounded-lg cursor-pointer group hover:shadow-primary hover:border-pollloop-orange border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15"
             >
-              <p>{fileNameWithExtension}</p>
-              <Download
-                size={14}
-                className="flex-shrink-0 transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100"
-              />
+              <p className="break-all">{fileNameWithExtension}</p>
+              <Download size={14} className="flex-shrink-0 hidden ml-1 group-hover:block" />
             </li>
           );
         })}

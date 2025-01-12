@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import FormStatusBadge from '../common/status-badge/FormStatusBadge';
 import { FormDetails } from '../../types/home/home.types';
 import { useEffect, useState } from 'react';
+import CustomTag from './parts/CustomTag';
 
 interface HomeFormCardProps {
   item: FormDetails;
@@ -44,12 +45,7 @@ export default function HomeFormCard({ item }: HomeFormCardProps) {
 
         <div className="flex flex-col gap-2">
           <h3 className="flex-1 pr-20 line-clamp-3">{title}</h3>
-          <p
-            className="px-2 py-1 rounded-md line-clamp-1 w-fit text-13 bg-tag-default-bg"
-            role="tag"
-          >
-            {tag}
-          </p>
+          <CustomTag tag={tag} />
         </div>
 
         <div className="min-h-[40px] flex flex-col justify-center" aria-label="참여 현황">

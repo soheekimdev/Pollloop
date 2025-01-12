@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AskStatusBadge from '../common/status-badge/AskStatusBadge';
 import { AskDetails } from '../../types/home/home.types';
 import AccessCodeSection from './parts/AccessCodeSection';
+import { useAccessCode } from '../../hooks/useAccessCode';
 
 interface HomeAskCardProps {
   item: AskDetails;
@@ -10,13 +10,8 @@ interface HomeAskCardProps {
 
 export default function HomeAskCard({ item }: HomeAskCardProps) {
   const { id: ask_id, title, tag, is_closed, access_code } = item;
-  const [isDisplayed, setIsDisplayed] = useState(false);
-
-  const handleDisplay = (event: React.MouseEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setIsDisplayed(true);
-  };
+  const { isDisplayed, handleDisplay } = useAccessCode();
+  console.log(is_closed);
 
   const ASK_STATUS = is_closed ? '종료된' : '진행 중인';
 
@@ -49,7 +44,8 @@ export default function HomeAskCard({ item }: HomeAskCardProps) {
           </p>
         </div>
         <AccessCodeSection
-          is_closed={is_closed}
+          buttonText="비밀번호 확인하기"
+          is_closed={is_closed ? 'CLOSED' : 'OPEN'}
           isDisplayed={isDisplayed}
           access_code={access_code}
           onDisplay={handleDisplay}

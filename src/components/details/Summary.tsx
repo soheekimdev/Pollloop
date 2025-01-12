@@ -354,9 +354,9 @@ export default function Summary({ formId }: { formId: string }) {
     const loadOverviewData = async () => {
       try {
         setIsLoading(true);
-        // const data = await fetchSummaryData(formId);
-        // setSummaryData(data as SummaryData);
-        setSummaryData(testSummaryData as SummaryData);
+        const data = await fetchSummaryData(formId);
+        setSummaryData(data as SummaryData);
+        //setSummaryData(testSummaryData as SummaryData);
       } catch (err) {
         console.error('데이터 로딩 중 에러:', err);
       } finally {
