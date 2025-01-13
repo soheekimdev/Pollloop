@@ -17,6 +17,7 @@ import PublicLayout from './layouts/PublicLayout';
 import ProtectedLayout from './layouts/ProtectedLayout';
 import RequestPasswordReset from './pages/auth/RequestPasswordReset';
 import ResetPassword from './pages/auth/ResetPassword';
+import CustomToastContainer from './components/common/customToastContainer';
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="password" element={<RequestPasswordReset />} />
-            <Route path="reset-password/:token" element={<ResetPassword />} />
+            <Route path="reset-password/:uuid/:token" element={<ResetPassword />} />
             <Route path="auth/kakao/callback" element={<KakaoCallback />} />
           </Route>
         </Route>
@@ -52,6 +53,7 @@ function App() {
           </Route>
         </Route>
       </Routes>
+      <CustomToastContainer />
     </BrowserRouter>
   );
 }
