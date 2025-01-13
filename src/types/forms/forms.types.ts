@@ -56,6 +56,26 @@ export interface FormInfo {
   questions: Question[];
 }
 
+// 폼 목록 인터페이스
+export interface FormListItem extends Pick<FormInfo, 
+  'title' | 
+  'tag' |
+  'create_at' |
+  'end_at' |
+  'is_closed' |
+  'access_code' |
+  'target_count' |
+  'is_private' |
+  'is_bookmark'
+> {
+  uuid: string;
+  completed_count: number;
+}
+
+export interface FormListResponse {
+  forms: FormListItem[];
+}
+
 // 컴포넌트 Props 인터페이스
 export interface FormSectionBaseProps {
   className?: string;

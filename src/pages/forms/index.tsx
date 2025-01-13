@@ -1,247 +1,225 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Trash2, Star, X, Check } from 'lucide-react';
 import Breadcrumbs from '../../components/common/Breadcrumbs';
 import Button from '../../components/common/Button';
 import FormStatusBadge from '../../components/common/status-badge/FormStatusBadge';
 import { cn } from '../../utils/cn';
+import { FormListItem, FormStatus } from '../../types/forms/forms.types';
 
-// API 응답 데이터 타입
-interface Form {
-  uuid: string;
-  user: number;
-  title: string;
-  tag: string;
-  create_at: string;
-  end_at: string;
-  is_closed: boolean;
-  status?: '임시 저장' | '발행' | '종료';
-  access_code?: string;
-  is_bookmark: boolean;
-  completed_count: number;
-  target_count: number;
-}
-
-// API 명세서 기반 목업 데이터
-export const mockForms = [
+// 스웨거 기반 목업 데이터
+export const mockForms: FormListItem[] = [
   {
-    uuid: "12e3a5b415d98be25e8e7a766fb750bf",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 1주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-12-29",
-    end_at: "2024-12-29",
-    is_closed: false,
-    is_bookmark: false,
-    completed_count: 12,
-    target_count: 21
+    "title": "설문조사 생성 테스트1",
+    "tag": "설문조사생성1 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "OPEN",
+    "access_code": "56801",
+    "uuid": "96487021696562861821",
+    "target_count": 46,
+    "is_private": false,
+    "is_bookmark": false,
+    "completed_count": 8
   },
   {
-    uuid: "bcba661ffc39f4b26ca2d21200fdd117",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 2주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-11-30",
-    end_at: "2024-12-02",
-    is_closed: true,
-    is_bookmark: false,
-    completed_count: 16,
-    target_count: 16
+    "title": "설문조사 생성 테스트2",
+    "tag": "설문조사생성2 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "OPEN",
+    "access_code": "56775",
+    "uuid": "17998266948177270132",
+    "target_count": 30,
+    "is_private": false,
+    "is_bookmark": true,
+    "completed_count": 30
   },
   {
-    uuid: "255e2a43094a1f15f18a063b19de324e",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 3주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-11-18",
-    end_at: "2024-12-13",
-    is_closed: false,
-    is_bookmark: false,
-    completed_count: 6,
-    target_count: 25
+    "title": "설문조사 생성 테스트3",
+    "tag": "설문조사생성3 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "CLOSED",
+    "access_code": "61864",
+    "uuid": "14328580701078995276",
+    "target_count": 50,
+    "is_private": false,
+    "is_bookmark": true,
+    "completed_count": 3
   },
   {
-    uuid: "049b00dff1570acb4fd4957d1064dba1",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 4주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-11-21",
-    end_at: "2024-12-18",
-    is_closed: true,
-    is_bookmark: false,
-    completed_count: 21,
-    target_count: 21
+    "title": "설문조사 생성 테스트4",
+    "tag": "설문조사생성4 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "OPEN",
+    "access_code": "51545",
+    "uuid": "60493137544415082420",
+    "target_count": 16,
+    "is_private": true,
+    "is_bookmark": true,
+    "completed_count": 16
   },
   {
-    uuid: "f871383078bed649170c13caa74fb2bb",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 5주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-12-09",
-    end_at: "2024-12-18",
-    is_closed: true,
-    is_bookmark: false,
-    completed_count: 27,
-    target_count: 27
+    "title": "설문조사 생성 테스트5",
+    "tag": "설문조사생성5 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "CLOSED",
+    "access_code": "47378",
+    "uuid": "63178930654858518266",
+    "target_count": 34,
+    "is_private": false,
+    "is_bookmark": true,
+    "completed_count": 10
   },
   {
-    uuid: "28c8b9969a206c0088d31c0bec5b4e20",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 6주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-11-08",
-    end_at: "2024-11-10",
-    is_closed: true,
-    is_bookmark: false,
-    completed_count: 0,
-    target_count: 6
+    "title": "설문조사 생성 테스트6",
+    "tag": "설문조사생성6 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "OPEN",
+    "access_code": "38082",
+    "uuid": "56168280976713418989",
+    "target_count": 39,
+    "is_private": true,
+    "is_bookmark": true,
+    "completed_count": 0
   },
   {
-    uuid: "a7ab60a9acdfc5189a8d85e49bcdf6d5",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 7주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-11-18",
-    end_at: "2024-11-20",
-    is_closed: false,
-    is_bookmark: false,
-    completed_count: 20,
-    target_count: 27
+    "title": "설문조사 생성 테스트7",
+    "tag": "설문조사생성7 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "TEMP",
+    "access_code": "54604",
+    "uuid": "10469959714114593196",
+    "target_count": 32,
+    "is_private": false,
+    "is_bookmark": false,
+    "completed_count": 24
   },
   {
-    uuid: "ce7e8ae6ec3afbc945ad97188e21f9c0",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 8주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-12-01",
-    end_at: "2024-12-05",
-    is_closed: false,
-    is_bookmark: false,
-    completed_count: 18,
-    target_count: 28
+    "title": "설문조사 생성 테스트8",
+    "tag": "설문조사생성8 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "OPEN",
+    "access_code": "53556",
+    "uuid": "13402484602409938305",
+    "target_count": 11,
+    "is_private": true,
+    "is_bookmark": true,
+    "completed_count": 18
   },
   {
-    uuid: "3f8ff66bca294bf7881944c4d14e1537",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 9주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-11-15",
-    end_at: "2024-12-10",
-    is_closed: true,
-    is_bookmark: true,
-    completed_count: 13,
-    target_count: 13
+    "title": "설문조사 생성 테스트9",
+    "tag": "설문조사생성9 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "CLOSED",
+    "access_code": "12485",
+    "uuid": "93930161646355766236",
+    "target_count": 39,
+    "is_private": false,
+    "is_bookmark": false,
+    "completed_count": 20
   },
   {
-    uuid: "785fba2b032f11c8a7b55eb8b8da0fa4",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 10주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-11-24",
-    end_at: "2024-12-12",
-    is_closed: false,
-    is_bookmark: false,
-    completed_count: 8,
-    target_count: 10
+    "title": "설문조사 생성 테스트10",
+    "tag": "설문조사생성10 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "CLOSED",
+    "access_code": "99760",
+    "uuid": "57987118064489438267",
+    "target_count": 19,
+    "is_private": true,
+    "is_bookmark": true,
+    "completed_count": 6
   },
   {
-    uuid: "5822d22783b8cb6e0d858fdb846e312d",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 11주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-12-14",
-    end_at: "2024-12-20",
-    is_closed: true,
-    is_bookmark: false,
-    completed_count: 19,
-    target_count: 22
+    "title": "설문조사 생성 테스트11",
+    "tag": "설문조사생성11 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "OPEN",
+    "access_code": "10638",
+    "uuid": "34307169726260408301",
+    "target_count": 21,
+    "is_private": false,
+    "is_bookmark": true,
+    "completed_count": 17
   },
   {
-    uuid: "bb8dff36f77211d39c99b49d8b63dce5",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 12주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-12-04",
-    end_at: "2024-12-15",
-    is_closed: false,
-    is_bookmark: true,
-    completed_count: 7,
-    target_count: 12
+    "title": "설문조사 생성 테스트12",
+    "tag": "설문조사생성12 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "CLOSED",
+    "access_code": "25370",
+    "uuid": "23265063914507580651",
+    "target_count": 28,
+    "is_private": true,
+    "is_bookmark": true,
+    "completed_count": 1
   },
   {
-    uuid: "d2b8c687d2d06087f07b7b688e81274f",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 13주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-11-29",
-    end_at: "2024-12-07",
-    is_closed: false,
-    is_bookmark: false,
-    completed_count: 15,
-    target_count: 20
+    "title": "설문조사 생성 테스트13",
+    "tag": "설문조사생성13 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "OPEN",
+    "access_code": "82581",
+    "uuid": "61149062394764764474",
+    "target_count": 11,
+    "is_private": false,
+    "is_bookmark": true,
+    "completed_count": 30
   },
   {
-    uuid: "b8248ef2f3824d43182169ffda9f9232",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 14주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-11-23",
-    end_at: "2024-12-03",
-    is_closed: false,
-    is_bookmark: false,
-    completed_count: 5,
-    target_count: 27
+    "title": "설문조사 생성 테스트14",
+    "tag": "설문조사생성14 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "CLOSED",
+    "access_code": "90701",
+    "uuid": "58812308217458843249",
+    "target_count": 35,
+    "is_private": false,
+    "is_bookmark": false,
+    "completed_count": 20
   },
   {
-    uuid: "1b7b515c363c9e69904d164882c2d5f4",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 15주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-11-30",
-    end_at: "2024-12-05",
-    is_closed: false,
-    is_bookmark: false,
-    completed_count: 10,
-    target_count: 20
+    "title": "설문조사 생성 테스트15",
+    "tag": "설문조사생성15 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "OPEN",
+    "access_code": "53512",
+    "uuid": "36463169112936639978",
+    "target_count": 47,
+    "is_private": false,
+    "is_bookmark": false,
+    "completed_count": 0
   },
   {
-    uuid: "76a0017123bcb4d364c9b8757089a516",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 16주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-12-17",
-    end_at: "2024-12-20",
-    is_closed: true,
-    is_bookmark: false,
-    completed_count: 17,
-    target_count: 29
-  },
-  {
-    uuid: "edb7cb7a87c2d35e65e00eea0879fed5",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 17주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-12-23",
-    end_at: "2024-12-29",
-    is_closed: false,
-    is_bookmark: true,
-    completed_count: 25,
-    target_count: 27
-  },
-  {
-    uuid: "f1854559821c51a31ef18a8e8a6c3f1e",
-    user: 1,
-    title: "프론트엔드 6기 만족도 조사 18주차",
-    tag: "오즈부트캠프",
-    create_at: "2024-11-08",
-    end_at: "2024-12-03",
-    is_closed: false,
-    is_bookmark: false,
-    completed_count: 16,
-    target_count: 24
+    "title": "설문조사 생성 테스트16",
+    "tag": "설문조사생성16 태그",
+    "create_at": "2025-01-08",
+    "end_at": "2025-01-31",
+    "is_closed": "OPEN",
+    "access_code": "67828",
+    "uuid": "37620295372274135693",
+    "target_count": 23,
+    "is_private": true,
+    "is_bookmark": true,
+    "completed_count": 2
   }
-];
+]
 
-// 체크박스 컴포넌트 - 컴포넌트 분리 예정
+// 체크박스 컴포넌트
 const CheckboxWithLabel = ({ checked, onChange, label }: { checked: boolean; onChange: (checked: boolean) => void; label?: string }) => (
   <div className="relative flex items-center gap-6">
     <div className="relative w-5 h-5">
@@ -264,7 +242,8 @@ const CheckboxWithLabel = ({ checked, onChange, label }: { checked: boolean; onC
 );
 
 export default function Forms() {
-  const [forms, setForms] = useState<Form[]>(
+  const navigate = useNavigate();
+  const [forms, setForms] = useState<FormListItem[]>(
     [...mockForms].sort((a, b) => {
       if (a.is_bookmark === b.is_bookmark) return 0;
       return a.is_bookmark ? -1 : 1;
@@ -288,13 +267,6 @@ export default function Forms() {
 
   const handleToggleBookmark = async (formId: string) => {
     try {
-      // API 호출 예시
-      // const response = await fetch(/api/forms/${formId}/bookmark, {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ is_bookmark: true })
-      // });
-      
       const updatedForms = forms.map(form => {
         if (form.uuid === formId) {
           return { ...form, is_bookmark: !form.is_bookmark };
@@ -317,11 +289,6 @@ export default function Forms() {
     if (!window.confirm('선택한 폼을 삭제하시겠습니까?\n\n삭제한 후에는 복구할 수 없습니다.')) return;
     
     try {
-      // API 호출 예시
-      // await Promise.all(selectedForms.map(formId =>
-      //   fetch(/api/forms/${formId}, { method: 'DELETE' })
-      // ));
-      
       setForms(prev => prev.filter(form => !selectedForms.includes(form.uuid)));
       setSelectedForms([]);
     } catch (error) {
@@ -329,10 +296,40 @@ export default function Forms() {
     }
   };
 
-  const getFormStatus = (form: Form): '임시 저장' | '발행' | '종료' => {
-    if (form.is_closed) return '종료';
-    // 추가적인 상태 판단 로직 필요 (임시저장/발행)
-    return '발행';
+  const getFormStatus = (form: FormListItem): '임시 저장' | '발행' | '종료' => {
+    switch(form.is_closed) {
+      case 'CLOSED':
+        return '종료';
+      case 'TEMP':
+        return '임시 저장';
+      case 'OPEN':
+        return '발행';
+      default:
+        throw new Error(`Unexpected form status: ${form.is_closed}`);
+    }
+};
+
+  const handleActionButton = (form: FormListItem) => {
+    const status = getFormStatus(form);
+    if (status === '임시 저장') {
+      return (
+        <div className="flex gap-2">
+          <Button size="sm" variant="neutral" className="w-14">수정</Button>
+          <Button size="sm" variant="neutral" className="w-20">발행하기</Button>
+        </div>
+      );
+    } else {
+      return (
+        <Button 
+          size="sm" 
+          variant="neutral" 
+          className="w-[146px]"
+          onClick={() => navigate(`/form/summary/uuid:${form.uuid}`)}
+        >
+          결과 보기
+        </Button>
+      );
+    }
   };
 
   return (
@@ -359,14 +356,14 @@ export default function Forms() {
                   <Button
                     variant="primary"
                     size="sm"
-                    to="/forms/create"
+                    onClick={() => navigate('/forms/create')}
                   >
                     폼 만들기
                   </Button>
                 </div>
               </div>
             </div>
-
+  
             <div className="flex-1 overflow-hidden px-8 pb-8">
               <div className="h-full flex flex-col">
                 <table className="w-full table-fixed">
@@ -464,14 +461,7 @@ export default function Forms() {
                               </Button>
                             </td>
                             <td className="p-4">
-                              {status === '임시 저장' ? (
-                                <div className="flex gap-2">
-                                  <Button size="sm" variant="neutral" className="w-14">수정</Button>
-                                  <Button size="sm" variant="neutral" className="w-20">발행하기</Button>
-                                </div>
-                              ) : (
-                                <Button size="sm" variant="neutral" className="w-[146px]">결과 보기</Button>
-                              )}
+                              {handleActionButton(form)}
                             </td>
                             <td className="p-4 rounded-r-lg">
                               <div className="flex gap-4 text-pollloop-brown-01">
@@ -503,8 +493,7 @@ export default function Forms() {
           </div>
         </div>
       </div>
-
-
+  
       {isPreviewModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="w-[612px] bg-pollloop-light-beige rounded-2xl border border-[0.5px] border-pollloop-brown-01">
