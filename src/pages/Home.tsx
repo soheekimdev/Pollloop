@@ -16,34 +16,56 @@ export default function Home() {
   const testHomeData: HomeUserData = {
     forms: [
       {
-        author_id: 111,
-        id: 124,
-        title: '오즈_만족도조사_6기_14주',
-        tag: '6기만족도',
-        end_at: '20260116',
-        status: 'OPEN',
-        target_count: 100,
-        actual_count: 56,
+        title: '설문조사 생성 테스트1',
+        tag: '설문조사생성1 태그',
+        create_at: '2025-01-08',
+        end_at: '2025-01-31',
+        is_closed: 'TEMP',
+        access_code: '12345',
+        uuid: '2bd64b2e1364441b9840020039906fe4',
+        target_count: 30,
+        completed_count: 18,
+        is_private: true,
+        is_bookmark: false,
       },
       {
-        author_id: 111,
-        id: 125,
-        title: '오즈_만족도조사_6기_15주',
-        tag: '6기만족도',
-        end_at: '20250116',
-        status: 'OPEN',
-        target_count: 100,
-        actual_count: 56,
+        title: '설문조사 생성 테스트2',
+        tag: '설문조사생성1 태그',
+        create_at: '2025-01-08',
+        end_at: '2025-01-31',
+        is_closed: 'OPEN',
+        access_code: '12345',
+        uuid: 'e57fdf0f6a4f46a0b8d80956f13df3ea',
+        target_count: 30,
+        completed_count: 25,
+        is_private: true,
+        is_bookmark: false,
       },
       {
-        author_id: 111,
-        id: 131,
-        title: '오즈_만족도조사_6기_16주',
-        tag: '6기만족도',
-        end_at: '20250116',
-        status: 'CLOSED',
-        target_count: 100,
-        actual_count: 94,
+        title: '설문조사 생성 테스트3',
+        tag: '설문조사생성1 태그',
+        create_at: '2025-01-08',
+        end_at: '2025-01-31',
+        is_closed: 'CLOSED',
+        access_code: '12345',
+        uuid: '5adfd62e31074cab914b2c2ca04fa317',
+        target_count: 3,
+        completed_count: 2,
+        is_private: true,
+        is_bookmark: false,
+      },
+      {
+        title: '설문조사 생성 테스트1',
+        tag: '설문조사생성1 태그',
+        create_at: '2025-01-09',
+        end_at: '2025-01-31',
+        is_closed: 'OPEN',
+        access_code: '12345',
+        uuid: '04a10147b8cc4ef991b483384086ab4b',
+        target_count: 30,
+        completed_count: 0,
+        is_private: true,
+        is_bookmark: false,
       },
     ],
     asks: [
@@ -78,9 +100,11 @@ export default function Home() {
     const loadHomeData = async () => {
       try {
         setIsLoading(true);
-        // const data = await fetchHomeData(userId);
+        // const data = await fetchHomeData('1');
+        console.log('USER 아이디', userId);
         // console.log('API 응답 데이터:', data);
         // setHomeData(data);
+
         setHomeData(testHomeData);
       } catch (err) {
         console.error('데이터 로딩 중 에러:', err);
