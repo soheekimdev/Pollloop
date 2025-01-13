@@ -48,7 +48,7 @@ export default function FormResponse() {
   }
 
   return (
-    <div className="flex flex-col gap-4 max-w-3xl mx-auto pt-10 pb-20 px-4">
+    <div className="flex flex-col gap-2 max-w-3xl mx-auto pt-10 pb-20 px-4">
       <div className="flex flex-col align-center justify-center gap-2 p-8 bg-[#FFC76F] rounded-md">
         {formData.subtitle && (
           <h1 className="text-2xl font-bold text-center">{formData.subtitle}</h1>
@@ -159,31 +159,30 @@ export default function FormResponse() {
                     return;
                   }
 
-                    try {
-                      const formData = new FormData();
-                      formData.append('file', file);
+                  try {
+                    const formData = new FormData();
+                    formData.append('file', file);
 
-                      // TODO: API 호출하여 파일 업로드 (실제 엔드포인트로 수정 필요)
-                      const response = await fetch('/file/upload', {
-                        method: 'POST',
-                        body: formData,
-                      });
+                    // TODO: API 호출하여 파일 업로드 (실제 엔드포인트로 수정 필요)
+                    const response = await fetch('/file/upload', {
+                      method: 'POST',
+                      body: formData,
+                    });
 
-                      if (!response.ok) {
-                        throw new Error('파일 업로드에 실패했습니다.');
-                      }
-
-                      const { fileUrl } = await response.json();
-                      handleAnswerChange(question.question_order, fileUrl);
-                    } catch (error) {
-                      console.error('File upload error:', error);
+                    if (!response.ok) {
+                      throw new Error('파일 업로드에 실패했습니다.');
                     }
-                  }}
-                />
-              )}
-            </QuestionCard>
-          ))}
-        </div>
+
+                    const { fileUrl } = await response.json();
+                    handleAnswerChange(question.question_order, fileUrl);
+                  } catch (error) {
+                    console.error('File upload error:', error);
+                  }
+                }}
+              />
+            )}
+          </QuestionCard>
+        ))}
 
         <Button type="submit" variant="primary" size="lg" className="self-end">
           제출하기
