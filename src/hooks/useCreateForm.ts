@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { instance } from '@/api/axios';
 import { FormInfo, Question } from '@/types/forms/forms.types';
+import { AxiosError } from 'axios';
 
 interface CreateFormData {
   formInfo: FormInfo;
@@ -50,28 +51,34 @@ export function useCreateForm() {
 
       console.log('서버 응답 전체:', response);
       console.log('폼 생성 성공:', response.data);
+
+      // TODO: 실제 URL로 변경 및 모달에 포함 필요
+      console.log('참여 폼 URL:', `localhost:5173/forms/response/${response.data.uuid}`);
       return response.data;
-    } catch (err: any) {
-      // 서버 응답의 상세 내용 로깅
-      console.error('에러 객체:', err);
-      console.error('서버 응답 상태:', err.response?.status);
-      console.error('서버 응답 데이터:', err.response?.data);
+    } catch (err) {
+      console.log('에러 발생:', err);
 
-      let errorMessage;
-      if (err.response?.data) {
-        errorMessage =
-          typeof err.response.data === 'string'
-            ? err.response.data
-            : JSON.stringify(err.response.data);
-      } else if (err.message) {
-        errorMessage = err.message;
-      } else {
-        errorMessage = '폼 생성 중 오류가 발생했습니다.';
+      if (err instanceof AxiosError) {
+        console.error('에러 객체:', err);
+        console.error('서버 응답 상태:', err.response?.status);
+        console.error('서버 응답 데이터:', err.response?.data);
+
+        let errorMessage;
+        if (err.response?.data) {
+          errorMessage =
+            typeof err.response.data === 'string'
+              ? err.response.data
+              : JSON.stringify(err.response.data);
+        } else if (err.message) {
+          errorMessage = err.message;
+        } else {
+          errorMessage = '폼 생성 중 오류가 발생했습니다.';
+        }
+
+        console.error('폼 생성 실패:', errorMessage);
+        setError(errorMessage);
+        throw new Error(errorMessage);
       }
-
-      console.error('폼 생성 실패:', errorMessage);
-      setError(errorMessage);
-      throw new Error(errorMessage);
     } finally {
       setIsLoading(false);
     }

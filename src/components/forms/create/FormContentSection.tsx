@@ -42,94 +42,95 @@ export default function FormContentSection({
         </Button>
       </SectionTitle>
 
-      <FormCover
-        title={formInfo.subtitle}
-        description={formInfo.form_description}
-        onTitleChange={value => onFormInfoUpdate({ subtitle: value })}
-        onDescriptionChange={value => onFormInfoUpdate({ form_description: value })}
-      />
-
-      {questions.map(question => (
-        <QuestionCard
-          key={question.id}
-          onClick={() => onQuestionSelect(question.id)}
-          onDelete={() => onQuestionDelete(question.id)}
-          isSelected={selectedQuestionId === question.id}
-        >
-          {question.layout_type === 'SHORT_TYPE' && (
-            <ShortAnswer
-              data={question}
-              onUpdate={updates => onQuestionUpdate(question.id, updates)}
-            />
-          )}
-          {question.layout_type === 'LONG_TYPE' && (
-            <LongAnswer
-              data={question}
-              onUpdate={updates => onQuestionUpdate(question.id, updates)}
-            />
-          )}
-          {question.layout_type === 'CHECKBOX_TYPE' && (
-            <CheckboxAnswer
-              data={question}
-              onUpdate={updates => onQuestionUpdate(question.id, updates)}
-            />
-          )}
-          {question.layout_type === 'RADIO_TYPE' && (
-            <RadioAnswer
-              data={question}
-              onUpdate={updates => onQuestionUpdate(question.id, updates)}
-            />
-          )}
-          {question.layout_type === 'DROPDOWN_TYPE' && (
-            <DropdownAnswer
-              data={question}
-              onUpdate={updates => onQuestionUpdate(question.id, updates)}
-            />
-          )}
-          {question.layout_type === 'RANGE_TYPE' && (
-            <RangeAnswer
-              data={question}
-              onUpdate={updates => onQuestionUpdate(question.id, updates)}
-            />
-          )}
-          {question.layout_type === 'STAR_RATING_TYPE' && (
-            <StarRatingAnswer
-              data={question}
-              onUpdate={updates => onQuestionUpdate(question.id, updates)}
-            />
-          )}
-          {question.layout_type === 'IMAGE_SELECT_TYPE' && (
-            <ImageSelectAnswer
-              data={question}
-              onUpdate={updates => onQuestionUpdate(question.id, updates)}
-            />
-          )}
-          {question.layout_type === 'NUMBER_TYPE' && (
-            <NumberAnswer
-              data={question}
-              onUpdate={updates => onQuestionUpdate(question.id, updates)}
-            />
-          )}
-          {question.layout_type === 'DATE_TYPE' && (
-            <DateAnswer
-              data={question}
-              onUpdate={updates => onQuestionUpdate(question.id, updates)}
-            />
-          )}
-          {question.layout_type === 'EMAIL_TYPE' && (
-            <EmailAnswer
-              data={question}
-              onUpdate={updates => onQuestionUpdate(question.id, updates)}
-            />
-          )}
-          {question.layout_type === 'FILE_UPLOAD_TYPE' && (
-            <FileUploadAnswer
-              data={question}
-              onUpdate={updates => onQuestionUpdate(question.id, updates)}
-            />
-          )}
-        </QuestionCard>
-      ))}
+      <div className="flex flex-col gap-4">
+        <FormCover
+          title={formInfo.subtitle}
+          description={formInfo.form_description}
+          onTitleChange={value => onFormInfoUpdate({ subtitle: value })}
+          onDescriptionChange={value => onFormInfoUpdate({ form_description: value })}
+        />
+        {questions.map(question => (
+          <QuestionCard
+            key={question.id}
+            onClick={() => onQuestionSelect(question.id)}
+            onDelete={() => onQuestionDelete(question.id)}
+            isSelected={selectedQuestionId === question.id}
+          >
+            {question.layout_type === 'SHORT_TYPE' && (
+              <ShortAnswer
+                data={question}
+                onUpdate={updates => onQuestionUpdate(question.id, updates)}
+              />
+            )}
+            {question.layout_type === 'LONG_TYPE' && (
+              <LongAnswer
+                data={question}
+                onUpdate={updates => onQuestionUpdate(question.id, updates)}
+              />
+            )}
+            {question.layout_type === 'CHECKBOX_TYPE' && (
+              <CheckboxAnswer
+                data={question}
+                onUpdate={updates => onQuestionUpdate(question.id, updates)}
+              />
+            )}
+            {question.layout_type === 'RADIO_TYPE' && (
+              <RadioAnswer
+                data={question}
+                onUpdate={updates => onQuestionUpdate(question.id, updates)}
+              />
+            )}
+            {question.layout_type === 'DROPDOWN_TYPE' && (
+              <DropdownAnswer
+                data={question}
+                onUpdate={updates => onQuestionUpdate(question.id, updates)}
+              />
+            )}
+            {question.layout_type === 'RANGE_TYPE' && (
+              <RangeAnswer
+                data={question}
+                onUpdate={updates => onQuestionUpdate(question.id, updates)}
+              />
+            )}
+            {question.layout_type === 'STAR_RATING_TYPE' && (
+              <StarRatingAnswer
+                data={question}
+                onUpdate={updates => onQuestionUpdate(question.id, updates)}
+              />
+            )}
+            {question.layout_type === 'IMAGE_SELECT_TYPE' && (
+              <ImageSelectAnswer
+                data={question}
+                onUpdate={updates => onQuestionUpdate(question.id, updates)}
+              />
+            )}
+            {question.layout_type === 'NUMBER_TYPE' && (
+              <NumberAnswer
+                data={question}
+                onUpdate={updates => onQuestionUpdate(question.id, updates)}
+              />
+            )}
+            {question.layout_type === 'DATE_TYPE' && (
+              <DateAnswer
+                data={question}
+                onUpdate={updates => onQuestionUpdate(question.id, updates)}
+              />
+            )}
+            {question.layout_type === 'EMAIL_TYPE' && (
+              <EmailAnswer
+                data={question}
+                onUpdate={updates => onQuestionUpdate(question.id, updates)}
+              />
+            )}
+            {question.layout_type === 'FILE_UPLOAD_TYPE' && (
+              <FileUploadAnswer
+                data={question}
+                onUpdate={updates => onQuestionUpdate(question.id, updates)}
+              />
+            )}
+          </QuestionCard>
+        ))}
+      </div>
     </Section>
   );
 }
