@@ -21,11 +21,15 @@ const buttonVariants = cva(
       fullWidth: {
         true: 'w-full',
       },
+      flex: {
+        true: 'flex-1',
+      },
     },
     defaultVariants: {
       size: 'md',
       variant: 'secondary',
       fullWidth: false,
+      flex: false,
     },
   },
 );
@@ -34,8 +38,18 @@ interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {}
 
-export default function Button({ size, variant, fullWidth, className, ...props }: ButtonProps) {
+export default function Button({
+  size,
+  variant,
+  fullWidth,
+  flex,
+  className,
+  ...props
+}: ButtonProps) {
   return (
-    <button className={cn(buttonVariants({ size, variant, fullWidth }), className)} {...props} />
+    <button
+      className={cn(buttonVariants({ size, variant, fullWidth, flex }), className)}
+      {...props}
+    />
   );
 }

@@ -1,4 +1,5 @@
 import Button from '@/components/common/Button';
+import Modal from '@/components/common/Modal';
 import Section from '@/components/forms/create/Section';
 import SectionTitle from '@/components/forms/create/SectionTitle';
 import FormCover from '@/components/forms/create/FormCover';
@@ -16,6 +17,7 @@ import RangeAnswer from '@/components/forms/create/RangeAnswer';
 import ShortAnswer from '@/components/forms/create/ShortAnswer';
 import StarRatingAnswer from '@/components/forms/create/StarRatingAnswer';
 import { FormContentSectionProps } from '@/types/forms/forms.types';
+import { useModal } from '@/hooks/useModal';
 
 export default function FormContentSection({
   formInfo,
@@ -28,10 +30,12 @@ export default function FormContentSection({
   onSave,
   onPublish,
 }: FormContentSectionProps) {
+  const { isOpen, open, close } = useModal();
+
   return (
     <Section className="flex-1">
       <SectionTitle title={formInfo.title || '새로운 폼'}>
-        <Button type="button" variant="secondary">
+        <Button type="button" variant="secondary" onClick={open}>
           미리 보기
         </Button>
         <Button type="button" variant="secondary" onClick={onSave}>
@@ -41,6 +45,11 @@ export default function FormContentSection({
           발행하기
         </Button>
       </SectionTitle>
+
+      <Modal isOpen={isOpen} onClose={close}>
+        <Modal.Header title="미리 보기" onClose={close} />
+        <Modal.Content>내용</Modal.Content>
+      </Modal>
 
       <div className="flex flex-col gap-4">
         <FormCover
