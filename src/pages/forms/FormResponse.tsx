@@ -48,7 +48,7 @@ export default function FormResponse() {
   }
 
   return (
-    <div className="flex flex-col gap-4 max-w-3xl mx-auto pt-10 pb-20 px-4 md:px-8 lg:px-10">
+    <div className="flex flex-col gap-4 max-w-3xl mx-auto pt-10 pb-20 px-4">
       <div className="flex flex-col align-center justify-center gap-2 p-8 bg-[#FFC76F] rounded-md">
         {formData.subtitle && (
           <h1 className="text-2xl font-bold text-center">{formData.subtitle}</h1>

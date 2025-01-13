@@ -37,7 +37,7 @@ export default function RangeAnswer({ data, value, onChange }: RangeAnswerProps)
         ))}
       </div>
 
-      <p className="text-center">{maxLabelOption?.option_context}</p>
+      <p className="text-center self-end">{maxLabelOption?.option_context}</p>
     </div>
   );
 }
