@@ -8,7 +8,11 @@ interface ImageSelectAnswerProps {
   value?: string;
 }
 
-export default function ImageSelectAnswer({ data, onChange, value }: ImageSelectAnswerProps) {
+export default function ImageSelectAnswer({
+  data,
+  onChange,
+  value,
+}: ImageSelectAnswerProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
       {data.options_of_questions.map(option => (

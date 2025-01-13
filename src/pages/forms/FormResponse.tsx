@@ -56,109 +56,108 @@ export default function FormResponse() {
         {formData.form_description && <p className="text-center">{formData.form_description}</p>}
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          {formData.questions?.map(question => (
-            <QuestionCard
-              key={question.question_order}
-              question={question}
-              hasDescription={
-                question.layout_type === 'FILE_UPLOAD_TYPE'
-                  ? '파일은 최대 1개까지, 파일당 1MB 이하로 업로드 가능합니다.'
-                  : null
-              }
-            >
-              {question.layout_type === 'SHORT_TYPE' && (
-                <ShortAnswer
-                  data={question}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'LONG_TYPE' && (
-                <LongAnswer
-                  data={question}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'CHECKBOX_TYPE' && (
-                <CheckboxAnswer
-                  data={question}
-                  value={(answers[question.question_order] as string[]) || []}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'RADIO_TYPE' && (
-                <RadioAnswer
-                  data={question}
-                  value={
-                    Array.isArray(answers[question.question_order])
-                      ? undefined
-                      : (answers[question.question_order] as string)
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 flex-1">
+        {formData.questions?.map(question => (
+          <QuestionCard
+            key={question.question_order}
+            question={question}
+            hasDescription={
+              question.layout_type === 'FILE_UPLOAD_TYPE'
+                ? '파일은 최대 1개까지, 파일당 1MB 이하로 업로드 가능합니다.'
+                : null
+            }
+          >
+            {question.layout_type === 'SHORT_TYPE' && (
+              <ShortAnswer
+                data={question}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'LONG_TYPE' && (
+              <LongAnswer
+                data={question}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'CHECKBOX_TYPE' && (
+              <CheckboxAnswer
+                data={question}
+                value={(answers[question.question_order] as string[]) || []}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'RADIO_TYPE' && (
+              <RadioAnswer
+                data={question}
+                value={
+                  Array.isArray(answers[question.question_order])
+                    ? undefined
+                    : (answers[question.question_order] as string)
+                }
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'DROPDOWN_TYPE' && (
+              <DropdownAnswer
+                data={question}
+                value={
+                  Array.isArray(answers[question.question_order])
+                    ? ''
+                    : (answers[question.question_order] as string) || ''
+                }
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'RANGE_TYPE' && (
+              <RangeAnswer
+                data={question}
+                value={
+                  Array.isArray(answers[question.question_order])
+                    ? undefined
+                    : (answers[question.question_order] as string)
+                }
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'STAR_RATING_TYPE' && (
+              <StarRatingAnswer
+                data={question}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'IMAGE_SELECT_TYPE' && (
+              <ImageSelectAnswer
+                data={question}
+                value={answers[question.question_order] as string}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'NUMBER_TYPE' && (
+              <NumberAnswer
+                data={question}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'DATE_TYPE' && (
+              <DateAnswer
+                data={question}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'EMAIL_TYPE' && (
+              <EmailAnswer
+                data={question}
+                onChange={value => handleAnswerChange(question.question_order, value)}
+              />
+            )}
+            {question.layout_type === 'FILE_UPLOAD_TYPE' && (
+              <FileUploadAnswer
+                data={question}
+                onChange={async file => {
+                  if (!file) {
+                    handleAnswerChange(question.question_order, '');
+                    return;
                   }
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'DROPDOWN_TYPE' && (
-                <DropdownAnswer
-                  data={question}
-                  value={
-                    Array.isArray(answers[question.question_order])
-                      ? ''
-                      : (answers[question.question_order] as string) || ''
-                  }
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'RANGE_TYPE' && (
-                <RangeAnswer
-                  data={question}
-                  value={
-                    Array.isArray(answers[question.question_order])
-                      ? undefined
-                      : (answers[question.question_order] as string)
-                  }
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'STAR_RATING_TYPE' && (
-                <StarRatingAnswer
-                  data={question}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'IMAGE_SELECT_TYPE' && (
-                <ImageSelectAnswer
-                  data={question}
-                  value={answers[question.question_order] as string}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'NUMBER_TYPE' && (
-                <NumberAnswer
-                  data={question}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'DATE_TYPE' && (
-                <DateAnswer
-                  data={question}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'EMAIL_TYPE' && (
-                <EmailAnswer
-                  data={question}
-                  onChange={value => handleAnswerChange(question.question_order, value)}
-                />
-              )}
-              {question.layout_type === 'FILE_UPLOAD_TYPE' && (
-                <FileUploadAnswer
-                  data={question}
-                  onChange={async file => {
-                    if (!file) {
-                      handleAnswerChange(question.question_order, '');
-                      return;
-                    }
 
                     try {
                       const formData = new FormData();

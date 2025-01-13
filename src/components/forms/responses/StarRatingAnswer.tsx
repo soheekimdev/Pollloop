@@ -5,6 +5,8 @@ import { Star } from 'lucide-react';
 interface StarRatingAnswerProps {
   data: Question;
   onChange: (value: string) => void;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
 export default function StarRatingAnswer({ data, onChange }: StarRatingAnswerProps) {

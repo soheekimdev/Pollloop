@@ -7,6 +7,8 @@ interface CheckboxAnswerProps {
   data: Question;
   value?: string[];
   onChange: (value: string[]) => void;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
 export default function CheckboxAnswer({ data, value = [], onChange }: CheckboxAnswerProps) {

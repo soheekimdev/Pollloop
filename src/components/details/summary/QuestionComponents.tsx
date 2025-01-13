@@ -19,7 +19,7 @@ import {
 } from 'recharts';
 
 import useWindowSize from '../../../hooks/useWindowSize';
-import { Copy, Download, Star } from 'lucide-react';
+import { Check, CheckCircle, CheckCircle2, Copy, Download, Star } from 'lucide-react';
 import {
   ShortResultType,
   LongResultType,
@@ -32,10 +32,12 @@ import {
   DateResultType,
   EmailResultType,
   FileUploadResultType,
-  RangeResultsWithNumType,
+  RangeResultType,
 } from '../../../types/form-details.types';
 import { copyToClipboard } from '../../../utils/copyToClipboard';
 import { useInView } from '../../../hooks/useInView';
+import ImagePlaceholder from '../../common/ImagePlaceholder';
+import { useState } from 'react';
 
 const POLLLOOP_RED_01 = '#fbbaba';
 const POLLLOOP_GREEN_01 = '#b3f5b3';
@@ -61,11 +63,8 @@ const ShortTypeComponent: React.FC<{ results: ShortResultType[] }> = ({ results 
             key={index}
             className="flex items-center justify-between gap-2 px-3 py-1 text-sm border rounded-lg cursor-pointer transition-smooth group hover:shadow-primary hover:border-pollloop-orange border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15"
           >
-            <p>{result.value}</p>
-            <Copy
-              size={14}
-              className="flex-shrink-0 transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100"
-            />
+            <p className="break-all">{result.value}</p>
+            <Copy size={14} className="flex-shrink-0 hidden ml-1 group-hover:block" />
           </li>
         ))}
       </ul>
@@ -83,7 +82,7 @@ const LongTypeComponent: React.FC<{ results: LongResultType[] }> = ({ results })
             key={index}
             className="flex items-center justify-between gap-2 px-3 py-1 text-sm border rounded-lg cursor-pointer transition-smooth group hover:shadow-primary hover:border-pollloop-orange border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15"
           >
-            <p>{result.value}</p>
+            <p className="break-all">{result.value}</p>
             <Copy size={14} className="flex-shrink-0 hidden ml-1 group-hover:block" />
           </li>
         ))}
@@ -165,7 +164,7 @@ const CheckboxComponent: React.FC<{ results: CheckboxResultType[] }> = ({ result
   };
 
   return (
-    <div ref={ref} className="scrollable">
+    <div ref={ref} className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div
         className="min-w-[600px] overflow-hidden w-full"
         style={{
@@ -268,10 +267,16 @@ const RadioComponent: React.FC<{ results: RadioResultType[] }> = ({ results }) =
   const { ref, isInView } = useInView<HTMLDivElement>();
 
   const RADIAN = Math.PI / 180;
+
+  const processedData = results.map(item => ({
+    ...item,
+    count: item.count === 0 ? 0.1 : item.count,
+  }));
+
   const CustomTooltip: React.FC<TooltipProps<string, string>> = ({ active, payload }) => {
     if (active && payload && payload.length) {
-      const { label, count, values } = payload[0].payload;
-
+      const { label, values } = payload[0].payload;
+      const actualCount = results.find(r => r.label === label)?.count || 0;
       return (
         <div
           className="hidden lg:block"
@@ -286,39 +291,46 @@ const RadioComponent: React.FC<{ results: RadioResultType[] }> = ({ results }) =
           }}
         >
           {label === '기타' ? (
-            <ul className="flex flex-col gap-2">
-              <li
-                className="list-disc scrollable"
-                style={{
-                  minWidth: '250px',
-                  maxWidth: '500px',
-                  maxHeight: '250px',
-                  overflowY: 'auto',
-                  padding: '4px',
-                  pointerEvents: 'auto',
-                }}
-                onWheel={e => {
-                  e.stopPropagation();
-                }}
-              >
-                {values
-                  .filter((value: string) => value !== '')
-                  .map((value: string, index: number) => (
-                    <p key={index} className="flex items-center pr-4">
-                      <span className="py-1 mr-2 text-sm text-pollloop-brown-01/50 ">{`#${index + 1}`}</span>
-                      <span>{value}</span>
-                    </p>
-                  ))}
-              </li>
-            </ul>
+            values?.filter((value: string) => value !== '').length > 0 ? (
+              <ul className="flex flex-col gap-2">
+                <li
+                  className="list-disc scrollable"
+                  style={{
+                    minWidth: '150px',
+                    maxWidth: '500px',
+                    minHeight: '30px',
+                    maxHeight: '250px',
+                    overflowY: 'auto',
+                    padding: '4px',
+                    pointerEvents: 'auto',
+                  }}
+                  onWheel={e => {
+                    e.stopPropagation();
+                  }}
+                >
+                  {values
+                    .filter((value: string) => value !== '')
+                    .map((value: string, index: number) => (
+                      <p key={index} className="flex items-center pr-4">
+                        <span className="py-1 mr-2 text-sm text-pollloop-brown-01/50 ">{`#${index + 1}`}</span>
+                        <span>{value}</span>
+                      </p>
+                    ))}
+                </li>
+              </ul>
+            ) : (
+              <p>기타</p>
+            )
           ) : (
             <p>{label}</p>
           )}
-          {label === '기타' ? (
-            <p className="mt-2 text-sm text-right text-pollloop-purple-01">{`참여자 수: ${count}명 | 기타 (내용없음): ${values?.filter((value: string) => value === '').length}`}</p>
-          ) : (
-            <p className="mt-2 text-sm text-right text-pollloop-purple-01">{`참여자 수: ${count}명`}</p>
-          )}
+          <p className="mt-2 text-sm text-right text-pollloop-purple-01">
+            {`참여자 수: ${actualCount}명${
+              label === '기타' && values?.filter((value: string) => value === '').length > 0
+                ? ` | 기타 (내용없음): ${values?.filter((value: string) => value === '').length}`
+                : ''
+            }`}
+          </p>
         </div>
       );
     }
@@ -349,8 +361,7 @@ const RadioComponent: React.FC<{ results: RadioResultType[] }> = ({ results }) =
 
     if (dataItem) {
       const { label, count } = dataItem;
-      // 화면 너비에 따라 동적으로 최대 글자 수 계산
-      const dynamicMaxLength = Math.max(10, Math.floor(width / 80)); // 최소 15자는 보장
+      const dynamicMaxLength = Math.max(8, Math.floor(width / 80));
       const displayText =
         label.length > dynamicMaxLength ? `${label.slice(0, dynamicMaxLength)}...` : label;
 
@@ -375,19 +386,19 @@ const RadioComponent: React.FC<{ results: RadioResultType[] }> = ({ results }) =
   };
 
   return (
-    <div ref={ref} className="scrollable">
+    <div ref={ref} className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div className="min-w-[600px] overflow-hidden pb-10">
         <ResponsiveContainer width="100%" height={350}>
           <PieChart>
             <Tooltip content={<CustomTooltip />} />
             <Pie
-              data={results}
+              data={processedData}
               cx="50%"
               cy="50%"
               labelLine={true}
               label={renderCustomizedLabel}
               outerRadius={120}
-              fill="#8884d8"
+              fill={POLLLOOP_PURPLE_01}
               dataKey="count"
               isAnimationActive={isInView}
               animationDuration={800}
@@ -410,10 +421,15 @@ const DropdownComponent: React.FC<{ results: DropdownResultType[] }> = ({ result
 
   const RADIAN = Math.PI / 180;
 
+  const processedData = results.map(item => ({
+    ...item,
+    count: item.count === 0 ? 0.1 : item.count,
+  }));
+
   const CustomTooltip: React.FC<TooltipProps<string, string>> = ({ active, payload }) => {
     if (active && payload && payload.length) {
-      const { label, count, values } = payload[0].payload;
-
+      const { label, values } = payload[0].payload;
+      const actualCount = results.find(r => r.label === label)?.count || 0;
       return (
         <div
           className="hidden lg:block"
@@ -428,39 +444,46 @@ const DropdownComponent: React.FC<{ results: DropdownResultType[] }> = ({ result
           }}
         >
           {label === '기타' ? (
-            <ul className="flex flex-col gap-2">
-              <li
-                className="list-disc scrollable"
-                style={{
-                  minWidth: '250px',
-                  maxWidth: '500px',
-                  maxHeight: '250px',
-                  overflowY: 'auto',
-                  padding: '4px',
-                  pointerEvents: 'auto',
-                }}
-                onWheel={e => {
-                  e.stopPropagation();
-                }}
-              >
-                {values
-                  .filter((value: string) => value !== '')
-                  .map((value: string, index: number) => (
-                    <p key={index} className="flex items-center pr-4">
-                      <span className="py-1 mr-2 text-sm text-pollloop-brown-01/50 ">{`#${index + 1}`}</span>
-                      <span>{value}</span>
-                    </p>
-                  ))}
-              </li>
-            </ul>
+            values?.filter((value: string) => value !== '').length > 0 ? (
+              <ul className="flex flex-col gap-2">
+                <li
+                  className="list-disc scrollable"
+                  style={{
+                    minWidth: '150px',
+                    maxWidth: '500px',
+                    minHeight: '30px',
+                    maxHeight: '250px',
+                    overflowY: 'auto',
+                    padding: '4px',
+                    pointerEvents: 'auto',
+                  }}
+                  onWheel={e => {
+                    e.stopPropagation();
+                  }}
+                >
+                  {values
+                    .filter((value: string) => value !== '')
+                    .map((value: string, index: number) => (
+                      <p key={index} className="flex items-center pr-4">
+                        <span className="py-1 mr-2 text-sm text-pollloop-brown-01/50 ">{`#${index + 1}`}</span>
+                        <span>{value}</span>
+                      </p>
+                    ))}
+                </li>
+              </ul>
+            ) : (
+              <p>기타</p>
+            )
           ) : (
             <p>{label}</p>
           )}
-          {label === '기타' ? (
-            <p className="mt-2 text-sm text-right text-pollloop-purple-01">{`참여자 수: ${count}명 | 기타 (내용없음): ${values?.filter((value: string) => value === '').length}`}</p>
-          ) : (
-            <p className="mt-2 text-sm text-right text-pollloop-purple-01">{`참여자 수: ${count}명`}</p>
-          )}
+          <p className="mt-2 text-sm text-right text-pollloop-purple-01">
+            {`참여자 수: ${actualCount}명${
+              label === '기타' && values?.filter((value: string) => value === '').length > 0
+                ? ` | 기타 (내용없음): ${values?.filter((value: string) => value === '').length}`
+                : ''
+            }`}
+          </p>
         </div>
       );
     }
@@ -491,7 +514,7 @@ const DropdownComponent: React.FC<{ results: DropdownResultType[] }> = ({ result
 
     if (dataItem) {
       const { label, count } = dataItem;
-      const dynamicMaxLength = Math.max(10, Math.floor(width / 80)); // 최소 15자는 보장
+      const dynamicMaxLength = Math.max(10, Math.floor(width / 80));
       const displayText =
         label.length > dynamicMaxLength ? `${label.slice(0, dynamicMaxLength)}...` : label;
 
@@ -516,19 +539,19 @@ const DropdownComponent: React.FC<{ results: DropdownResultType[] }> = ({ result
   };
 
   return (
-    <div ref={ref} className="scrollable">
+    <div ref={ref} className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div className="min-w-[600px] overflow-hidden pb-10">
         <ResponsiveContainer width="100%" height={350}>
           <PieChart>
             <Tooltip content={<CustomTooltip />} />
             <Pie
-              data={results}
+              data={processedData}
               cx="50%"
               cy="50%"
               labelLine={true}
               label={renderCustomizedLabel}
               outerRadius={120}
-              fill="#8884d8"
+              fill={POLLLOOP_PURPLE_01}
               dataKey="count"
               isAnimationActive={isInView}
               animationDuration={800}
@@ -545,28 +568,13 @@ const DropdownComponent: React.FC<{ results: DropdownResultType[] }> = ({ result
   );
 };
 
-const RangeComponent: React.FC<{ results: RangeResultsWithNumType }> = ({
-  results: resultsData,
-}) => {
+const RangeComponent: React.FC<{ results: RangeResultType[] }> = ({ results }) => {
   const { ref, isInView } = useInView<HTMLDivElement>();
   const { width } = useWindowSize();
-  const { results, min_label, max_label } = resultsData;
-
-  const minValue = parseInt(min_label);
-  const maxValue = parseInt(max_label);
-
-  const processedData = Array.from({ length: maxValue - minValue + 1 }, (_, index) => {
-    const value = minValue + index;
-    const existingData = results.find(item => item.label === value);
-    return {
-      value: value,
-      count: existingData ? existingData.count : 0,
-    };
-  });
 
   const CustomTooltip: React.FC<TooltipProps<string, string>> = ({ active, payload }) => {
     if (active && payload && payload.length) {
-      const { value, count } = payload[0].payload;
+      const { label, count } = payload[0].payload;
 
       return (
         <div
@@ -580,7 +588,7 @@ const RangeComponent: React.FC<{ results: RangeResultsWithNumType }> = ({
             maxWidth: width * 0.5,
           }}
         >
-          <p>{value}</p>
+          <p>{label}</p>
           <p className="mt-2 text-sm text-right text-pollloop-purple-01">{`참여자 수: ${count}명`}</p>
         </div>
       );
@@ -589,11 +597,11 @@ const RangeComponent: React.FC<{ results: RangeResultsWithNumType }> = ({
   };
 
   return (
-    <div className="scrollable">
+    <div className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div ref={ref} className="min-w-[600px] overflow-hidden pb-10">
         <ResponsiveContainer width="100%" height={340}>
           <AreaChart
-            data={processedData}
+            data={results}
             margin={{
               top: TOP_SPACE,
               right: 30,
@@ -604,15 +612,13 @@ const RangeComponent: React.FC<{ results: RangeResultsWithNumType }> = ({
             <CartesianGrid strokeDasharray="3 3" stroke={POLLLOOP_BROWN_01} opacity={0.5} />
             <XAxis
               dy={DX_DY_SPACE}
-              dataKey="value"
-              domain={[minValue, maxValue]}
-              type="number"
+              dataKey="label"
               tick={{
                 fill: POLLLOOP_BROWN_01,
               }}
-              axisLine={{ stroke: POLLLOOP_BROWN_01 }}
-              tickCount={maxValue - minValue + 1}
+              domain={['dataMin', 'dataMax']}
               allowDataOverflow
+              axisLine={{ stroke: POLLLOOP_BROWN_01 }}
             />
             <YAxis
               label={{
@@ -683,7 +689,7 @@ const StarRatingComponent: React.FC<{ results: StarRatingResultType[] }> = ({ re
   };
 
   return (
-    <div ref={ref} className="scrollable">
+    <div ref={ref} className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div
         className="min-w-[600px] overflow-hidden w-full"
         style={{
@@ -754,26 +760,56 @@ const ImageSelectComponent: React.FC<{ results: ImageSelectResultType[] }> = ({ 
   const { ref, isInView } = useInView<HTMLDivElement>();
   const { width } = useWindowSize();
 
-  const renderImages = (index: number) => {
-    const imageUrl = results[index - 1].label;
-    const imageSize = width / 10;
+  const Image = ({
+    src,
+    alt,
+    className,
+    style,
+    iconSize,
+  }: {
+    src: string;
+    alt: string;
+    className?: string;
+    style?: React.CSSProperties;
+    iconSize?: number;
+  }) => {
+    const [hasError, setHasError] = useState(false);
+
+    if (!src || hasError) {
+      return (
+        <ImagePlaceholder
+          iconSize={iconSize}
+          className="object-cover object-center rounded-lg border border-pollloop-brown-03"
+          style={style}
+        />
+      );
+    }
 
     return (
-      <foreignObject
-        x={imageSize < 100 ? -imageSize / 2 : '-50'}
-        y="10"
-        width={imageSize}
-        height={imageSize}
-      >
-        <img
+      <img
+        src={src}
+        alt={alt}
+        className={className}
+        style={style}
+        onError={() => setHasError(true)}
+      />
+    );
+  };
+
+  const renderImages = (index: number) => {
+    const imageUrl = results[index - 1].label;
+    const imageSize = Math.min(width / 8, 100);
+
+    return (
+      <foreignObject x={-(imageSize / 2)} y="10" width={100} height={100}>
+        <Image
           src={imageUrl}
           alt={`image-${index}`}
-          className="object-cover rounded-lg bg-pollloop-brown-03"
+          iconSize={imageSize / 2}
+          className="object-cover object-center rounded-lg border border-pollloop-brown-03"
           style={{
             width: `${imageSize}px`,
-            maxWidth: '100px',
             height: `${imageSize}px`,
-            maxHeight: '100px',
           }}
         />
       </foreignObject>
@@ -781,7 +817,7 @@ const ImageSelectComponent: React.FC<{ results: ImageSelectResultType[] }> = ({ 
   };
 
   return (
-    <div ref={ref} className="scrollable">
+    <div ref={ref} className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div
         className="min-w-[600px] overflow-hidden w-full"
         style={{
@@ -800,7 +836,7 @@ const ImageSelectComponent: React.FC<{ results: ImageSelectResultType[] }> = ({ 
           >
             <CartesianGrid strokeDasharray="3 3" stroke={POLLLOOP_BROWN_01} opacity={0.5} />
             <XAxis
-              height={130}
+              height={120}
               interval={0}
               dataKey="value"
               allowDataOverflow={true}
@@ -874,7 +910,7 @@ const NumberComponent: React.FC<{ results: NumberResultType[] }> = ({ results })
         <div
           className="hidden md:block"
           style={{
-            backgroundColor: '#fff',
+            backgroundColor: `${POLLLOOP_WHITE}`,
             border: `1px solid ${POLLLOOP_BROWN_01}`,
             borderRadius: '4px',
             padding: '15px',
@@ -883,7 +919,7 @@ const NumberComponent: React.FC<{ results: NumberResultType[] }> = ({ results })
           }}
         >
           <p>{value}</p>
-          <p className="mt-2 text-sm text-right text-[#8884d8]">{`참여자 수: ${count}명`}</p>
+          <p className="mt-2 text-sm text-right text-pollloop-purple-01">{`참여자 수: ${count}명`}</p>
         </div>
       );
     }
@@ -904,7 +940,7 @@ const NumberComponent: React.FC<{ results: NumberResultType[] }> = ({ results })
   };
 
   return (
-    <div className="scrollable">
+    <div className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div ref={ref} className="min-w-[600px] overflow-hidden">
         <ResponsiveContainer width="100%" height={380}>
           <LineChart
@@ -977,7 +1013,7 @@ const NumberComponent: React.FC<{ results: NumberResultType[] }> = ({ results })
               key={isInView ? 'visible' : 'hidden'}
               type="monotone"
               dataKey="count"
-              stroke="#8884d8"
+              stroke={POLLLOOP_PURPLE_01}
               activeDot={{ r: 8 }}
               isAnimationActive={isInView}
               animationBegin={0}
@@ -1041,7 +1077,7 @@ const DateComponent: React.FC<{ results: DateResultType[] }> = ({ results }) => 
   };
 
   return (
-    <div className="scrollable">
+    <div className="scrollable" style={{ opacity: isInView ? 1 : 0 }}>
       <div ref={ref} className="min-w-[600px] overflow-hidden pb-10">
         <ResponsiveContainer width="100%" height={500}>
           <ScatterChart
@@ -1054,6 +1090,15 @@ const DateComponent: React.FC<{ results: DateResultType[] }> = ({ results }) => 
           >
             <CartesianGrid strokeDasharray="3 3" stroke={POLLLOOP_BROWN_01} opacity={0.5} />
             <XAxis
+              label={{
+                value: '년월 (YYYY.MM)',
+                position: 'bottom',
+                offset: 30,
+                style: {
+                  fill: POLLLOOP_BROWN_01,
+                  fontSize: '14px',
+                },
+              }}
               type="category"
               dataKey="yearMonth"
               name="년월"
@@ -1068,7 +1113,7 @@ const DateComponent: React.FC<{ results: DateResultType[] }> = ({ results }) => 
             />
             <YAxis
               label={{
-                value: '참여자 수(명)',
+                value: '날짜 (DD)',
                 angle: 0,
                 position: 'top',
                 offset: 30,
@@ -1141,11 +1186,8 @@ const EmailComponent: React.FC<{ results: EmailResultType[] }> = ({ results }) =
             key={index}
             className="flex items-center justify-between gap-2 px-3 py-1 text-sm border rounded-lg cursor-pointer group hover:shadow-primary hover:border-pollloop-orange border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15"
           >
-            <p>{result.value}</p>
-            <Copy
-              size={14}
-              className="flex-shrink-0 transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100"
-            />
+            <p className="break-all">{result.value}</p>
+            <Copy size={14} className="flex-shrink-0 hidden ml-1 group-hover:block" />
           </li>
         ))}
       </ul>
@@ -1154,30 +1196,59 @@ const EmailComponent: React.FC<{ results: EmailResultType[] }> = ({ results }) =
 };
 
 const FileUploadComponent: React.FC<{ results: FileUploadResultType[] }> = ({ results }) => {
-  const handleDownload = (fileName: string, fileUrl: string) => {
-    if (window.confirm(`${fileName} 파일을 다운로드하시겠습니까?`)) {
-      window.location.href = fileUrl; // 추후 S3 URL로 변경
+  const [downloadedFiles, setDownloadedFiles] = useState<string[]>([]);
+
+  const handleDownload = (fileId: string, fileName: string, e: React.MouseEvent) => {
+    if (!window.confirm(`${fileName} 파일을 다운로드하시겠습니까?`)) {
+      e.preventDefault();
+      return;
     }
+
+    const url = e.currentTarget.getAttribute('href');
+    if (url) {
+      const newWindow = window.open(url, '_blank');
+
+      if (newWindow) {
+        newWindow.blur();
+        window.focus();
+        setTimeout(() => {
+          newWindow.close();
+          setDownloadedFiles(prev => [...prev, fileId]);
+        }, 500);
+      }
+    }
+
+    e.preventDefault();
   };
 
   return (
     <div className="pr-4 scrollable">
       <ul className="p-1 space-y-2 h-[200px]">
-        {results.map((result, index) => {
+        {results.map(result => {
           const fullPath = result.value;
           const fileNameWithExtension = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+          const fileId = fullPath;
+          const isDownloaded = downloadedFiles.includes(fileId);
 
           return (
             <li
-              key={index}
-              onClick={() => handleDownload(fileNameWithExtension, result.value)}
+              key={fileId}
               className="flex items-center justify-between gap-2 px-3 py-1 text-sm border rounded-lg cursor-pointer group hover:shadow-primary hover:border-pollloop-orange border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15"
             >
-              <p>{fileNameWithExtension}</p>
-              <Download
-                size={14}
-                className="flex-shrink-0 transition-opacity duration-300 ease-in-out opacity-0 group-hover:opacity-100"
-              />
+              <a
+                href={`https://${fullPath}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={e => handleDownload(fileId, fileNameWithExtension, e)}
+                className="flex items-center justify-between w-full"
+              >
+                <p className="break-all">{fileNameWithExtension}</p>
+                {isDownloaded ? (
+                  <Check size={14} className="flex-shrink-0 ml-1" />
+                ) : (
+                  <Download size={14} className="flex-shrink-0 hidden ml-1 group-hover:block" />
+                )}
+              </a>
             </li>
           );
         })}

@@ -7,6 +7,8 @@ interface RadioAnswerProps {
   data: Question;
   value?: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
 export default function RadioAnswer({ data, value, onChange }: RadioAnswerProps) {

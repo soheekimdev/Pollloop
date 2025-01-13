@@ -14,9 +14,14 @@ const ALLOWED_TYPES = {
 interface FileUploadAnswerProps {
   data: Question;
   onChange: (value: File | null) => void;
+  readOnly?: boolean;
 }
 
-export default function FileUploadAnswer({ data, onChange }: FileUploadAnswerProps) {
+export default function FileUploadAnswer({
+  data,
+  onChange,
+  readOnly = false,
+}: FileUploadAnswerProps) {
   const [fileName, setFileName] = useState<string>('');
   const [error, setError] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -69,15 +74,22 @@ export default function FileUploadAnswer({ data, onChange }: FileUploadAnswerPro
   return (
     <div className="flex flex-col gap-2">
       <div className="flex gap-2 items-center">
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={handleButtonClick}
-          className="whitespace-nowrap"
-        >
-          <Upload size={16} />
-          파일 업로드
-        </Button>
+        {readOnly ? (
+          <div className="flex-none flex items-center gap-1 justify-center rounded-lg bg-button-secondary-bg text-button-secondary-text h-10 px-4 text-sm cursor-default">
+            <Upload size={16} />
+            파일 업로드
+          </div>
+        ) : (
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={handleButtonClick}
+            className={`whitespace-nowrap`}
+          >
+            <Upload size={16} />
+            파일 업로드
+          </Button>
+        )}
 
         {fileName && (
           <div className="flex items-center gap-3 px-4 py-2 pr-3 rounded-lg bg-button-neutral-bg overflow-hidden">
@@ -103,6 +115,7 @@ export default function FileUploadAnswer({ data, onChange }: FileUploadAnswerPro
         onChange={handleFileSelect}
         required={data.is_required}
         className="hidden"
+        readOnly={readOnly}
       />
     </div>
   );
