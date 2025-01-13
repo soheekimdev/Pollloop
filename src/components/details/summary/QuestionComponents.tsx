@@ -36,6 +36,8 @@ import {
 } from '../../../types/form-details.types';
 import { copyToClipboard } from '../../../utils/copyToClipboard';
 import { useInView } from '../../../hooks/useInView';
+import ImagePlaceholder from '../../common/ImagePlaceholder';
+import { useState } from 'react';
 
 const POLLLOOP_RED_01 = '#fbbaba';
 const POLLLOOP_GREEN_01 = '#b3f5b3';
@@ -359,7 +361,7 @@ const RadioComponent: React.FC<{ results: RadioResultType[] }> = ({ results }) =
 
     if (dataItem) {
       const { label, count } = dataItem;
-      const dynamicMaxLength = Math.max(10, Math.floor(width / 80));
+      const dynamicMaxLength = Math.max(8, Math.floor(width / 80));
       const displayText =
         label.length > dynamicMaxLength ? `${label.slice(0, dynamicMaxLength)}...` : label;
 
@@ -758,26 +760,56 @@ const ImageSelectComponent: React.FC<{ results: ImageSelectResultType[] }> = ({ 
   const { ref, isInView } = useInView<HTMLDivElement>();
   const { width } = useWindowSize();
 
-  const renderImages = (index: number) => {
-    const imageUrl = results[index - 1].label;
-    const imageSize = width / 10;
+  const Image = ({
+    src,
+    alt,
+    className,
+    style,
+    iconSize,
+  }: {
+    src: string;
+    alt: string;
+    className?: string;
+    style?: React.CSSProperties;
+    iconSize?: number;
+  }) => {
+    const [hasError, setHasError] = useState(false);
+
+    if (!src || hasError) {
+      return (
+        <ImagePlaceholder
+          iconSize={iconSize}
+          className="object-cover object-center rounded-lg border border-pollloop-brown-03"
+          style={style}
+        />
+      );
+    }
 
     return (
-      <foreignObject
-        x={imageSize < 100 ? -imageSize / 2 : '-50'}
-        y="10"
-        width={imageSize}
-        height={imageSize}
-      >
-        <img
+      <img
+        src={src}
+        alt={alt}
+        className={className}
+        style={style}
+        onError={() => setHasError(true)}
+      />
+    );
+  };
+
+  const renderImages = (index: number) => {
+    const imageUrl = results[index - 1].label;
+    const imageSize = Math.min(width / 8, 100);
+
+    return (
+      <foreignObject x={-(imageSize / 2)} y="10" width={100} height={100}>
+        <Image
           src={imageUrl}
           alt={`image-${index}`}
-          className="object-cover rounded-lg bg-pollloop-brown-03"
+          iconSize={imageSize / 2}
+          className="object-cover object-center rounded-lg border border-pollloop-brown-03"
           style={{
             width: `${imageSize}px`,
-            maxWidth: '100px',
             height: `${imageSize}px`,
-            maxHeight: '100px',
           }}
         />
       </foreignObject>
@@ -804,7 +836,7 @@ const ImageSelectComponent: React.FC<{ results: ImageSelectResultType[] }> = ({ 
           >
             <CartesianGrid strokeDasharray="3 3" stroke={POLLLOOP_BROWN_01} opacity={0.5} />
             <XAxis
-              height={130}
+              height={120}
               interval={0}
               dataKey="value"
               allowDataOverflow={true}

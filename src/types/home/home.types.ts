@@ -5,7 +5,7 @@ export interface FormDetails {
   author_id: number;
   id: number;
   title: string;
-  tag: string;
+  tag?: string;
   end_at: string;
   status: FormStatus;
   target_count: number;
@@ -16,7 +16,7 @@ export interface AskDetails {
   author_id: number;
   id: number;
   title: string;
-  tag: string;
+  tag?: string;
   is_closed: boolean; // 나중에 백엔드에서 AskStatus 형식으로 줄 수도 있음 (체크)
   access_code: string;
 }

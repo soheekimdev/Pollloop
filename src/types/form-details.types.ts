@@ -21,7 +21,7 @@ export interface OverviewData {
   user: number;
   uuid: string;
   title: string;
-  tag: string;
+  tag?: string;
   subtitle: string;
   form_description: string;
   create_at: string;
