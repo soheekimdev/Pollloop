@@ -5,9 +5,17 @@ interface CheckboxAnswerProps {
   data: Question;
   value?: string[];
   onChange: (value: string[]) => void;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
-export default function CheckboxAnswer({ data, value = [], onChange }: CheckboxAnswerProps) {
+export default function CheckboxAnswer({
+  data,
+  value = [],
+  onChange,
+  disabled = false,
+  readOnly = false,
+}: CheckboxAnswerProps) {
   const getOptionId = (option: { option_number: number; option_context: string }) =>
     `${option.option_number}-${option.option_context}`;
 
@@ -36,6 +44,8 @@ export default function CheckboxAnswer({ data, value = [], onChange }: CheckboxA
                 value={option.option_context}
                 checked={value.includes(optionId)}
                 onChange={() => handleChange(optionId)}
+                disabled={disabled}
+                readOnly={readOnly}
               />
               <div>{option.option_context}</div>
             </label>

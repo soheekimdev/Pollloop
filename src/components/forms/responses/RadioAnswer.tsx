@@ -5,9 +5,11 @@ interface RadioAnswerProps {
   data: Question;
   value?: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
-export default function RadioAnswer({ data, value, onChange }: RadioAnswerProps) {
+export default function RadioAnswer({ data, value, onChange, disabled = false, readOnly = false }: RadioAnswerProps) {
   const handleChange = (optionNumber: number, optionContext: string) => {
     onChange(optionContext);
   };
@@ -26,6 +28,7 @@ export default function RadioAnswer({ data, value, onChange }: RadioAnswerProps)
               value={option.option_context}
               checked={value === option.option_context}
               onChange={() => handleChange(option.option_number, option.option_context)}
+              disabled={disabled}
             />
             <div>{option.option_context}</div>
           </label>

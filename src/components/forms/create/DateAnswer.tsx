@@ -24,7 +24,7 @@ export default function DateAnswer({ data, onUpdate }: DateAnswerProps) {
         />
       </div>
 
-      <Input type="date" disabled />
+      <Input type="date" readOnly />
     </>
   );
 }

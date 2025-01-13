@@ -16,6 +16,7 @@ import RadioAnswer from '@/components/forms/create/RadioAnswer';
 import RangeAnswer from '@/components/forms/create/RangeAnswer';
 import ShortAnswer from '@/components/forms/create/ShortAnswer';
 import StarRatingAnswer from '@/components/forms/create/StarRatingAnswer';
+import FormPreview from '@/components/forms/create/FormPreview';
 import { FormContentSectionProps } from '@/types/forms/forms.types';
 import { useModal } from '@/hooks/useModal';
 
@@ -32,6 +33,11 @@ export default function FormContentSection({
 }: FormContentSectionProps) {
   const { isOpen, open, close } = useModal();
 
+  const previewFormInfo = {
+    ...formInfo,
+    questions: questions.sort((a, b) => a.question_order - b.question_order),
+  };
+
   return (
     <Section className="flex-1">
       <SectionTitle title={formInfo.title || '새로운 폼'}>
@@ -46,9 +52,11 @@ export default function FormContentSection({
         </Button>
       </SectionTitle>
 
-      <Modal isOpen={isOpen} onClose={close}>
+      <Modal isOpen={isOpen} onClose={close} width="2xl">
         <Modal.Header title="미리 보기" onClose={close} />
-        <Modal.Content>내용</Modal.Content>
+        <Modal.Content>
+          <FormPreview formInfo={previewFormInfo} />
+        </Modal.Content>
       </Modal>
 
       <div className="flex flex-col gap-4">

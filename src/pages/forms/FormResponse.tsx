@@ -56,7 +56,7 @@ export default function FormResponse() {
         {formData.form_description && <p className="text-center">{formData.form_description}</p>}
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4 flex-1">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 flex-1">
         {formData.questions?.map(question => (
           <QuestionCard
             key={question.question_order}

@@ -52,7 +52,7 @@ function ModalHeader({ title, onClose, children }: ModalHeaderProps) {
 }
 
 function ModalContent({ children }: ModalContentProps) {
-  return <div className="py-2">{children}</div>;
+  return <div className="py-2 pr-3 scrollable">{children}</div>;
 }
 
 function ModalFooter({ children }: ModalFooterProps) {
@@ -83,7 +83,7 @@ function Modal({ isOpen, onClose, children, closeOnScrimClick = false, width }: 
       <div className="fixed inset-0 bg-scrim" onClick={closeOnScrimClick ? onClose : undefined} />
       <div
         className={cn(
-          'relative flex flex-col gap-4 w-full mx-4 p-6 rounded-lg bg-pollloop-light-beige shadow-lg',
+          'relative flex flex-col gap-4 w-full max-h-[80vh] mx-4 p-6 rounded-lg bg-pollloop-light-beige shadow-lg',
           width && sizeClasses[width],
         )}
       >
