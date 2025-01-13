@@ -4,6 +4,8 @@ import FormsInput from '@/components/forms/create/FormsInput';
 import FormsDescription from '@/components/forms/create/FormsDescription';
 import { Plus, X } from 'lucide-react';
 import { Option, Question } from '@/types/forms/forms.types';
+import { formatFileName } from '@/utils/fileNameFormatter';
+import { uploadImage } from '@/api/files';
 
 interface ImageSelectAnswerProps {
   data: Question;
@@ -44,27 +46,44 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
       return;
     }
 
-    // 이미지 URL 생성
-    // TODO: 실제 서버 통신 시에는 이미지 파일을 FormData로 변환하여 전송
-    // TODO: URL.createObjectURL로 생성된 URL은 컴포넌트가 언마운트될 때 해제해야 메모리 누수를 방지할 수 있음 !
-    // TODO: 이미지 업로드 시 추가적인 최적화(압축, 리사이징 등) 진행
-    const imageUrl = URL.createObjectURL(file);
+    const formattedFileName = formatFileName(file.name);
+    const renamedFile = new File([file], formattedFileName, { type: file.type });
 
-    const newImage: Option = {
-      option_number: images.length + 1,
-      option_context: `${file.name}|${imageUrl}`,
-      imageUrl,
-    };
+    try {
+      const response = await uploadImage({
+        input_source: 'form',
+        form_uuid: '2bd64b2e1364441b9840020039906fe4', // 테스트용 UUID
+        question_order: data.question_order,
+        option_number: images.length + 1,
+        file: renamedFile,
+      });
 
-    const updatedImages = [...images, newImage];
-    setImages(updatedImages);
+      console.log('File upload response:', response);
 
-    onUpdate({
-      options_of_questions: updatedImages.map(img => ({
-        option_number: img.option_number,
-        option_context: img.option_context,
-      })),
-    });
+      // 이미지 URL 생성 (실제 서버 응답으로 대체 필요)
+      const imageUrl = URL.createObjectURL(file);
+
+      // 새로운 이미지 옵션 추가
+      const newImage: Option = {
+        option_number: images.length + 1,
+        option_context: `${formattedFileName}|${imageUrl}`,
+        imageUrl,
+      };
+
+      const updatedImages = [...images, newImage];
+      setImages(updatedImages);
+
+      // Question 데이터 업데이트
+      onUpdate({
+        options_of_questions: updatedImages.map(img => ({
+          option_number: img.option_number,
+          option_context: img.option_context,
+        })),
+      });
+    } catch (error) {
+      console.error('File upload error:', error);
+      alert('파일 업로드에 실패했습니다.');
+    }
   };
 
   const handleImageDelete = (index: number) => {
