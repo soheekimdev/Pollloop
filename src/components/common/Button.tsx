@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes } from 'react';
 import { cn } from '@/utils/cn';
 
 const buttonVariants = cva(
-  'flex-none flex items-center gap-1 justify-center rounded-lg transition-colors focus-visible:outline-pollloop-brown-01 disabled:bg-button-disabled-bg disabled:text- disabled:cursor-not-allowed',
+  'flex-none flex items-center gap-1 justify-center rounded-lg transition-colors focus-visible:outline-pollloop-brown-01 disabled:bg-button-disabled-bg disabled:text-button-disabled-text disabled:cursor-not-allowed',
   {
     variants: {
       size: {
