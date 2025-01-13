@@ -19,7 +19,7 @@ import {
 } from 'recharts';
 
 import useWindowSize from '../../../hooks/useWindowSize';
-import { Copy, Download, Star } from 'lucide-react';
+import { Check, CheckCircle, CheckCircle2, Copy, Download, Star } from 'lucide-react';
 import {
   ShortResultType,
   LongResultType,
@@ -1196,27 +1196,59 @@ const EmailComponent: React.FC<{ results: EmailResultType[] }> = ({ results }) =
 };
 
 const FileUploadComponent: React.FC<{ results: FileUploadResultType[] }> = ({ results }) => {
-  const handleDownload = (fileName: string, fileUrl: string) => {
-    if (window.confirm(`${fileName} 파일을 다운로드하시겠습니까?`)) {
-      window.location.href = fileUrl; // 추후 S3 URL로 변경
+  const [downloadedFiles, setDownloadedFiles] = useState<string[]>([]);
+
+  const handleDownload = (fileId: string, fileName: string, e: React.MouseEvent) => {
+    if (!window.confirm(`${fileName} 파일을 다운로드하시겠습니까?`)) {
+      e.preventDefault();
+      return;
     }
+
+    const url = e.currentTarget.getAttribute('href');
+    if (url) {
+      const newWindow = window.open(url, '_blank');
+
+      if (newWindow) {
+        newWindow.blur();
+        window.focus();
+        setTimeout(() => {
+          newWindow.close();
+          setDownloadedFiles(prev => [...prev, fileId]);
+        }, 500);
+      }
+    }
+
+    e.preventDefault();
   };
 
   return (
     <div className="pr-4 scrollable">
       <ul className="p-1 space-y-2 h-[200px]">
-        {results.map((result, index) => {
+        {results.map(result => {
           const fullPath = result.value;
           const fileNameWithExtension = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+          const fileId = fullPath;
+          const isDownloaded = downloadedFiles.includes(fileId);
 
           return (
             <li
-              key={index}
-              onClick={() => handleDownload(fileNameWithExtension, result.value)}
+              key={fileId}
               className="flex items-center justify-between gap-2 px-3 py-1 text-sm border rounded-lg cursor-pointer group hover:shadow-primary hover:border-pollloop-orange border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15"
             >
-              <p className="break-all">{fileNameWithExtension}</p>
-              <Download size={14} className="flex-shrink-0 hidden ml-1 group-hover:block" />
+              <a
+                href={`https://${fullPath}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={e => handleDownload(fileId, fileNameWithExtension, e)}
+                className="flex items-center justify-between w-full"
+              >
+                <p className="break-all">{fileNameWithExtension}</p>
+                {isDownloaded ? (
+                  <Check size={14} className="flex-shrink-0 ml-1" />
+                ) : (
+                  <Download size={14} className="flex-shrink-0 hidden ml-1 group-hover:block" />
+                )}
+              </a>
             </li>
           );
         })}

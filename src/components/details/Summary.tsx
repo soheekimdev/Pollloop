@@ -336,13 +336,13 @@ export default function Summary({ formId }: { formId: string }) {
         is_required: true,
         question: '이번 주 과제를 제출해주세요',
         results: [
-          { value: 'AWS/S3/pollloop/..../assignment1.pdf' },
-          { value: 'AWS/S3/pollloop/..../assignment2.pdf' },
-          { value: 'AWS/S3/pollloop/..../assignment2.pdf' },
-          { value: 'AWS/S3/pollloop/..../assignment2.pdf' },
-          { value: 'AWS/S3/pollloop/..../assignment2.pdf' },
-          { value: 'AWS/S3/pollloop/..../assignment3.pdf' },
-          { value: 'AWS/S3/pollloop/..../assignment4.pdf' },
+          { value: 'AWS/S3/pollloop/....1/assignment1.pdf' },
+          { value: 'AWS/S3/pollloop/....2/assignment2.pdf' },
+          { value: 'AWS/S3/pollloop/....3/assignment2.pdf' },
+          { value: 'AWS/S3/pollloop/....4/assignment2.pdf' },
+          { value: 'AWS/S3/pollloop/....5/assignment2.pdf' },
+          { value: 'AWS/S3/pollloop/....6/assignment3.pdf' },
+          { value: 'AWS/S3/pollloop/....7/assignment4.pdf' },
         ],
       },
     ],
@@ -354,9 +354,9 @@ export default function Summary({ formId }: { formId: string }) {
     const loadOverviewData = async () => {
       try {
         setIsLoading(true);
-        const data = await fetchSummaryData(formId);
-        setSummaryData(data as SummaryData);
-        //setSummaryData(testSummaryData as SummaryData);
+        // const data = await fetchSummaryData(formId);
+        // setSummaryData(data as SummaryData);
+        setSummaryData(testSummaryData as SummaryData);
       } catch (err) {
         console.error('데이터 로딩 중 에러:', err);
       } finally {
