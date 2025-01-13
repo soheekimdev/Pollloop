@@ -30,7 +30,7 @@ export default function FormCreate() {
     setFormInfo(prev => ({
       ...prev,
       is_private: isChecked,
-      access_code: newAccessCode
+      access_code: newAccessCode,
     }));
   };
 
@@ -114,10 +114,10 @@ export default function FormCreate() {
   };
 
   return (
-    <div className="flex flex-col gap-4 h-full">
+    <div className="flex flex-col gap-4 h-full md:overflow-hidden">
       <Breadcrumbs items={breadcrumbsItems} className="px-4 md:px-8 lg:px-10" />
 
-      <form className="flex-1 flex px-4 md:px-8 lg:px-10 pb-10">
+      <form className="flex-1 flex px-4 md:px-8 lg:px-10 pb-10 md:overflow-hidden">
         <div className="flex-1 flex flex-col gap-6 md:flex-row">
           <FormBasicSection
             formInfo={formInfo}

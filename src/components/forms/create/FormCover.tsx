@@ -22,15 +22,15 @@ export default function FormCover({
   };
 
   return (
-    <div className="flex flex-col gap-6 bg-pollloop-light-beige rounded-lg p-10 xl:p-20">
+    <div className="flex flex-col gap-6 bg-pollloop-light-beige rounded-lg p-10">
       <FormsInput
-        placeholder="여기에 표지 제목을 적어주세요."
+        placeholder="표지 제목을 적어주세요."
         value={title}
         onChange={handleTitleChange}
         align="center"
       />
       <FormsInput
-        placeholder="(선택) 폼 설명을 적어주세요."
+        placeholder="(선택) 상세 설명을 적어주세요."
         value={description}
         onChange={handleDescriptionChange}
         variant="md"

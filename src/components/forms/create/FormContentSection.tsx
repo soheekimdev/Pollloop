@@ -19,6 +19,7 @@ import StarRatingAnswer from '@/components/forms/create/StarRatingAnswer';
 import FormPreview from '@/components/forms/create/FormPreview';
 import { FormContentSectionProps } from '@/types/forms/forms.types';
 import { useModal } from '@/hooks/useModal';
+import { cn } from '@/utils/cn';
 
 export default function FormContentSection({
   formInfo,
@@ -59,7 +60,7 @@ export default function FormContentSection({
         </Modal.Content>
       </Modal>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 p-2 scrollable">
         <FormCover
           title={formInfo.subtitle}
           description={formInfo.form_description}
@@ -73,6 +74,15 @@ export default function FormContentSection({
             onDelete={() => onQuestionDelete(question.id)}
             isSelected={selectedQuestionId === question.id}
           >
+            <p
+              className={cn(
+                'absolute top-8 xl:top-[56px] left-5 xl:left-10 p-2 text-sm text-tag-secondary-text',
+                selectedQuestionId === question.id && 'font-bold',
+              )}
+            >
+              {question.question_order}
+            </p>
+
             {question.layout_type === 'SHORT_TYPE' && (
               <ShortAnswer
                 data={question}
