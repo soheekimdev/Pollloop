@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
+import { cn } from '@/utils/cn';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
   closeOnScrimClick?: boolean;
+  width?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl';
 }
 
 interface ModalHeaderProps {
@@ -22,6 +24,19 @@ interface ModalContentProps {
 interface ModalFooterProps {
   children: React.ReactNode;
 }
+
+const sizeClasses = {
+  sm: 'sm:max-w-sm',
+  md: 'sm:max-w-md',
+  lg: 'md:max-w-lg',
+  xl: 'md:max-w-xl',
+  '2xl': 'md:max-w-2xl',
+  '3xl': 'md:max-w-3xl',
+  '4xl': 'md:max-w-4xl',
+  '5xl': 'md:max-w-5xl',
+  '6xl': 'md:max-w-6xl',
+  '7xl': 'md:max-w-7xl',
+} as const;
 
 function ModalHeader({ title, onClose, children }: ModalHeaderProps) {
   return (
@@ -44,7 +59,7 @@ function ModalFooter({ children }: ModalFooterProps) {
   return <div className="flex justify-end gap-2">{children}</div>;
 }
 
-function Modal({ isOpen, onClose, children, closeOnScrimClick = false }: ModalProps) {
+function Modal({ isOpen, onClose, children, closeOnScrimClick = false, width }: ModalProps) {
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -66,7 +81,12 @@ function Modal({ isOpen, onClose, children, closeOnScrimClick = false }: ModalPr
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-scrim" onClick={closeOnScrimClick ? onClose : undefined} />
-      <div className="relative flex flex-col gap-4 w-full mx-4 sm:w-auto sm:min-w-96 p-6 rounded-lg bg-pollloop-light-beige shadow-lg">
+      <div
+        className={cn(
+          'relative flex flex-col gap-4 w-full mx-4 p-6 rounded-lg bg-pollloop-light-beige shadow-lg',
+          width && sizeClasses[width],
+        )}
+      >
         {children}
       </div>
     </div>,
