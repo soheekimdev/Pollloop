@@ -11,7 +11,6 @@ import NumberAnswer from '@/components/forms/responses/NumberAnswer';
 import DateAnswer from '@/components/forms/responses/DateAnswer';
 import EmailAnswer from '@/components/forms/responses/EmailAnswer';
 import FileUploadAnswer from '@/components/forms/responses/FileUploadAnswer';
-import { QUESTION_TYPES } from '@/constants/forms.constants';
 import { FormInfo } from '@/types/forms/forms.types';
 
 interface FormPreviewProps {
@@ -31,9 +30,7 @@ export default function FormPreview({ formInfo }: FormPreviewProps) {
 
     formInfo.questions?.forEach(q => {
       if (!q.question?.trim()) {
-        const questionType =
-          QUESTION_TYPES.find(type => type.value === q.layout_type)?.label || '질문';
-        emptyFields.push(`${questionType} 질문`);
+        emptyFields.push(`질문 ${q.question_order}`);
       }
     });
 
@@ -45,12 +42,10 @@ export default function FormPreview({ formInfo }: FormPreviewProps) {
 
   return (
     <div className="flex flex-col gap-2 max-w-3xl mx-auto py-8 px-10 rounded-lg bg-pollloop-bg-02">
-      {hasEmptyFields && (
-        <div className="p-4 mb-4 rounded-lg bg-pollloop-light-beige border">
-          <p className="font-medium">미리보기 화면입니다.</p>
-          <p className="text-sm mt-1">비어있는 항목: {emptyFields.join(', ')}</p>
-        </div>
-      )}
+      <div className="p-4 mb-4 rounded-lg bg-pollloop-light-beige border">
+        <p className="font-medium">미리보기 화면입니다.</p>
+        {hasEmptyFields && <p className="text-sm mt-1">비어있는 항목: {emptyFields.join(', ')}</p>}
+      </div>
 
       <div className="flex flex-col align-center justify-center gap-2 p-8 bg-[#FFC76F] rounded-md">
         {formInfo.subtitle && (

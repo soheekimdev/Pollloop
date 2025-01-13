@@ -76,7 +76,7 @@ export default function FormContentSection({
           >
             <p
               className={cn(
-                'absolute top-8 xl:top-[56px] left-5 xl:left-10 p-2 text-sm text-tag-secondary-text',
+                'absolute top-8 xl:top-[56px] left-8 xl:left-14 p-2 text-sm text-tag-secondary-text',
                 selectedQuestionId === question.id && 'font-bold',
               )}
             >
