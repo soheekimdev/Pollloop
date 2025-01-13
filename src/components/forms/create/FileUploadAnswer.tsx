@@ -1,6 +1,7 @@
 import Button from '@/components/common/Button';
-import FormsLabel from '@/components/forms/FormsLabel';
-import FormsInput from '@/components/forms/FormsInput';
+import FormsLabel from '@/components/forms/create/FormsLabel';
+import FormsInput from '@/components/forms/create/FormsInput';
+import { Upload } from 'lucide-react';
 import { Question } from '@/types/forms/forms.types';
 
 interface FileUploadAnswerProps {
@@ -24,7 +25,8 @@ export default function FileUploadAnswer({ data, onUpdate }: FileUploadAnswerPro
         />
       </div>
 
-      <Button type="button" className="self-start">
+      <Button type="button" className="self-start" disabled>
+        <Upload size={16} />
         파일 업로드
       </Button>
     </>

@@ -27,7 +27,7 @@ export default function Textarea({
       value={value}
       disabled={disabled}
       className={cn(
-        'w-full h-20 p-3 rounded-lg bg-input-bg border border-input-border text-sm placeholder:text-input-placeholder focus-visible:outline-pollloop-brown-01 resize-none',
+        'w-full h-20 p-3 rounded-lg bg-input-bg border border-input-border text-sm placeholder:text-input-placeholder focus-visible:outline-pollloop-brown-01 resize-none scrollable',
         className,
       )}
       onChange={onChange}

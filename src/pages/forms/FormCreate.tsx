@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import Breadcrumbs from '@/components/common/Breadcrumbs.tsx';
-import FormBasicSection from '@/components/forms/FormBasicSection';
-import FormContentSection from '@/components/forms/FormContentSection';
-import FormQuestionSection from '@/components/forms/FormQuestionSection';
+import FormBasicSection from '@/components/forms/create/FormBasicSection';
+import FormContentSection from '@/components/forms/create/FormContentSection';
+import FormQuestionSection from '@/components/forms/create/FormQuestionSection';
 import { FormInfo, Option, Question, QuestionType } from '@/types/forms/forms.types';
 import { NO_OPTIONS_TYPES } from '@/constants/forms.constants';
+import { useCreateForm } from '@/hooks/useCreateForm';
 
 export default function FormCreate() {
   const breadcrumbsItems = ['홈', '나의 폼', '폼 만들기'];
@@ -16,7 +17,7 @@ export default function FormCreate() {
     target_count: 0,
     is_closed: 'TEMP',
     is_private: false,
-    is_bookmark: false,
+    questions: [],
   });
 
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -70,7 +71,7 @@ export default function FormCreate() {
       options_of_questions: [],
     };
     setQuestions(prev => [...prev, newQuestion]);
-    setSelectedQuestionId(newQuestion.id);
+    setSelectedQuestionId(newQuestion.id as string);
   };
 
   const handleUpdateQuestion = (id: string, updates: Partial<Question>) => {
@@ -90,25 +91,16 @@ export default function FormCreate() {
     }
   };
 
-  const handleSubmit = async (isPublishing: boolean) => {
-    const formData = {
-      ...formInfo,
-      is_closed: isPublishing ? ('PUBLISHED' as const) : ('TEMP' as const),
-      questions: questions.map((q, index) => ({
-        layout_type: q.layout_type,
-        question: q.question,
-        question_order: index + 1,
-        is_required: q.is_required,
-        options_of_questions:
-          q.options_of_questions?.map(opt => ({
-            option_number: opt.option_number,
-            option_context: opt.option_context,
-          })) || [],
-      })),
-    };
+  const { createForm } = useCreateForm();
 
+  const handleSubmit = async (isPublishing: boolean) => {
     try {
-      console.log('서버로 전송될 데이터:', formData);
+      await createForm({
+        formInfo,
+        questions,
+        isPublishing,
+      });
+      console.log('폼이 성공적으로 저장되었습니다.');
     } catch (error) {
       console.error('폼 저장 실패:', error);
     }
@@ -118,7 +110,7 @@ export default function FormCreate() {
     <div className="flex flex-col gap-4 h-full">
       <Breadcrumbs items={breadcrumbsItems} className="px-4 md:px-8 lg:px-10" />
 
-      <form className="flex-1 flex md:px-8 lg:px-10 pb-10">
+      <form className="flex-1 flex px-4 md:px-8 lg:px-10 pb-10">
         <div className="flex-1 flex flex-col gap-6 md:flex-row">
           <FormBasicSection
             formInfo={formInfo}

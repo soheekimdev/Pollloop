@@ -15,7 +15,7 @@ export type QuestionType =
   | 'EMAIL_TYPE'
   | 'FILE_UPLOAD_TYPE';
 
-export type FormStatus = 'TEMP' | 'PUBLISHED' | 'CLOSED';
+export type FormStatus = 'TEMP' | 'OPEN' | 'CLOSED';
 
 // 데이터 모델 인터페이스
 export interface Option {
@@ -53,6 +53,7 @@ export interface FormInfo {
   access_code?: string;
   subtitle?: string;
   form_description?: string;
+  questions: Question[];
 }
 
 // 컴포넌트 Props 인터페이스

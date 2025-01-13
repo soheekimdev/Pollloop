@@ -11,12 +11,12 @@ export default function Navbar() {
   console.log(user);
   const toggleModal = () => setIsModalOpen(prev => !prev);
   return (
-    <header className="h-[80px] px-5 xs:px-10 py-5 text-pollloop-brown-01 flex justify-between items-center">
+    <header className="shrink-0 h-20 px-4 md:px-8 lg:px-10 xs:px-10 py-5 text-pollloop-brown-01 flex justify-between items-center font-iowan font-semibold">
       <div className="flex items-center gap-6 md:gap-[104px] xs:gap-14">
-        <h1 className="text-base xs:text-lg md:text-2xl ">
+        <h1 className="text-base xs:text-lg md:text-2xl">
           <Link to="/">Polloop</Link>
         </h1>
-        <nav className="text-xs xs:text-sm md:text-lg font-bold flex gap-7 xs:gap-10">
+        <nav className="text-xs xs:text-sm md:text-lg flex gap-4 md:gap-10">
           <Link to="forms">Form</Link>
           <Link to="/">Ask</Link>
         </nav>

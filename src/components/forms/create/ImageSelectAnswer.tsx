@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import FormsLabel from '@/components/forms/FormsLabel';
-import FormsInput from '@/components/forms/FormsInput';
-import FormsDescription from '@/components/forms/FormsDescription';
+import FormsLabel from '@/components/forms/create/FormsLabel';
+import FormsInput from '@/components/forms/create/FormsInput';
+import FormsDescription from '@/components/forms/create/FormsDescription';
 import { Plus, X } from 'lucide-react';
 import { Option, Question } from '@/types/forms/forms.types';
 
@@ -28,19 +28,16 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // 이미지 개수 제한 확인
     if (images.length >= MAX_IMAGES) {
       alert('이미지는 최대 4개까지만 추가할 수 있습니다.');
       return;
     }
 
-    // 이미지 파일 검증
     if (!file.type.startsWith('image/')) {
       alert('이미지 파일만 업로드 가능합니다.');
       return;
     }
 
-    // 파일 크기 제한 (1MB)
     const maxSize = 1 * 1024 * 1024;
     if (file.size > maxSize) {
       alert('파일 크기는 1MB 이하여야 합니다.');
@@ -49,11 +46,10 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
 
     // 이미지 URL 생성
     // TODO: 실제 서버 통신 시에는 이미지 파일을 FormData로 변환하여 전송
-    // TODO: URL.createObjectURL로 생성된 URL은 컴포넌트가 언마운트될 때 해제해야 메모리 누수를 방지할 수 있음
+    // TODO: URL.createObjectURL로 생성된 URL은 컴포넌트가 언마운트될 때 해제해야 메모리 누수를 방지할 수 있음 !
     // TODO: 이미지 업로드 시 추가적인 최적화(압축, 리사이징 등) 진행
     const imageUrl = URL.createObjectURL(file);
 
-    // 새로운 이미지 옵션 추가
     const newImage: Option = {
       option_number: images.length + 1,
       option_context: `${file.name}|${imageUrl}`,
@@ -63,7 +59,6 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
     const updatedImages = [...images, newImage];
     setImages(updatedImages);
 
-    // Question 데이터 업데이트
     onUpdate({
       options_of_questions: updatedImages.map(img => ({
         option_number: img.option_number,

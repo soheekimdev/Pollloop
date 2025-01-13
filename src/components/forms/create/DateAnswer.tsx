@@ -1,14 +1,14 @@
 import Input from '@/components/form/Input';
-import FormsLabel from '@/components/forms/FormsLabel';
-import FormsInput from '@/components/forms/FormsInput';
+import FormsLabel from '@/components/forms/create/FormsLabel';
+import FormsInput from '@/components/forms/create/FormsInput';
 import { Question } from '@/types/forms/forms.types';
 
-interface NumberAnswerProps {
+interface DateAnswerProps {
   data: Question;
   onUpdate: (updates: Partial<Question>) => void;
 }
 
-export default function NumberAnswer({ data, onUpdate }: NumberAnswerProps) {
+export default function DateAnswer({ data, onUpdate }: DateAnswerProps) {
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdate({ question: e.target.value });
   };
@@ -16,7 +16,7 @@ export default function NumberAnswer({ data, onUpdate }: NumberAnswerProps) {
   return (
     <>
       <div className="flex flex-col gap-2">
-        <FormsLabel text="숫자" />
+        <FormsLabel text="날짜" />
         <FormsInput
           required={data.is_required}
           value={data.question}
@@ -24,7 +24,7 @@ export default function NumberAnswer({ data, onUpdate }: NumberAnswerProps) {
         />
       </div>
 
-      <Input type="number" disabled />
+      <Input type="date" disabled />
     </>
   );
 }

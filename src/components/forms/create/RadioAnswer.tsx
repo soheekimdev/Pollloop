@@ -1,4 +1,4 @@
-import { EditableOptionsAnswer } from '@/components/forms/EditableOptionsAnswer';
+import { EditableOptionsAnswer } from '@/components/forms/create/EditableOptionsAnswer';
 import { Question } from '@/types/forms/forms.types';
 
 interface RadioAnswerProps {

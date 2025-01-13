@@ -35,6 +35,8 @@ export default {
         'danger-bg': '#C63B00',
         'danger-text': '#FFFBEB',
         'ghost-bg-active': '#85582B26',
+        'disabled-bg': '#C28B5540',
+        'disabled-text': '#85582B66',
       },
       input: {
         bg: '#FFFBEB',

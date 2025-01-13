@@ -1,4 +1,4 @@
-import FormsInput from '@/components/forms/FormsInput';
+import FormsInput from '@/components/forms/create/FormsInput';
 
 interface FormCoverProps {
   title?: string;
