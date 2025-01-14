@@ -6,6 +6,7 @@ import {
   DropdownResultType,
   EmailResultType,
   FileUploadResultType,
+  FormResultType,
   ImageSelectResultType,
   LayoutType,
   LongResultType,
@@ -16,20 +17,22 @@ import {
   ShortResultType,
   StarRatingResultType,
 } from '../../../types/form-details.types';
+import useWindowSize from '../../../hooks/useWindowSize';
 
 interface QuestionProps {
   questionItem: QuestionResultType;
 }
 
 export default function Question({ questionItem }: QuestionProps) {
-  const { id, is_required, layout_type, question, results } = questionItem;
+  const { width } = useWindowSize();
+  const { id, is_required, layout_type, question, results, min_label, max_label } = questionItem;
 
   // console.log(questionItem);
 
   const ResultComponent = QUESTION_COMPONENTS[layout_type as LayoutType];
   if (!ResultComponent) return null;
 
-  const getTypedResults = () => {
+  const getTypedResults = (): FormResultType[] => {
     switch (layout_type) {
       case 'SHORT_TYPE':
         return results as ShortResultType[];
@@ -65,7 +68,7 @@ export default function Question({ questionItem }: QuestionProps) {
   return (
     <li
       key={id}
-      className="flex flex-col justify-start gap-6 p-10 rounded-lg bg-pollloop-light-beige"
+      className="relative flex flex-col justify-start gap-6 p-10 rounded-lg bg-pollloop-light-beige"
     >
       <div className="flex flex-col gap-2 md:flex-row">
         <p className="text-xl font-bold text-pollloop-brown-01/60">{`#${id}`}</p>
@@ -76,8 +79,25 @@ export default function Question({ questionItem }: QuestionProps) {
           ) : null}
         </p>
       </div>
-      <p className="text-sm text-right">{/* 상세 정보 추가 */}</p>
       <ResultComponent results={typedResults as any} />
+      {layout_type === 'RANGE_TYPE' && (
+        <div className="items-center justify-between hidden w-full px-12 ml-5 text-sm text-right md:flex">
+          <p
+            title={min_label}
+            className="text-left line-clamp-1 text-text-truncate"
+            style={{ maxWidth: `${width / 4}px` }}
+          >
+            {min_label}
+          </p>
+          <p
+            title={max_label}
+            className="text-right line-clamp-1 text-text-truncate"
+            style={{ maxWidth: `${width / 4}px` }}
+          >
+            {max_label}
+          </p>
+        </div>
+      )}
     </li>
   );
 }

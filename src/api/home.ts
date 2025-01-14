@@ -5,10 +5,10 @@ const getLastFourItems = (data: FormDetails[]): FormDetails[] => {
   return data.slice(-4);
 };
 
-export const fetchHomeData = async (userId: string) => {
+export const fetchHomeData = async () => {
   try {
-    const response = await instance.get<FormDetails[]>(`/form/list/user_id:${userId}/`); // BE-FOR008로 대체
-    console.log('response', response.data);
+    const response = await instance.get<FormDetails[]>(`/form/list/`); // BE-FOR008로 대체
+    // console.log('response', response);
     const data = {
       forms: getLastFourItems(response.data),
       asks: [

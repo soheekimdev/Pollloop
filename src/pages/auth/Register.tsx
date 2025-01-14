@@ -10,12 +10,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '@/store/userSlice';
-import { AppDispatch } from '@/store';
+import { AppDispatch, RootState } from '@/store';
 import { RegisterFormValue, registerSchema } from '@/schemas/auth';
-import { RootState } from '@reduxjs/toolkit/query';
+import { errorToast, successToast } from '@/utils/toast';
 
 export default function Register() {
-  const { status, error } = useSelector((state: RootState) => state.user);
+  const { status } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const {
@@ -29,17 +29,18 @@ export default function Register() {
 
   const onSubmit = async (data: RegisterFormValue) => {
     try {
-      await dispatch(
+      const response = await dispatch(
         registerUser({
           email: data.email,
           password: data.password,
           password2: data.confirmPassword,
         }),
       ).unwrap();
-      alert('회원가입 성공!');
-      navigate('/');
-    } catch (error) {
+      successToast(response.message);
+      navigate('/login');
+    } catch (error: any) {
       console.error('회원가입 실패', error);
+      errorToast(error.message || '회원가입에 실패했습니다.');
     }
   };
   return (
