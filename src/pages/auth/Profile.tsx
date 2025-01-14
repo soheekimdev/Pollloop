@@ -45,6 +45,15 @@ export default function Profile() {
   const handleFilechange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      const MAX_FILE_SIZE = 1 * 1024 * 1024;
+
+      if (file.size > MAX_FILE_SIZE) {
+        errorToast('파일 크기는 1MB 이하여야 합니다.');
+        if (event.target) {
+          event.target.value = '';
+        }
+        return;
+      }
       const formData = new FormData();
       formData.append('input_source', 'profile');
       formData.append('file', file);
@@ -68,13 +77,13 @@ export default function Profile() {
   };
 
   return (
-    <div className="h-full flex flex-col items-center gap-[170px]">
+    <div className="h-full flex flex-col items-center gap-[170px] ">
       <Breadcrumbs items={['홈', '프로필']} className="px-10 w-full" />
       <div className="w-[480px] flex flex-col bg-pollloop-light-beige p-10 gap-10 items-center rounded-2xl -translate-y-10">
         <div className="flex h-6 pl-[170px] justify-end items-start gap-[147px]">
           <h1 className="text-lg font-extrabold">내 정보</h1>
-          <button>
-            <Settings className=" w-6 h-6 " onClick={toggleSettingModal} />
+          <button onClick={toggleSettingModal}>
+            <Settings className=" w-6 h-6 " />
           </button>
           {isclickedSetting && (
             <Dropdown

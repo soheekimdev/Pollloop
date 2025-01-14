@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
 import Button from '../common/Button';
 import { authAPI } from '@/api/auth';
 import { logoutUser } from '@/store/userSlice';
@@ -20,23 +19,19 @@ export default function DeleteAccountModal({ isOpen, onClose }: DeleteAccountMod
   const handleDeleteAccount = async () => {
     try {
       if (user?.email) {
-        const response = await authAPI.deleteUser({ email: user.email, confirm: true });
-        if (response && response.status === 200) {
-          await dispatch(logoutUser()).unwrap();
-          successToast('계정 탈퇴가 완료되었습니다.');
-          navigate('/login');
-        } else {
-          console.error('탈퇴 요청 실패:', response);
-          errorToast('탈퇴 요청이 실패하였습니다.');
-        }
+        await authAPI.deleteUser({ email: user.email, confirm: true });
+        await dispatch(logoutUser()).unwrap();
+        successToast('계정 탈퇴가 완료되었습니다.');
+        navigate('/login');
       }
     } catch (error) {
       console.error('탈퇴 에러', error);
+      errorToast('탈퇴 요청이 실패하였습니다.');
     }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} width="sm">
+    <Modal isOpen={isOpen} onClose={onClose} width="sm" closeOnScrimClick>
       <Modal.Header title="회원탈퇴" />
       <Modal.Content>
         <p>정말 탈퇴하시겠습니까?</p>

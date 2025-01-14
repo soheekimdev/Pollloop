@@ -34,6 +34,9 @@ export interface RequestPasswordResetResponse {
 export interface ResetPasswordResponse {
   message: string;
 }
+export interface ChangePasswordResponse {
+  message: string;
+}
 
 export interface DeleteUserResponse {
   message: string;

@@ -52,17 +52,21 @@ export default function ResetPassword() {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <InputWithLabel>
           <Label htmlFor="new-password" text="새 비밀번호" />
-          <Input id="new-password" type="password" {...register('password')} />
-          {errors.password && (
-            <p className="mt-2 text-xs text-status-red-text">{errors.password.message}</p>
-          )}
+          <Input
+            id="new-password"
+            type="password"
+            {...register('password')}
+            error={errors.password?.message}
+          />
         </InputWithLabel>
         <InputWithLabel>
           <Label htmlFor="confirm-new-password" text="새 비밀번호 확인" />
-          <Input id="confirm-new-password" type="password" {...register('confirmPassword')} />
-          {errors.confirmPassword && (
-            <p className="mt-2 text-xs text-status-red-text">{errors.confirmPassword.message}</p>
-          )}
+          <Input
+            id="confirm-new-password"
+            type="password"
+            {...register('confirmPassword')}
+            error={errors.confirmPassword?.message}
+          />
         </InputWithLabel>
         <Button type="submit">재설정</Button>
       </form>
