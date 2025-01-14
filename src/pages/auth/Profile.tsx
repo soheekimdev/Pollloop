@@ -9,19 +9,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser, updateUserProfileImage } from '@/store/userSlice';
 import { AppDispatch, RootState } from '@/store';
-import axios from 'axios';
 import ChangePasswordModal from '@/components/auth/ChangePasswordModal';
 import { authAPI } from '@/api/auth';
+import { errorToast, successToast } from '@/utils/toast';
+import DeleteAccountModal from '@/components/auth/DeleteAccountModal';
 
 export default function Profile() {
   const [isclickedSetting, setIsClickedSetting] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isDeleteAccountModalOpen, setIsDeleteAccountModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.user.user);
+  const { user } = useSelector((state: RootState) => state.user);
 
   const toggleSettingModal = () => setIsClickedSetting(prev => !prev);
+  const openDeleteAccountModal = () => setIsDeleteAccountModalOpen(true);
   const openPasswordModal = () => setIsPasswordModalOpen(true);
   const handleLogout = async () => {
     try {
@@ -42,32 +45,24 @@ export default function Profile() {
     const file = event.target.files?.[0];
     if (file) {
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append('input_source', 'profile');
+      formData.append('file', file);
       try {
-        const response = await axios.post(
-          'https://api.imgbb.com/1/upload?key=f645de5a07b0cf7a43b5a44396235a47',
-          formData,
-        );
-        console.log(response.data);
-        const profileImage = response.data.data.url;
-        dispatch(updateUserProfileImage(profileImage));
+        const response = await authAPI.inputFile(formData);
+        const profileImage = response.file_url;
+
+        if (!profileImage) {
+          throw new Error('파일 URL을 받지 못했습니다.');
+        }
+        if (user?.email) {
+          const response = await authAPI.updateUserProfile(user.email, profileImage);
+          dispatch(updateUserProfileImage(response.profile));
+          successToast('프로필 이미지가 업데이트되었습니다.');
+        }
       } catch (error) {
         console.error('파일 업로드 실패', error);
+        errorToast('이미지 업로드에 실패하였습니다.');
       }
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    try {
-      const confirmDelete = window.confirm('정말 탈퇴하시겠습니까?');
-      if (!confirmDelete) return;
-      await authAPI.deleteUser();
-
-      await dispatch(logoutUser()).unwrap();
-      alert('회원 탈퇴가 완료되었습니다.');
-      navigate('/login');
-    } catch (error) {
-      console.error('탈퇴 에러', error);
     }
   };
 
@@ -83,7 +78,7 @@ export default function Profile() {
           {isclickedSetting && (
             <div className="absolute top-[75px] right-[-50px] py-2 w-[120px] border-[0.5px] border-solid border-[#E0D5C3] shadow-[0_2px_10px_0_rgba(0,0,0,0.13)] bg-pollloop-light-beige rounded-lg ">
               <p
-                onClick={handleDeleteAccount}
+                onClick={openDeleteAccountModal}
                 className="px-4 py-2 text-status-red-text hover:cursor-pointer"
               >
                 탈퇴
@@ -125,11 +120,16 @@ export default function Profile() {
           로그아웃
         </button>
       </div>
-      {isPasswordModalOpen ? (
+      {isDeleteAccountModalOpen && (
+        <div className="fixed inset-0 flex justify-center items-center bg-scrim">
+          <DeleteAccountModal setIsDeleteAccountModalOpen={setIsDeleteAccountModalOpen} />
+        </div>
+      )}
+      {isPasswordModalOpen && (
         <div className="fixed inset-0 flex justify-center items-center bg-scrim">
           <ChangePasswordModal setIsPasswordModalOpen={setIsPasswordModalOpen} />
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

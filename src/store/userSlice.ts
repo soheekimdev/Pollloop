@@ -50,14 +50,7 @@ export const registerUser = createAsyncThunk(
         userData.password2,
       );
       return {
-        user: {
-          email: response.email,
-          profileImage: null,
-        },
-        tokens: {
-          access: response.access,
-          refresh: response.refresh,
-        },
+        message: response.message,
       };
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string; errors: any }>;
@@ -71,18 +64,19 @@ export const kakaoLoginUser = createAsyncThunk(
   async (code: string, { rejectWithValue }) => {
     try {
       const response = await authAPI.handleKakaoCallback(code);
+      console.log(response);
       return {
         user: {
-          email: response.email,
-          profileImage: response.profile_image || null,
+          email: response.user.email,
+          profileImage: response.user.profile || null,
         },
         tokens: {
-          access: response.access,
-          refresh: response.refresh,
+          access: response.access_token,
+          refresh: response.refresh_token,
         },
       };
     } catch (error) {
-      const axiosError = error as AxiosError<{ message: string }>;
+      const axiosError = error as AxiosError<{ message: string; errors: any }>;
       return rejectWithValue(axiosError.response?.data || '카카오 로그인에 실패했습니다');
     }
   },
@@ -103,8 +97,9 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     updateUserProfileImage: (state, action) => {
-      if (state.user) {
+      if (state.user && state.tokens) {
         state.user.profileImage = action.payload;
+        storage.setUserData(state.user, state.tokens);
       }
     },
   },
@@ -129,12 +124,9 @@ const userSlice = createSlice({
         state.status = 'loading';
         state.error = null;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(registerUser.fulfilled, state => {
         state.status = 'succeeded';
-        state.user = action.payload.user;
-        state.tokens = action.payload.tokens;
         state.error = null;
-        storage.setUserData(state.user, state.tokens);
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = 'failed';

@@ -19,7 +19,7 @@ export default function MenuModal() {
     }
   };
   return (
-    <div className="absolute top-[70px] right-[38px] w-[120px] bg-pollloop-light-beige py-2 items-start rounded-lg text-sm font-gothic shadow-[0_2px_10px_0_rgba(0,0,0,0.3)]">
+    <div className="absolute top-[70px] right-[38px] w-[120px] bg-pollloop-light-beige py-2 items-start rounded-lg text-sm font-gothic shadow-[0_2px_10px_0_rgba(0,0,0,0.3)] z-20">
       <ul>
         <li className="px-4 py-2 hover:cursor-pointer" onClick={moveToProfile}>
           프로필
