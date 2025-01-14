@@ -6,6 +6,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChangePasswordFormValue, changePasswordSchema } from '@/schemas/auth';
 import Modal from '../common/Modal';
+import { authAPI } from '@/api/auth';
+import { AppDispatch, RootState } from '@/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { errorToast, successToast } from '@/utils/toast';
+import { useNavigate } from 'react-router-dom';
+import { logoutUser } from '@/store/userSlice';
 
 type ChangePasswordModalProps = {
   isOpen: boolean;
@@ -22,8 +28,29 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
     mode: 'onChange',
   });
 
-  const onSubmit = (data: ChangePasswordFormValue) => {
-    console.log(data);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const { tokens } = useSelector((state: RootState) => state.user);
+
+  const onSubmit = async (data: ChangePasswordFormValue) => {
+    if (!tokens) {
+      errorToast('로그인 정보가 없습니다.');
+      return;
+    }
+    try {
+      const response = await authAPI.changePassword(
+        tokens.refresh,
+        data.password,
+        data.newPassword,
+        data.confirmNewPassword,
+      );
+      successToast(response.message);
+      await dispatch(logoutUser());
+      navigate('/login');
+    } catch (error: any) {
+      console.error(error);
+      errorToast(error.password[0]);
+    }
   };
 
   return (
@@ -37,26 +64,30 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
         >
           <InputWithLabel>
             <Label htmlFor="previous-password" text="기존 비밀번호" />
-            <Input id="precious-password" type="password" {...register('password')} />
-            {errors.password && (
-              <p className="mt-2 text-xs text-status-red-text">{errors.password?.message}</p>
-            )}
+            <Input
+              id="precious-password"
+              type="password"
+              {...register('password')}
+              error={errors.password?.message}
+            />
           </InputWithLabel>
           <InputWithLabel>
             <Label htmlFor="new-password" text="새 비밀번호" />
-            <Input id="precious-password" type="password" {...register('newPassword')} />
-            {errors.newPassword && (
-              <p className="mt-2 text-xs text-status-red-text">{errors.newPassword.message}</p>
-            )}
+            <Input
+              id="precious-password"
+              type="password"
+              {...register('newPassword')}
+              error={errors.newPassword?.message}
+            />
           </InputWithLabel>
           <InputWithLabel>
             <Label htmlFor="confirm-new-password" text="새 비밀번호 확인" />
-            <Input id="confirm-new-password" type="password" {...register('confirmNewPassword')} />
-            {errors.confirmNewPassword && (
-              <p className="mt-2 text-xs text-status-red-text">
-                {errors.confirmNewPassword.message}
-              </p>
-            )}
+            <Input
+              id="confirm-new-password"
+              type="password"
+              {...register('confirmNewPassword')}
+              error={errors.confirmNewPassword?.message}
+            />
           </InputWithLabel>
         </form>
       </Modal.Content>

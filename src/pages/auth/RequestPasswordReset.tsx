@@ -36,10 +36,13 @@ export default function RequestPasswordReset() {
         <fieldset>
           <InputWithLabel>
             <Label htmlFor="email" text="아이디" />
-            <Input id="email" type="email" placeholder="name@example.com" {...register('email')} />
-            {errors.email && (
-              <p className="mt-2 text-sm text-status-red-text">{errors.email.message}</p>
-            )}
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              {...register('email')}
+              error={errors.email?.message}
+            />
           </InputWithLabel>
         </fieldset>
         <FormActionButton

@@ -33,7 +33,8 @@ export default function Dropdown({ items, position, className, onClose }: Dropdo
 
   return (
     <div
-      className={`absolute bg-pollloop-light-beige py-2 w-[120px] rounded-lg text-sm font-gothic shadow-[0_2px_10px_0_rgba(0,0,0,0.3)] ${className}`}
+      ref={dropdownRef}
+      className={`absolute bg-pollloop-light-beige py-2 w-[120px] rounded-lg text-sm font-gothic shadow-[0_2px_10px_0_rgba(0,0,0,0.3)] z-20 ${className}`}
       style={position}
     >
       <ul>
