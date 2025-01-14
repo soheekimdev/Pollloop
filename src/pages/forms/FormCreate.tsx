@@ -87,7 +87,14 @@ export default function FormCreate() {
   };
 
   const handleDeleteQuestion = (id: string) => {
-    setQuestions(prev => prev.filter(q => q.id !== id));
+    setQuestions(prev => {
+      const filteredQuestions = prev.filter(q => q.id !== id);
+      return filteredQuestions.map((question, index) => ({
+        ...question,
+        question_order: index + 1,
+      }));
+    });
+
     if (selectedQuestionId === id) {
       setSelectedQuestionId(null);
     }

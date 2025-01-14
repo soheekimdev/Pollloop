@@ -59,7 +59,11 @@ export default function RadioAnswer({ data, value, onChange, readOnly }: RadioAn
                 name={`question-${data.question_order}`}
                 id={`option-${data.question_order}-${option.option_number}`}
                 value={option.option_context}
-                checked={isEtcOption && !readOnly ? showEtcInput : value === option.option_context}
+                checked={
+                  isEtcOption && !readOnly
+                    ? showEtcInput
+                    : !!option.option_context && value === option.option_context
+                }
                 onChange={() => handleChange(option.option_number, option.option_context)}
                 readOnly={readOnly}
               />
