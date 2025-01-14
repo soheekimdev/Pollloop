@@ -31,7 +31,7 @@ export default function StarRatingAnswer({ data, onUpdate }: StarRatingAnswerPro
           <Star
             key={rating}
             size={24}
-            className="text-pollloop-brown-01 cursor-pointer"
+            className="text-pollloop-brown-01"
             fill="transparent"
             strokeWidth={1.5}
           />

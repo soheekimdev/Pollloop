@@ -2,7 +2,8 @@ import axios from 'axios';
 import { authAPI } from './auth';
 
 export const instance = axios.create({
-  baseURL: '/api',
+  baseURL: 'http://3.38.227.106/',
+  timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
   },

@@ -5,16 +5,29 @@ import Participants from '../../components/details/Participants';
 import Summary from '../../components/details/Summary';
 import useTabs from '../../hooks/useTabs';
 import { OverviewData } from '../../types/form-details.types';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { fetchOverviewData } from '../../api/form-detail';
 import { copyToClipboard } from '../../utils/copyToClipboard';
 import { getCompleteRate } from '../../utils/getCompleteRate';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
+import { Tokens } from '../../types/auth';
+import FormStatusBadge from '../../components/common/status-badge/FormStatusBadge';
+import { AlignLeft, Calendar, FileText, Globe2, Tag, Target } from 'lucide-react';
+import CustomTag from '../../components/home/parts/CustomTag';
+import { useAccessCode } from '../../hooks/useAccessCode';
+import SmallAccessCodeSection from '../../components/home/parts/SmallAccessCodeSection';
 
 export default function FormDetail() {
+  const { user: loginUser } = useSelector((state: RootState) => state);
   const { formId } = useParams<{ formId: string }>();
   const [overviewData, setOverviewData] = useState<OverviewData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { activeIndex, changeTab } = useTabs(0);
+  const { isDisplayed, handleDisplay } = useAccessCode();
+  const navigate = useNavigate();
+
+  const loginUserId = (loginUser as { tokens: Tokens }).tokens.access;
 
   useEffect(() => {
     if (!formId) return;
@@ -22,9 +35,18 @@ export default function FormDetail() {
     const loadOverviewData = async () => {
       try {
         setIsLoading(true);
+
         const data = await fetchOverviewData(formId);
-        // console.log('API 응답 데이터:', data);
-        setOverviewData(data[0] as OverviewData);
+
+        // 최종 배포 때 활성화 예정 (폼 작성자===로그인 유저만 접근 가능하도록)
+        // const userId = data.uuid;
+        // if (loginUserId !== userId) {
+        //   alert('접근 권한이 없습니다.'); // 추후 토스트 팝업으로 변경 예정
+        //   navigate(-1);
+        //   return;
+        // }
+        console.log(data);
+        setOverviewData(data as OverviewData);
       } catch (err) {
         console.error('데이터 로딩 중 에러:', err);
       } finally {
@@ -33,7 +55,7 @@ export default function FormDetail() {
     };
 
     loadOverviewData();
-  }, [formId]);
+  }, [formId, loginUserId, navigate]);
 
   if (isLoading) return <div>로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중...</div>; // 로딩 컴포넌트 추가 예정
   if (!overviewData) return <div>데이터가 없습니다</div>;
@@ -55,11 +77,24 @@ export default function FormDetail() {
     access_code,
   } = overviewData;
 
+  const basicInfoData = [
+    { label: '태그', value: tag, labelIcon: <Tag size={16} /> },
+    { label: '표지 제목', value: subtitle, labelIcon: <FileText size={16} /> },
+    { label: '폼 설명', value: form_description, labelIcon: <AlignLeft size={16} /> },
+    { label: '생성일', value: create_at, labelIcon: <Calendar size={16} /> },
+    { label: '목표 수', value: target_count, labelIcon: <Target size={16} /> },
+    {
+      label: '공개 여부',
+      value: is_private ? '일부 공개' : '전체 공개',
+      labelIcon: <Globe2 size={16} />,
+    },
+  ];
+
   const complete_rate = getCompleteRate(completed_count, user_count);
 
   // 추후 참여 링크 공유하기 클릭시 토스트 팝업 대체 예정
   return (
-    <div className="flex flex-col gap-4 px-10 min-w-[480px]">
+    <div className="flex flex-col gap-4 px-10 min-w-[480px] pb-10">
       <Breadcrumbs items={['홈', '나의 폼', title]} />
 
       <div className="relative flex flex-col w-full gap-10 p-10 bg-pollloop-bg-02 rounded-2xl">
@@ -71,12 +106,64 @@ export default function FormDetail() {
             type="button"
             variant="primary"
             size="md"
-            className="w-full md:w-40 "
+            className="w-full mb-5 md:w-40 md:mb-0"
             aria-label="폼 참여 링크 복사하기"
           >
             참여 링크 공유하기
           </Button>
-          <h2 className="font-semibold text-22">{title}</h2>
+          <header className="inline-flex flex-wrap items-center gap-2">
+            <div className="inline font-semibold text-22">{title}</div>
+            <FormStatusBadge
+              status={is_closed}
+              end_at={end_at}
+              aria-label={`상태: ${is_closed === 'OPEN' ? '진행 중' : '종료'}`}
+            />
+          </header>
+        </section>
+        <section className="flex flex-col gap-4" aria-labelledby="basics-title">
+          <h3 id="basics-title" className="font-semibold text-22">
+            기본 정보
+          </h3>
+          <ul className="flex flex-col gap-4">
+            {basicInfoData.map(({ label, value, labelIcon }) => {
+              const renderValue = () => {
+                if (!value) return '-';
+
+                switch (label) {
+                  case '태그':
+                    return <CustomTag is_multiline tag={String(value)} />;
+                  case '공개 여부':
+                    return (
+                      <div className="flex items-center gap-4 md:items-start md:relative ">
+                        <span>{value}</span>
+                        <SmallAccessCodeSection
+                          buttonText="비밀번호 확인하기"
+                          is_closed={is_closed}
+                          isDisplayed={isDisplayed}
+                          access_code={access_code}
+                          onDisplay={handleDisplay}
+                        />
+                      </div>
+                    );
+                  default:
+                    return value;
+                }
+              };
+
+              return (
+                <li
+                  key={label}
+                  className="flex flex-col md:flex-row md:gap-y-0 gap-y-1 md:gap-x-2 md:items-start"
+                >
+                  <div className="flex items-center flex-shrink-0 gap-3 font-semibold w-28 text-pollloop-brown-01">
+                    {labelIcon}
+                    {label}
+                  </div>
+                  <div className="text-pollloop-brown-01 pl-7 md:pl-0">{renderValue()}</div>
+                </li>
+              );
+            })}
+          </ul>
         </section>
         <section className="flex flex-col gap-4" aria-labelledby="statistics-title">
           <h3 id="statistics-title" className="font-semibold text-22">

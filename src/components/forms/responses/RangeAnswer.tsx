@@ -5,9 +5,11 @@ interface RangeAnswerProps {
   data: Question;
   value?: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
-export default function RangeAnswer({ data, value, onChange }: RangeAnswerProps) {
+export default function RangeAnswer({ data, value, onChange, disabled = false, readOnly = false }: RangeAnswerProps) {
   const minLabelOption = data.options_of_questions.find(option => option.option_number === 100);
   const maxLabelOption = data.options_of_questions.find(option => option.option_number === 200);
   const rangeOptions = data.options_of_questions.filter(
@@ -32,12 +34,13 @@ export default function RangeAnswer({ data, value, onChange }: RangeAnswerProps)
               value={option.option_context}
               checked={value === option.option_context}
               onChange={() => handleChange(option.option_number, option.option_context)}
+              disabled={disabled}
             />
           </label>
         ))}
       </div>
 
-      <p className="text-center">{maxLabelOption?.option_context}</p>
+      <p className="text-center self-end">{maxLabelOption?.option_context}</p>
     </div>
   );
 }

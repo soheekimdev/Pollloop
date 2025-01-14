@@ -15,7 +15,7 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   return (
     <div
-      className={`flex flex-col gap-10 relative bg-pollloop-light-beige rounded-lg p-10 xl:p-20 cursor-pointer ${isSelected ? 'shadow-primary' : ''}`}
+      className={`flex flex-col gap-10 relative bg-pollloop-light-beige rounded-lg p-10 xl:p-16 cursor-pointer ${isSelected ? 'shadow-primary' : ''}`}
       onClick={onClick}
     >
       <button

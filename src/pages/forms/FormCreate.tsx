@@ -6,6 +6,7 @@ import FormQuestionSection from '@/components/forms/create/FormQuestionSection';
 import { FormInfo, Option, Question, QuestionType } from '@/types/forms/forms.types';
 import { NO_OPTIONS_TYPES } from '@/constants/forms.constants';
 import { useCreateForm } from '@/hooks/useCreateForm';
+import { generateAccessCode } from '@/utils/generateAccessCode';
 
 export default function FormCreate() {
   const breadcrumbsItems = ['홈', '나의 폼', '폼 만들기'];
@@ -25,10 +26,11 @@ export default function FormCreate() {
   const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
 
   const handlePrivateToggle = (isChecked: boolean) => {
+    const newAccessCode = isChecked ? generateAccessCode() : '';
     setFormInfo(prev => ({
       ...prev,
       is_private: isChecked,
-      access_code: isChecked ? prev.access_code : '',
+      access_code: newAccessCode,
     }));
   };
 
@@ -68,7 +70,12 @@ export default function FormCreate() {
       question: '',
       question_order: questions.length + 1,
       is_required: false,
-      options_of_questions: [],
+      options_of_questions: [
+        // {
+        //   option_number: 1,
+        //   option_context: '',
+        // },
+      ],
     };
     setQuestions(prev => [...prev, newQuestion]);
     setSelectedQuestionId(newQuestion.id as string);
@@ -107,10 +114,10 @@ export default function FormCreate() {
   };
 
   return (
-    <div className="flex flex-col gap-4 h-full">
+    <div className="flex flex-col gap-4 h-full md:overflow-hidden">
       <Breadcrumbs items={breadcrumbsItems} className="px-4 md:px-8 lg:px-10" />
 
-      <form className="flex-1 flex px-4 md:px-8 lg:px-10 pb-10">
+      <form className="flex-1 flex px-4 md:px-8 lg:px-10 pb-10 md:overflow-hidden">
         <div className="flex-1 flex flex-col gap-6 md:flex-row">
           <FormBasicSection
             formInfo={formInfo}

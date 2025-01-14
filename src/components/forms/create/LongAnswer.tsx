@@ -24,7 +24,7 @@ export default function LongAnswer({ data, onUpdate }: LongAnswerProps) {
         />
       </div>
 
-      <Textarea disabled />
+      <Textarea readOnly />
     </>
   );
 }

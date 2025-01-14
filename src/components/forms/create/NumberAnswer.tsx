@@ -24,7 +24,7 @@ export default function NumberAnswer({ data, onUpdate }: NumberAnswerProps) {
         />
       </div>
 
-      <Input type="number" disabled />
+      <Input type="number" readOnly />
     </>
   );
 }
