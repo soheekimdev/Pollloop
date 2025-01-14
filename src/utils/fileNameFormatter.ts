@@ -17,21 +17,3 @@ export function formatFileName(fileName: string): string {
   
   return `${formattedName}.${extension}`;
 }
-
-// 테스트 코드
-if (import.meta.env.DEV) {
-  const testCases = [
-    "Hello World.jpg",
-    "My File!@#$%.png",
-    "테스트 파일 (1).pdf",
-    "document__.doc",
-    "image   with   spaces.jpg",
-    "test-file_name(1).txt"
-  ];
-
-  console.log("File name formatting test cases:");
-  testCases.forEach(fileName => {
-    console.log(`Original: ${fileName}`);
-    console.log(`Formatted: ${formatFileName(fileName)}\n`);
-  });
-}
