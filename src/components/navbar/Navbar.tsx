@@ -1,15 +1,15 @@
 import { ChevronDown, CircleUserRound, Menu } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import MenuModal from './MenuModal';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
+import MenuDropdown from './MenuDropdown';
 
 export default function Navbar() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user } = useSelector((state: RootState) => state.user);
 
-  const toggleModal = () => setIsModalOpen(prev => !prev);
+  const toggleModal = () => setIsMenuOpen(prev => !prev);
   return (
     <header className="shrink-0 h-20 px-4 md:px-8 lg:px-10 xs:px-10 py-5 text-pollloop-brown-01 flex justify-between items-center font-iowan font-semibold">
       <div className="flex items-center gap-6 md:gap-[104px] xs:gap-14">
@@ -40,7 +40,7 @@ export default function Navbar() {
             <ChevronDown className="hover:cursor-pointer" onClick={toggleModal} />
           </button>
         </div>
-        {isModalOpen && <MenuModal />}
+        {isMenuOpen && <MenuDropdown setIsMenuOpen={setIsMenuOpen} />}
       </aside>
     </header>
   );

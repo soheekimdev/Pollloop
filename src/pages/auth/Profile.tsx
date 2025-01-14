@@ -13,6 +13,7 @@ import ChangePasswordModal from '@/components/auth/ChangePasswordModal';
 import { authAPI } from '@/api/auth';
 import { errorToast, successToast } from '@/utils/toast';
 import DeleteAccountModal from '@/components/auth/DeleteAccountModal';
+import Dropdown from '@/components/common/Dropdown';
 
 export default function Profile() {
   const [isclickedSetting, setIsClickedSetting] = useState(false);
@@ -69,21 +70,19 @@ export default function Profile() {
   return (
     <div className="h-full flex flex-col items-center gap-[170px]">
       <Breadcrumbs items={['홈', '프로필']} className="px-10 w-full" />
-      <div className="relative w-[480px] flex flex-col bg-pollloop-light-beige p-10 gap-10 items-center rounded-2xl -translate-y-10">
+      <div className="w-[480px] flex flex-col bg-pollloop-light-beige p-10 gap-10 items-center rounded-2xl -translate-y-10">
         <div className="flex h-6 pl-[170px] justify-end items-start gap-[147px]">
           <h1 className="text-lg font-extrabold">내 정보</h1>
           <button>
             <Settings className=" w-6 h-6 " onClick={toggleSettingModal} />
           </button>
           {isclickedSetting && (
-            <div className="absolute top-[75px] right-[-50px] py-2 w-[120px] border-[0.5px] border-solid border-[#E0D5C3] shadow-[0_2px_10px_0_rgba(0,0,0,0.13)] bg-pollloop-light-beige rounded-lg ">
-              <p
-                onClick={openDeleteAccountModal}
-                className="px-4 py-2 text-status-red-text hover:cursor-pointer"
-              >
-                탈퇴
-              </p>
-            </div>
+            <Dropdown
+              position={{ top: '75px', right: '-50px' }}
+              className="border-[0.5px] borer-solid border-[#E0D5C3]"
+              items={[{ label: '탈퇴', onClick: openDeleteAccountModal, isDestructive: true }]}
+              onClose={() => setIsClickedSetting(false)}
+            />
           )}
         </div>
         <div className="flex w-24 h-24 justify-center relative">
