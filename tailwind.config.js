@@ -14,6 +14,7 @@ export default {
       current: 'currentColor',
       scrim: '#252525A3',
       pollloop: {
+        red: 'FF0000',
         orange: '#FFA632',
         coral: '#FFC082',
         'brown-01': '#85582B',
@@ -80,6 +81,82 @@ export default {
       },
       width: {
         cardWidth: '400px',
+      },
+      keyframes: {
+        dotBounce: {
+          '0%': {
+            transform: 'translateX(0) translateY(0.625rem) scaleX(1)',
+          },
+          '10%': {
+            transform: 'translateX(0.75rem) translateY(0.125rem) scaleX(1.03)',
+          },
+          '20%': {
+            transform: 'translateX(1.5rem) translateY(-0.275rem) scaleX(1.05)',
+          },
+          '30%': {
+            transform: 'translateX(2.25rem) translateY(-0.575rem) scaleX(1.07)',
+          },
+          '40%': {
+            transform: 'translateX(3rem) translateY(-0.775rem) scaleX(1.08)',
+          },
+          '50%': {
+            transform: 'translateX(3.75rem) translateY(-0.875rem) scaleX(1.08)',
+          },
+          '60%': {
+            transform: 'translateX(4.5rem) translateY(-0.775rem) scaleX(1.08)',
+          },
+          '70%': {
+            transform: 'translateX(5.25rem) translateY(-0.575rem) scaleX(1.07)',
+          },
+          '80%': {
+            transform: 'translateX(6rem) translateY(-0.275rem) scaleX(1.05)',
+          },
+          '90%': {
+            transform: 'translateX(6.75rem) translateY(0.125rem) scaleX(1.03)',
+          },
+          '100%': {
+            transform: 'translateX(7.5rem) translateY(0.825rem) scaleX(1)',
+          },
+        },
+        dotBounceSm: {
+          '0%': {
+            transform: 'translateX(0) translateY(0.425rem) scaleX(1)',
+          },
+          '10%': {
+            transform: 'translateX(0.5rem) translateY(0.125rem) scaleX(1.03)',
+          },
+          '20%': {
+            transform: 'translateX(1rem) translateY(-0.175rem) scaleX(1.05)',
+          },
+          '30%': {
+            transform: 'translateX(1.5rem) translateY(-0.375rem) scaleX(1.07)',
+          },
+          '40%': {
+            transform: 'translateX(2rem) translateY(-0.475rem) scaleX(1.08)',
+          },
+          '50%': {
+            transform: 'translateX(2.5rem) translateY(-0.575rem) scaleX(1.08)',
+          },
+          '60%': {
+            transform: 'translateX(3rem) translateY(-0.475rem) scaleX(1.08)',
+          },
+          '70%': {
+            transform: 'translateX(3.5rem) translateY(-0.375rem) scaleX(1.07)',
+          },
+          '80%': {
+            transform: 'translateX(4rem) translateY(-0.175rem) scaleX(1.05)',
+          },
+          '90%': {
+            transform: 'translateX(4.5rem) translateY(0.125rem) scaleX(1.03)',
+          },
+          '100%': {
+            transform: 'translateX(5rem) translateY(0.425rem) scaleX(1)',
+          },
+        },
+      },
+      animation: {
+        'dot-bounce': 'dotBounce 0.8s linear infinite alternate',
+        'dot-bounce-sm': 'dotBounceSm 0.8s linear infinite alternate',
       },
     },
   },
