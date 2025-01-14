@@ -6,6 +6,9 @@ import Button from '../../components/common/Button';
 import FormStatusBadge from '../../components/common/status-badge/FormStatusBadge';
 import { cn } from '../../utils/cn';
 import { FormListItem, FormStatus } from '../../types/forms/forms.types';
+import { successToast, errorToast } from '../../utils/toast';
+import 'react-toastify/dist/ReactToastify.css';
+//import '../../styles/toast-custom.css';
 
 // 스웨거 기반 목업 데이터
 export const mockForms: FormListItem[] = [
@@ -291,8 +294,10 @@ export default function Forms() {
     try {
       setForms(prev => prev.filter(form => !selectedForms.includes(form.uuid)));
       setSelectedForms([]);
+      successToast('폼이 삭제되었습니다.');
     } catch (error) {
       console.error('폼 삭제 실패:', error);
+      errorToast('폼 삭제에 실패했습니다.');
     }
   };
 
