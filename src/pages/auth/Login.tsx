@@ -12,9 +12,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '@/store/userSlice';
 import { AppDispatch, RootState } from '@/store';
 import { LoginFormValue, loginSchema } from '@/schemas/auth';
+import { errorToast } from '@/utils/toast';
 
 export default function Login() {
-  const { status, error } = useSelector((state: RootState) => state.user);
+  const { status } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const {
@@ -29,10 +30,10 @@ export default function Login() {
   const onSubmit = async (data: LoginFormValue) => {
     try {
       await dispatch(loginUser({ email: data.email, password: data.password })).unwrap();
-      alert('로그인 성공');
       navigate('/');
-    } catch (error) {
+    } catch (error: any) {
       console.error('로그인 실패', error);
+      errorToast(error);
     }
   };
 

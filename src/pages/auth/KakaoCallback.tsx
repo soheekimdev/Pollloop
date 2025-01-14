@@ -1,5 +1,6 @@
 import { AppDispatch } from '@/store';
 import { kakaoLoginUser } from '@/store/userSlice';
+import { errorToast } from '@/utils/toast';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -20,12 +21,11 @@ export default function KakaoCallback() {
 
       try {
         await dispatch(kakaoLoginUser(code)).unwrap();
-
-        alert('카카오 로그인 성공');
+        console.log('카카오 로그인 성공');
         navigate('/');
       } catch (error) {
         console.error('카카오 로그인 실패:', error);
-        alert('카카오 로그인에 실패했습니다.');
+        errorToast('카카오 로그인에 실패했습니다.');
         navigate('/login');
       }
     };

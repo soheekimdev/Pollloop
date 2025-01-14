@@ -1,12 +1,14 @@
 import {
   DeleteUserResponse,
+  FileUploadResponse,
+  KakaoLoginResponse,
   LoginResponse,
   LogoutResponse,
-  ProfileImageResponse,
   RegisterResponse,
   RequestPasswordResetResponse,
   ResetPasswordResponse,
   Tokens,
+  UpdateUserProfileResponse,
 } from '@/types/auth';
 import { instance } from './axios';
 
@@ -33,14 +35,6 @@ export const authAPI = {
     return response.data;
   },
 
-  updateProfileImage: (formData: FormData) => {
-    return instance.post<ProfileImageResponse>('/user/profile/image/', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  },
-
   requestPasswordReset: async (email: string) => {
     const response = await instance.post<RequestPasswordResetResponse>('/user/password-reset/', {
       email,
@@ -48,22 +42,52 @@ export const authAPI = {
     return response.data;
   },
 
-  resetPassword: async (uid: string, token: string, newPassword: string) => {
-    const response = await instance.post<ResetPasswordResponse>('/user/reset-password/confirm/', {
-      uid,
+  resetPassword: async (
+    uuid: string,
+    token: string,
+    new_password: string,
+    new_password2: string,
+  ) => {
+    const response = await instance.post<ResetPasswordResponse>('/user/password-reset/confirm/', {
+      uuid,
       token,
-      newPassword,
+      new_password,
+      new_password2,
     });
     return response.data;
   },
 
   handleKakaoCallback: async (code: string) => {
-    const response = await instance.get(`/user/oauth/kakao/callback/?code=${code}`);
+    const response = await instance.get<KakaoLoginResponse>('/user/oauth/kakao/callback/', {
+      params: { code },
+    });
+    console.log('카카오 응답:', response);
     return response.data;
   },
 
-  deleteUser: async () => {
-    const response = await instance.post<DeleteUserResponse>('/user/profile/delete/');
+  deleteUser: async ({ email, confirm }: { email: string; confirm: boolean }) => {
+    const response = await instance.post<DeleteUserResponse>('/user/profile/delete/', {
+      email,
+      confirm,
+    });
+    console.log('Response:', response);
+    return response;
+  },
+
+  inputFile: async (formData: FormData) => {
+    const response = await instance.post<FileUploadResponse>('/inputfile/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  updateUserProfile: async (email: string, profile: string) => {
+    const response = await instance.post<UpdateUserProfileResponse>('/user/profile/', {
+      email,
+      profile,
+    });
     return response.data;
   },
 
