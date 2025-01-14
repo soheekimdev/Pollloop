@@ -14,6 +14,7 @@ import { AlignLeft, Calendar, FileText, Globe2, Tag, Target } from 'lucide-react
 import CustomTag from '../../components/home/parts/CustomTag';
 import { useAccessCode } from '../../hooks/useAccessCode';
 import SmallAccessCodeSection from '../../components/home/parts/SmallAccessCodeSection';
+import MainLoader from '@/components/common/loaders/MainLoader';
 
 export default function FormDetail() {
   const { formId } = useParams<{ formId: string }>();
@@ -43,7 +44,13 @@ export default function FormDetail() {
     loadOverviewData();
   }, [formId, navigate]);
 
-  if (isLoading) return <div>로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중...</div>; // 로딩 컴포넌트 추가 예정
+  if (isLoading)
+    return (
+      <div className="gap-5 w-full h-[calc(100vh-96px)] flex items-center justify-center">
+        <MainLoader />
+      </div>
+    );
+
   if (!overviewData) return <div>데이터가 없습니다</div>;
 
   const {
