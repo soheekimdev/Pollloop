@@ -1,26 +1,25 @@
 import { useState, useEffect } from 'react';
 import Radio from '@/components/form/Radio';
 import Input from '@/components/form/Input';
-import { Question } from '@/types/forms/forms.types';
+import { AnswerOption, Question, QuestionType } from '@/types/forms/forms.types';
 
 interface RadioAnswerProps {
   data: Question;
-  value?: string;
-  onChange: (value: string) => void;
+  value?: AnswerOption;
+  onChange: (type: QuestionType, value: AnswerOption) => void;
   disabled?: boolean;
   readOnly?: boolean;
 }
 
-export default function RadioAnswer({ data, value, onChange, readOnly }: RadioAnswerProps) {
+export default function RadioAnswer({ data, value, onChange, readOnly = false }: RadioAnswerProps) {
   const [etcText, setEtcText] = useState('');
   const [showEtcInput, setShowEtcInput] = useState(false);
 
   const etcOption = data.options_of_questions.find(option => option.option_number === 99);
 
   useEffect(() => {
-    if (value?.startsWith('99-')) {
-      const etcValue = value.split('-')[2] || '';
-      setEtcText(etcValue);
+    if (value?.optionNumber === 99) {
+      setEtcText(value.context);
       setShowEtcInput(true);
     } else {
       setShowEtcInput(false);
@@ -28,12 +27,18 @@ export default function RadioAnswer({ data, value, onChange, readOnly }: RadioAn
     }
   }, [value]);
 
-  const handleChange = (optionNumber: number, optionContext: string) => {
+  const handleChange = (optionNumber: number, context: string) => {
     if (optionNumber === 99) {
-      onChange(`99-기타-${etcText}`);
+      onChange(data.layout_type, {
+        optionNumber: 99,
+        context: etcText,
+      });
       setShowEtcInput(true);
     } else {
-      onChange(optionContext);
+      onChange(data.layout_type, {
+        optionNumber,
+        context,
+      });
       setShowEtcInput(false);
     }
   };
@@ -41,7 +46,10 @@ export default function RadioAnswer({ data, value, onChange, readOnly }: RadioAn
   const handleEtcTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newText = e.target.value;
     setEtcText(newText);
-    onChange(`99-기타-${newText}`);
+    onChange(data.layout_type, {
+      optionNumber: 99,
+      context: newText,
+    });
   };
 
   return (
@@ -62,7 +70,7 @@ export default function RadioAnswer({ data, value, onChange, readOnly }: RadioAn
                 checked={
                   isEtcOption && !readOnly
                     ? showEtcInput
-                    : !!option.option_context && value === option.option_context
+                    : value?.optionNumber === option.option_number
                 }
                 onChange={() => handleChange(option.option_number, option.option_context)}
                 readOnly={readOnly}

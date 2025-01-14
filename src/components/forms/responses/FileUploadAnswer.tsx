@@ -1,122 +1,77 @@
-import { useRef, useState } from 'react';
 import Button from '@/components/common/Button';
-import { Upload, X } from 'lucide-react';
-import { Question } from '@/types/forms/forms.types';
-
-const FILE_SIZE_LIMIT = 1 * 1024 * 1024; // 1MB
-
-const ALLOWED_TYPES = {
-  image: '.jpg,.jpeg,.png,.gif',
-  pdf: '.pdf',
-  spreadsheet: '.xlsx,.xls,.csv',
-};
+import { Upload } from 'lucide-react';
+import { Question, QuestionType } from '@/types/forms/forms.types';
+import { instance } from '@/api/axios';
+import { errorToast } from '@/utils/toast';
 
 interface FileUploadAnswerProps {
   data: Question;
-  onChange: (value: File | null) => void;
-  readOnly?: boolean;
+  value?: string;
+  onChange: (type: QuestionType, value: string) => void;
+  formTitle: string;
 }
 
 export default function FileUploadAnswer({
   data,
+  value,
   onChange,
-  readOnly = false,
+  formTitle,
 }: FileUploadAnswerProps) {
-  const [fileName, setFileName] = useState<string>('');
-  const [error, setError] = useState<string>('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const allowedFileType = data.options_of_questions.find(option => option.option_number === 99)
-    ?.option_context as keyof typeof ALLOWED_TYPES;
-
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    setError('');
-
-    if (!file) {
-      setFileName('');
-      onChange(null);
-      return;
-    }
-
-    if (file.size > FILE_SIZE_LIMIT) {
-      setError('파일 크기는 1MB를 초과할 수 없습니다.');
-      e.target.value = '';
-      setFileName('');
-      onChange(null);
-      return;
-    }
-
+  const handleFileUpload = async (file: File) => {
     try {
-      setFileName(file.name);
-      onChange(file);
+      const formData = new FormData();
+      formData.append('input_source', 'form_answer');
+      formData.append('form_title', formTitle);
+      formData.append('question_order', data.question_order.toString());
+      formData.append('option_number', '1');
+      formData.append('file', file);
+
+      console.log('File upload request:', {
+        input_source: 'form_answer',
+        form_title: formTitle,
+        question_order: data.question_order,
+        option_number: 1,
+        file: file.name,
+      });
+
+      const response = await instance.post('/inputfile/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log('File upload response:', response.data);
+      if (response.data.file_url) {
+        onChange(data.layout_type, response.data.file_url);
+      }
     } catch (error) {
-      setError('파일 업로드 중 오류가 발생했습니다.');
-      console.error(error);
-      setFileName('');
-      onChange(null);
+      console.error('File upload error:', error);
+      errorToast('이미지 업로드에 실패하였습니다.');
     }
-  };
-
-  const handleButtonClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleRemoveFile = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-    setFileName('');
-    setError('');
-    onChange(null);
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex gap-2 items-center">
-        {readOnly ? (
-          <div className="flex-none flex items-center gap-1 justify-center rounded-lg bg-button-secondary-bg text-button-secondary-text h-10 px-4 text-sm cursor-default">
-            <Upload size={16} />
-            파일 업로드
-          </div>
-        ) : (
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={handleButtonClick}
-            className={`whitespace-nowrap`}
-          >
-            <Upload size={16} />
-            파일 업로드
-          </Button>
-        )}
-
-        {fileName && (
-          <div className="flex items-center gap-3 px-4 py-2 pr-3 rounded-lg bg-button-neutral-bg overflow-hidden">
-            <span className="flex-1 truncate">{fileName}</span>
-            <button
-              type="button"
-              className="p-px hover:text-tag-default-text/65"
-              onClick={handleRemoveFile}
-              aria-label="옵션 삭제"
-            >
-              <X size={16} />
-            </button>
-          </div>
-        )}
-      </div>
-
-      {error && <p className="text-status-red-text text-sm">{error}</p>}
-
+    <div className="flex flex-col gap-4">
       <input
-        ref={fileInputRef}
         type="file"
-        accept={ALLOWED_TYPES[allowedFileType]}
-        onChange={handleFileSelect}
-        required={data.is_required}
+        onChange={e => {
+          const file = e.target.files?.[0];
+          if (file) {
+            handleFileUpload(file);
+          }
+        }}
         className="hidden"
-        readOnly={readOnly}
+        id={`file-upload-${data.question_order}`}
       />
+      <label htmlFor={`file-upload-${data.question_order}`} className="cursor-pointer">
+        <Button type="button" className="self-start">
+          <Upload size={16} />
+          파일 업로드
+        </Button>
+      </label>
+      {value && (
+        <div className="text-sm text-gray-600">업로드된 파일: {value.split('/').pop()}</div>
+      )}
     </div>
   );
 }

@@ -1,37 +1,40 @@
 import PlaceholderImage from '@/components/common/PlaceholderImage';
 import { Check } from 'lucide-react';
-import { Question } from '@/types/forms/forms.types';
+import { AnswerOption, Option, Question, QuestionType } from '@/types/forms/forms.types';
 
 interface ImageSelectAnswerProps {
   data: Question;
-  onChange: (value: string) => void;
-  value?: string;
+  value?: AnswerOption;
+  onChange: (type: QuestionType, value: AnswerOption) => void;
 }
 
-export default function ImageSelectAnswer({
-  data,
-  onChange,
-  value,
-}: ImageSelectAnswerProps) {
+export default function ImageSelectAnswer({ data, value, onChange }: ImageSelectAnswerProps) {
+  const handleImageSelect = (option: Option) => {
+    onChange(data.layout_type, {
+      optionNumber: option.option_number,
+      context: option.option_context, // URL string
+    });
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
       {data.options_of_questions.map(option => (
         <div
           key={option.option_number}
           className="relative group w-full select-none"
-          onClick={() => onChange(option.option_number.toString())}
+          onClick={() => handleImageSelect(option)}
           role="button"
           tabIndex={0}
           onKeyDown={e => {
             if (e.key === 'Enter' || e.key === ' ') {
-              onChange(option.option_number.toString());
+              handleImageSelect(option);
             }
           }}
         >
           <div
             className={`
               relative aspect-square border-pollloop-orange rounded-lg overflow-hidden cursor-pointer hover:border
-              ${value === option.option_number.toString() && 'border-[3px] hover:border-[3px]'}
+              ${value?.optionNumber === option.option_number && 'border-[3px] hover:border-[3px]'}
             `}
           >
             {option.option_context ? (
@@ -43,7 +46,7 @@ export default function ImageSelectAnswer({
             ) : (
               <PlaceholderImage text={`${option.option_number}번`} />
             )}
-            {value === option.option_number.toString() && (
+            {value?.optionNumber === option.option_number && (
               <>
                 <div className="absolute inset-0 bg-pollloop-brown-01/10" />
                 <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-pollloop-orange flex items-center justify-center z-10">

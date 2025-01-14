@@ -1,43 +1,24 @@
 import { useState } from 'react';
 import { instance } from '@/api/axios';
-import { Question } from '@/types/forms/forms.types';
-
-interface SubmitFormData {
-  uuid: string;
-  questions: Question[];
-}
+import { SubmitFormRequest } from '@/types/forms/forms.types';
+import { toast } from 'react-toastify';
 
 export function useSubmitForm() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submitForm = async (data: SubmitFormData) => {
-    setIsLoading(true);
-    setError(null);
-
+  const submitForm = async (params: SubmitFormRequest) => {
+    setIsSubmitting(true);
     try {
-      console.log('API request URL:', '/form/submit/');
-      console.log('API request data:', data);
-
-      const response = await instance.post('/form/submit/', {
-        user: 5, // TODO: 실제 사용자 ID로 변경 필요
-        uuid: data.uuid,
-        questions: data.questions,
-      });
-
+      const response = await instance.post('/form/submit/', params);
       return response.data;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : '폼 제출 중 오류가 발생했습니다.';
-      setError(errorMessage);
-      throw new Error(errorMessage);
+    } catch (error) {
+      console.error('Form submission error:', error);
+      toast.error('폼 제출에 실패했습니다. 다시 시도해주세요.');
+      throw error;
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
-  return {
-    submitForm,
-    isLoading,
-    error,
-  };
+  return { submitForm, isSubmitting };
 }
