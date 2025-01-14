@@ -26,11 +26,15 @@ export function useCreateForm() {
         question: q.question,
         question_order: index + 1,
         is_required: q.is_required,
-        options_of_questions:
-          q.options_of_questions?.map(opt => ({
-            option_number: opt.option_number,
-            option_context: opt.option_context,
-          })) || [],
+        options_of_questions: q.options_of_questions?.map(opt => ({
+          option_number: opt.option_number,
+          option_context: opt.option_context,
+        })) || [
+          {
+            option_number: 1,
+            option_context: '',
+          },
+        ],
       })),
     };
 

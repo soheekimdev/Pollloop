@@ -1,5 +1,9 @@
+import { useState } from 'react';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
+import InputWithLabel from '@/components/form/InputWithLabel';
+import Label from '@/components/form/Label';
+import Input from '@/components/form/Input';
 import Section from '@/components/forms/create/Section';
 import SectionTitle from '@/components/forms/create/SectionTitle';
 import FormCover from '@/components/forms/create/FormCover';
@@ -17,14 +21,11 @@ import RangeAnswer from '@/components/forms/create/RangeAnswer';
 import ShortAnswer from '@/components/forms/create/ShortAnswer';
 import StarRatingAnswer from '@/components/forms/create/StarRatingAnswer';
 import FormPreview from '@/components/forms/create/FormPreview';
-import { FormContentSectionProps } from '@/types/forms/forms.types';
-import { cn } from '@/utils/cn';
-import { useState } from 'react';
-import InputWithLabel from '@/components/form/InputWithLabel';
-import Label from '@/components/form/Label';
-import Input from '@/components/form/Input';
 import { Copy } from 'lucide-react';
 import { copyToClipboard } from '@/utils/copyToClipboard';
+import { errorToast } from '@/utils/toast';
+import { cn } from '@/utils/cn';
+import { FormContentSectionProps } from '@/types/forms/forms.types';
 
 export default function FormContentSection({
   formInfo,
@@ -64,7 +65,6 @@ export default function FormContentSection({
       console.log('발행 결과:', result);
 
       if (result?.uuid) {
-        // 참여 링크 생성 (실제 도메인으로 수정 필요)
         const participationUrl = `${window.location.origin}/forms/response/${result.uuid}`;
         setFormUrl(participationUrl);
         setFormPassword(result.access_code || '');
@@ -76,7 +76,7 @@ export default function FormContentSection({
       }
     } catch (error) {
       console.error('폼 발행 실패:', error);
-      // TODO: 에러 처리 (예: 에러 메시지 토스트 표시)
+      errorToast('폼 발행에 실패했습니다.');
     }
   };
 
