@@ -6,19 +6,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AppDispatch, RootState } from '@/store';
 import { errorToast, successToast } from '@/utils/toast';
+import Modal from '../common/Modal';
 
-type DeleteAccountModalProps = {
-  setIsDeleteAccountModalOpen: Dispatch<SetStateAction<boolean>>;
-};
-export default function DeleteAccountModal({
-  setIsDeleteAccountModalOpen,
-}: DeleteAccountModalProps) {
+interface DeleteAccountModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+export default function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps) {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.user);
-  const closeDeleteAccountModal = () => {
-    setIsDeleteAccountModalOpen(false);
-  };
 
   const handleDeleteAccount = async () => {
     try {
@@ -39,14 +36,14 @@ export default function DeleteAccountModal({
   };
 
   return (
-    <div className="min-w-[360px] bg-pollloop-light-beige flex flex-col p-6 justify-center items-center rounded-2xl gap-4">
-      <p className="w-full flex items-center justify-start text-lg font-semibold">회원탈퇴</p>
-      <div className="w-full min-h-[88px]">
+    <Modal isOpen={isOpen} onClose={onClose} width="sm">
+      <Modal.Header title="회원탈퇴" />
+      <Modal.Content>
         <p>정말 탈퇴하시겠습니까?</p>
-      </div>
-      <div className="w-full flex gap-2">
+      </Modal.Content>
+      <Modal.Footer>
         <Button
-          onClick={closeDeleteAccountModal}
+          onClick={onClose}
           className="flex-grow flex-shrink-0 basis-0 px-4 py-2 bg-tag-default-bg text-pollloop-brown-01"
         >
           취소
@@ -54,7 +51,7 @@ export default function DeleteAccountModal({
         <Button onClick={handleDeleteAccount} className="flex-grow flex-shrink-0 basis-0 px-4 py-2">
           확인
         </Button>
-      </div>
-    </div>
+      </Modal.Footer>
+    </Modal>
   );
 }
