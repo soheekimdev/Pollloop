@@ -15,7 +15,7 @@ export function ItemList({ items }: ItemListProps) {
     <ul className="flex flex-wrap w-full h-full gap-4">
       {items.map(item =>
         isForm(item) ? (
-          <HomeFormCard key={item.id} item={item} />
+          <HomeFormCard key={item.uuid} item={item} />
         ) : (
           <HomeAskCard key={item.id} item={item} />
         ),

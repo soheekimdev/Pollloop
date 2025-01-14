@@ -24,7 +24,7 @@ export default function EmailAnswer({ data, onUpdate }: EmailAnswerProps) {
         />
       </div>
 
-      <Input type="email" disabled />
+      <Input type="email" readOnly />
     </>
   );
 }

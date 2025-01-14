@@ -5,9 +5,16 @@ interface DropdownAnswerProps {
   data: Question;
   value: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
+  readOnly?: boolean;
 }
 
-export default function DropdownAnswer({ data, value, onChange }: DropdownAnswerProps) {
+export default function DropdownAnswer({
+  data,
+  value,
+  onChange,
+  disabled = false,
+}: DropdownAnswerProps) {
   const defaultOption = {
     value: 'default',
     label: '선택',
@@ -18,8 +25,8 @@ export default function DropdownAnswer({ data, value, onChange }: DropdownAnswer
   const convertedOptions = [
     defaultOption,
     ...data.options_of_questions.map(option => ({
-      value: option.option_context,
-      label: option.option_context,
+      value: `${option.option_number}:${option.option_context}`,
+      label: option.option_context || `옵션 ${option.option_number}`,
       disabled: false,
       defaultValue: false,
     })),
@@ -32,6 +39,7 @@ export default function DropdownAnswer({ data, value, onChange }: DropdownAnswer
         value={value || defaultOption.value}
         onChange={e => onChange(e.target.value)}
         required={data.is_required}
+        disabled={disabled}
       />
     </div>
   );

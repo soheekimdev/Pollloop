@@ -17,6 +17,7 @@ export const NO_OPTIONS_TYPES: QuestionType[] = [
   'NUMBER_TYPE',
   'DATE_TYPE',
   'EMAIL_TYPE',
+  'IMAGE_SELECT_TYPE',
 ] as const;
 
 // UI에서 사용하는 옵션 목록들

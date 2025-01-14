@@ -24,7 +24,7 @@ export default function ShortAnswer({ data, onUpdate }: ShortAnswerProps) {
         />
       </div>
 
-      <Input disabled />
+      <Input readOnly />
     </>
   );
 }

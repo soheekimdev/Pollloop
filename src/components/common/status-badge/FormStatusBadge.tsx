@@ -38,11 +38,7 @@ export default function FormStatusBadge({
     if (!end_at) return 0;
 
     const today = new Date();
-    const endDate = new Date(
-      Number(end_at.slice(0, 4)),
-      Number(end_at.slice(4, 6)) - 1,
-      Number(end_at.slice(6, 8)),
-    );
+    const endDate = new Date(end_at); // YYYY-MM-DD
 
     const diffTime = endDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));

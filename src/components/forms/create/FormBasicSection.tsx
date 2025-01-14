@@ -17,7 +17,7 @@ export default function FormBasicSection({
 
       <fieldset className="flex flex-col gap-4">
         <InputWithLabel>
-          <Label text="폼 이름" />
+          <Label text="*폼 이름" />
           <Input
             value={formInfo.title}
             onChange={e =>
@@ -45,7 +45,7 @@ export default function FormBasicSection({
         </InputWithLabel>
 
         <InputWithLabel>
-          <Label text="참여 인원" />
+          <Label text="*참여 인원" />
           <Input
             type="number"
             value={formInfo.target_count}
@@ -60,7 +60,7 @@ export default function FormBasicSection({
         </InputWithLabel>
 
         <InputWithLabel>
-          <Label text="마감 일자" />
+          <Label text="*마감 일자" />
           <Input
             type="date"
             value={formInfo.end_at}

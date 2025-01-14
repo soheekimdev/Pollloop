@@ -17,7 +17,7 @@ import PublicLayout from './layouts/PublicLayout';
 import ProtectedLayout from './layouts/ProtectedLayout';
 import RequestPasswordReset from './pages/auth/RequestPasswordReset';
 import ResetPassword from './pages/auth/ResetPassword';
-import CustomToastContainer from './components/common/customToastContainer';
+import CustomToastContainer from './components/common/CustomToastContainer';
 
 function App() {
   return (
