@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Dropdown from '../common/Dropdown';
 
 interface MenuDropdownProps {
-  setIsMenuOpen: boolean;
+  setIsMenuOpen: (value: boolean) => void;
 }
 
 export default function MenuDropdown({ setIsMenuOpen }: MenuDropdownProps) {

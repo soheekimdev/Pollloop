@@ -1,4 +1,5 @@
 import {
+  ChangePasswordResponse,
   DeleteUserResponse,
   FileUploadResponse,
   KakaoLoginResponse,
@@ -51,6 +52,21 @@ export const authAPI = {
     const response = await instance.post<ResetPasswordResponse>('/user/password-reset/confirm/', {
       uuid,
       token,
+      new_password,
+      new_password2,
+    });
+    return response.data;
+  },
+
+  changePassword: async (
+    refresh_token: string,
+    password: string,
+    new_password: string,
+    new_password2: string,
+  ) => {
+    const response = await instance.post<ChangePasswordResponse>('/user/profile/password-reset/', {
+      refresh_token,
+      password,
       new_password,
       new_password2,
     });

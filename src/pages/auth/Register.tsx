@@ -54,25 +54,27 @@ export default function Register() {
               id="email"
               type="email"
               placeholder="이메일을 입력해주세요"
+              error={errors.email?.message}
               {...register('email')}
             />
-            {errors.email && (
-              <p className="mt-2 text-xs text-status-red-text">{errors.email.message}</p>
-            )}
           </InputWithLabel>
           <InputWithLabel>
             <Label htmlFor="password" text="비밀번호" />
-            <Input id="password" type="password" {...register('password')} />
-            {errors.password && (
-              <p className="mt-2 text-xs text-status-red-text">{errors.password.message}</p>
-            )}
+            <Input
+              id="password"
+              type="password"
+              {...register('password')}
+              error={errors.password?.message}
+            />
           </InputWithLabel>
           <InputWithLabel>
             <Label htmlFor="confirmPassword" text="비밀번호 확인" />
-            <Input id="confirmPassword" type="password" {...register('confirmPassword')} />
-            {errors.confirmPassword && (
-              <p className="mt-2 text-xs text-status-red-text">{errors.confirmPassword.message}</p>
-            )}
+            <Input
+              id="confirmPassword"
+              type="password"
+              {...register('confirmPassword')}
+              error={errors.confirmPassword?.message}
+            />
           </InputWithLabel>
         </fieldset>
         <FormActionButton submitButtonText="회원가입" linkButtonText="로그인" path="/login" />
