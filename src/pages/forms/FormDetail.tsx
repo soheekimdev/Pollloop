@@ -96,7 +96,10 @@ export default function FormDetail() {
         <section className="flex flex-col justify-between w-full gap-4 md:flex-row-reverse">
           <Button
             onClick={() =>
-              copyToClipboard('domain.com/forms/' + uuid, '참여 링크가 클립보드에 복사되었습니다.')
+              copyToClipboard(
+                'pollloop.vercel.app/forms/response/' + uuid,
+                '참여 링크가 클립보드에 복사되었습니다.',
+              )
             }
             type="button"
             variant="primary"

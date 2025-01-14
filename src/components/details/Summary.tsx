@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { SummaryData } from '../../types/form-details.types';
 import Question from './summary/Question';
 import { fetchSummaryData } from '../../api/form-detail';
-import MainLoader from '../common/loaders/MainLoader';
 import CircleLoader from '../common/loaders/CircleLoader';
 
 export default function Summary({ formId }: { formId: string }) {
