@@ -11,7 +11,7 @@ interface CheckboxAnswerProps {
   readOnly?: boolean;
 }
 
-export default function CheckboxAnswer({ data, value = [], onChange }: CheckboxAnswerProps) {
+export default function CheckboxAnswer({ data, value = [], onChange, readOnly = false }: CheckboxAnswerProps) {
   const [etcText, setEtcText] = useState('');
   const [showEtcInput, setShowEtcInput] = useState(false);
 
@@ -78,21 +78,23 @@ export default function CheckboxAnswer({ data, value = [], onChange }: CheckboxA
                 name={`question-${data.question_order}`}
                 id={`option-${data.question_order}-${option.option_number}`}
                 value={option.option_context}
-                checked={isEtcOption ? showEtcInput : value.includes(optionId)}
+                checked={(isEtcOption && !readOnly) ? showEtcInput : value.includes(optionId)}
                 onChange={() => handleChange(optionId, isEtcOption)}
+                readOnly={readOnly}
               />
               <div>{option.option_context}</div>
             </label>
           );
         })}
 
-        {etcOption && showEtcInput && (
+        {etcOption && showEtcInput && !readOnly && (
           <Input
             type="text"
             value={etcText}
             onChange={handleEtcTextChange}
             placeholder="기타 내용을 입력하세요"
             className="ml-8 w-[calc(100%-2rem)]"
+            readOnly={readOnly}
           />
         )}
       </div>

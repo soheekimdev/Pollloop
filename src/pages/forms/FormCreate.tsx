@@ -70,12 +70,7 @@ export default function FormCreate() {
       question: '',
       question_order: questions.length + 1,
       is_required: false,
-      options_of_questions: [
-        // {
-        //   option_number: 1,
-        //   option_context: '',
-        // },
-      ],
+      options_of_questions: [],
     };
     setQuestions(prev => [...prev, newQuestion]);
     setSelectedQuestionId(newQuestion.id as string);

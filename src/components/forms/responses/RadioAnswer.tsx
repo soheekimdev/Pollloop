@@ -11,7 +11,7 @@ interface RadioAnswerProps {
   readOnly?: boolean;
 }
 
-export default function RadioAnswer({ data, value, onChange }: RadioAnswerProps) {
+export default function RadioAnswer({ data, value, onChange, readOnly }: RadioAnswerProps) {
   const [etcText, setEtcText] = useState('');
   const [showEtcInput, setShowEtcInput] = useState(false);
 
@@ -59,21 +59,23 @@ export default function RadioAnswer({ data, value, onChange }: RadioAnswerProps)
                 name={`question-${data.question_order}`}
                 id={`option-${data.question_order}-${option.option_number}`}
                 value={option.option_context}
-                checked={isEtcOption ? showEtcInput : value === option.option_context}
+                checked={isEtcOption && !readOnly ? showEtcInput : value === option.option_context}
                 onChange={() => handleChange(option.option_number, option.option_context)}
+                readOnly={readOnly}
               />
               <div>{option.option_context}</div>
             </label>
           );
         })}
 
-        {etcOption && showEtcInput && (
+        {etcOption && showEtcInput && !readOnly && (
           <Input
             type="text"
             value={etcText}
             onChange={handleEtcTextChange}
             placeholder="기타 응답을 입력하세요"
             className="ml-8 w-[calc(100%-2rem)]"
+            readOnly={readOnly}
           />
         )}
       </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PlaceholderImage from '@/components/common/PlaceholderImage';
 import FormsLabel from '@/components/forms/create/FormsLabel';
 import FormsInput from '@/components/forms/create/FormsInput';
 import FormsDescription from '@/components/forms/create/FormsDescription';
@@ -19,6 +20,7 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
       imageUrl: option.option_context.split('|')[1] || '',
     })) || [],
   );
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdate({ question: e.target.value });
@@ -30,59 +32,68 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // 이미지 개수 제한 확인
     if (images.length >= MAX_IMAGES) {
       alert('이미지는 최대 4개까지만 추가할 수 있습니다.');
       return;
     }
 
+    // 이미지 파일 검증
     if (!file.type.startsWith('image/')) {
       alert('이미지 파일만 업로드 가능합니다.');
       return;
     }
 
+    // 파일 크기 제한 (1MB)
     const maxSize = 1 * 1024 * 1024;
     if (file.size > maxSize) {
       alert('파일 크기는 1MB 이하여야 합니다.');
       return;
     }
 
-    const formattedFileName = formatFileName(file.name);
-    const renamedFile = new File([file], formattedFileName, { type: file.type });
-
     try {
-      const response = await uploadImage({
-        input_source: 'form',
-        form_uuid: '2bd64b2e1364441b9840020039906fe4', // 테스트용 UUID
-        question_order: data.question_order,
-        option_number: images.length + 1,
-        file: renamedFile,
-      });
+      setIsUploading(true);
 
-      console.log('File upload response:', response);
+      const formattedFileName = formatFileName(file.name);
+      const renamedFile = new File([file], formattedFileName, { type: file.type });
 
-      // 이미지 URL 생성 (실제 서버 응답으로 대체 필요)
-      const imageUrl = URL.createObjectURL(file);
+      try {
+        const response = await uploadImage({
+          input_source: 'form',
+          form_title: '프론트엔드 6기 만족도 조사 15주차',
+          question_order: data.question_order,
+          option_number: images.length + 1,
+          file: renamedFile,
+        });
 
-      // 새로운 이미지 옵션 추가
-      const newImage: Option = {
-        option_number: images.length + 1,
-        option_context: `${formattedFileName}|${imageUrl}`,
-        imageUrl,
-      };
+        // 새로운 이미지 옵션 추가
+        const newImage: Option = {
+          option_number: images.length + 1,
+          option_context: response.file_url,
+          imageUrl: response.file_url,
+        };
 
-      const updatedImages = [...images, newImage];
-      setImages(updatedImages);
+        console.log('Upload API Response:', response); // 응답 구조 확인
 
-      // Question 데이터 업데이트
-      onUpdate({
-        options_of_questions: updatedImages.map(img => ({
-          option_number: img.option_number,
-          option_context: img.option_context,
-        })),
-      });
+        const updatedImages = [...images, newImage];
+        setImages(updatedImages);
+
+        onUpdate({
+          options_of_questions: updatedImages.map(img => ({
+            option_number: img.option_number,
+            option_context: img.option_context,
+          })),
+        });
+      } catch (uploadError) {
+        console.error('Upload API error:', uploadError);
+        throw new Error('이미지 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      }
     } catch (error) {
-      console.error('File upload error:', error);
-      alert('파일 업로드에 실패했습니다.');
+      console.error('Image upload error:', error);
+      alert(error instanceof Error ? error.message : '이미지 업로드에 실패했습니다.');
+    } finally {
+      setIsUploading(false);
+      if (e.target) e.target.value = '';
     }
   };
 
@@ -122,11 +133,16 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
         {images.map((image, index) => (
           <div key={image.option_number} className="relative group min-w-36 max-w-xs select-none">
             <div className="relative aspect-square rounded-lg overflow-hidden">
-              <img
-                src={image.imageUrl ?? '/api/placeholder/144/144'} // placeholder 이미지
-                alt={`${image.option_number}번`}
-                className="w-full h-full object-cover cursor-default"
-              />
+              {image.imageUrl ? (
+                <img
+                  src={image.imageUrl ?? '/api/placeholder/144/144'}
+                  alt={`${image.option_number}번`}
+                  className="w-full h-full object-cover cursor-default"
+                />
+              ) : (
+                <PlaceholderImage text={`${image.option_number}번`} />
+              )}
+
               <div className="absolute bottom-0 left-0 right-0 bg-pollloop-brown-03/70 text-pollloop-light-beige text-xs py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity truncate">
                 {image.option_context.split('|')[0]}
               </div>
@@ -145,11 +161,21 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
 
         {images.length < MAX_IMAGES && (
           <label className="flex-grow flex items-center justify-center basis-36 min-w-36 max-w-xs aspect-square bg-tag-default-bg rounded-lg cursor-pointer hover:bg-tag-default-bg/90 transition-colors">
-            <input type="file" accept="image/*" onChange={handleImageUpload} className="sr-only" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              disabled={isUploading}
+              className="sr-only"
+            />
             <div className="flex flex-col items-center gap-1">
               <Plus size={16} />
               <span className="text-xs text-tag-default-text/65">
-                {images.length === 0 ? '이미지 추가' : `${images.length}/4`}
+                {isUploading
+                  ? '업로드 중...'
+                  : images.length === 0
+                    ? '이미지 추가'
+                    : `${images.length}/4`}
               </span>
             </div>
           </label>
