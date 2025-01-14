@@ -1,7 +1,7 @@
 import { QUESTION_COMPONENTS } from '../constants/form-details';
 import { QuestionType } from '../types/forms/forms.types';
 
-type FormResultType =
+export type FormResultType =
   | ShortResultType
   | LongResultType
   | CheckboxResultType
@@ -14,6 +14,7 @@ type FormResultType =
   | DateResultType
   | EmailResultType
   | FileUploadResultType;
+
 export type LayoutType = keyof typeof QUESTION_COMPONENTS;
 
 // 폼 기본 상세정보 타입 정의
@@ -103,6 +104,8 @@ export interface QuestionResultType {
   id: number;
   layout_type: QuestionType;
   is_required: boolean;
+  min_label?: string;
+  max_label?: string;
   question: string;
   results: FormResultType[];
 }
