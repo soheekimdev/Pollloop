@@ -13,7 +13,7 @@ export interface LoginResponse {
   email: string;
   access: string;
   refresh: string;
-  profileImage: string | null;
+  profile: string | null;
 }
 
 export interface LogoutResponse {

@@ -26,7 +26,7 @@ export const loginUser = createAsyncThunk(
       return {
         user: {
           email: response.email,
-          profileImage: null,
+          profileImage: response.profile,
         },
         tokens: {
           access: response.access,
