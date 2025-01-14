@@ -122,12 +122,20 @@ export default function Profile() {
       </div>
       {isDeleteAccountModalOpen && (
         <div className="fixed inset-0 flex justify-center items-center bg-scrim">
-          <DeleteAccountModal setIsDeleteAccountModalOpen={setIsDeleteAccountModalOpen} />
+          <DeleteAccountModal
+            isOpen={isDeleteAccountModalOpen}
+            onClose={() => setIsDeleteAccountModalOpen(false)}
+          />
         </div>
       )}
       {isPasswordModalOpen && (
         <div className="fixed inset-0 flex justify-center items-center bg-scrim">
-          <ChangePasswordModal setIsPasswordModalOpen={setIsPasswordModalOpen} />
+          <ChangePasswordModal
+            isOpen={isPasswordModalOpen}
+            onClose={() => {
+              setIsPasswordModalOpen(false);
+            }}
+          />
         </div>
       )}
     </div>
