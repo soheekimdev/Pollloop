@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { fetchHomeData } from '../api/home';
 import HomeCategory from '../components/home/HomeCategory';
 import { HomeUserData } from '../types/home/home.types';
-import { Loader2 } from 'lucide-react';
-import CircleLoader from '@/components/common/loaders/CircleLoader';
 import MainLoader from '@/components/common/loaders/MainLoader';
 
 export default function Home() {
