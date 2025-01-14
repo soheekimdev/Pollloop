@@ -2,7 +2,7 @@ import axios from 'axios';
 import { authAPI } from './auth';
 
 export const instance = axios.create({
-  baseURL: 'http://api.pollloop.store',
+  baseURL: 'https://api.pollloop.store',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
