@@ -109,3 +109,19 @@ export interface QuestionResultType {
   question: string;
   results: FormResultType[];
 }
+
+// 참여자 정보 타입 정의
+export interface FormParticipant {
+  email: string;
+  is_complete: boolean;
+}
+
+export interface ParticipantsResponse {
+  data: FormParticipant[];
+  message?: string;
+}
+
+export interface SendRequestResponse {
+  success: boolean;
+  message: string;
+}
