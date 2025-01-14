@@ -2,10 +2,33 @@ import { useEffect, useState } from 'react';
 import { fetchHomeData } from '../api/home';
 import HomeCategory from '../components/home/HomeCategory';
 import { HomeUserData } from '../types/home/home.types';
+import MainLoader from '@/components/common/loaders/MainLoader';
+import { useDelayedLoading } from '@/hooks/useDelayedLoading';
 
 export default function Home() {
   const [homeData, setHomeData] = useState<HomeUserData>({ forms: [], asks: [] });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isActuallyLoading, setIsActuallyLoading] = useState(true);
+
+  // 커스텀 훅 사용
+  const isLoading = useDelayedLoading({
+    isActuallyLoading,
+    minimumLoadingTime: 1000,
+  });
+
+  useEffect(() => {
+    const loadHomeData = async () => {
+      try {
+        const data = await fetchHomeData();
+        setHomeData(data);
+      } catch (err) {
+        console.error('데이터 로딩 중 에러:', err);
+      } finally {
+        setIsActuallyLoading(false);
+      }
+    };
+
+    loadHomeData();
+  }, []);
 
   // const testHomeData: HomeUserData = {
   //   forms: [
@@ -90,26 +113,12 @@ export default function Home() {
   //   ],
   // };
 
-  useEffect(() => {
-    const loadHomeData = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchHomeData();
-        // console.log('API 응답 데이터:', data);
-        setHomeData(data);
-
-        // setHomeData(testHomeData);
-      } catch (err) {
-        console.error('데이터 로딩 중 에러:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadHomeData();
-  }, []);
-
-  if (isLoading) return <div>로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중...</div>; // 로딩 컴포넌트 추가 예정
+  if (isLoading)
+    return (
+      <div className="flex-col gap-5 w-full h-[calc(100vh-96px)] flex items-center justify-center">
+        <MainLoader />
+      </div>
+    );
 
   return (
     <div className=" bg-pollloop-bg-03">
