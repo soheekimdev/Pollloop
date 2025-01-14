@@ -16,6 +16,7 @@ import NumberAnswer from '@/components/forms/responses/NumberAnswer';
 import DateAnswer from '@/components/forms/responses/DateAnswer';
 import EmailAnswer from '@/components/forms/responses/EmailAnswer';
 import FileUploadAnswer from '@/components/forms/responses/FileUploadAnswer';
+import { errorToast } from '@/utils/toast';
 import { useSubmitForm } from '@/hooks/useSubmitForm';
 import { useFormData } from '@/hooks/useFormData';
 import { useModal } from '@/hooks/useModal';
@@ -91,14 +92,16 @@ export default function FormResponse() {
           case 'IMAGE_SELECT_TYPE': {
             if (answer.value) {
               const answerOption = answer.value as AnswerOption;
-              optionsOfQuestions = [{
-                option_number: answerOption.optionNumber,
-                option_context: answerOption.context // URL string이 들어감
-              }];
+              optionsOfQuestions = [
+                {
+                  option_number: answerOption.optionNumber,
+                  option_context: answerOption.context, // URL string이 들어감
+                },
+              ];
             }
             break;
           }
-          
+
           case 'RANGE_TYPE':
           case 'STAR_RATING_TYPE': {
             const value = answer.value as string;
@@ -131,16 +134,19 @@ export default function FormResponse() {
         };
       });
 
-      await submitForm({
+      const payload = {
         uuid: formId || '',
         questions: questionsWithAnswers,
-      });
+      };
 
+      console.log('Submit payload:', payload);
+
+      await submitForm(payload);
       console.log('폼 제출 완료');
       open();
     } catch (error) {
       console.error('Form submission error:', error);
-      // toast.error('폼 제출에 실패했습니다. 다시 시도해주세요.');
+      errorToast('폼 제출에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
