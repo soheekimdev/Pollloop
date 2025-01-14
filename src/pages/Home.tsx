@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import { fetchHomeData } from '../api/home';
 import HomeCategory from '../components/home/HomeCategory';
 import { HomeUserData } from '../types/home/home.types';
+import { Loader2 } from 'lucide-react';
+import CircleLoader from '@/components/common/loaders/CircleLoader';
+import MainLoader from '@/components/common/loaders/MainLoader';
 
 export default function Home() {
   const [homeData, setHomeData] = useState<HomeUserData>({ forms: [], asks: [] });
@@ -109,7 +112,12 @@ export default function Home() {
     loadHomeData();
   }, []);
 
-  if (isLoading) return <div>로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중...</div>; // 로딩 컴포넌트 추가 예정
+  if (isLoading)
+    return (
+      <div className="flex-col gap-5 w-full h-[calc(100vh-96px)] flex items-center justify-center">
+        <MainLoader />
+      </div>
+    );
 
   return (
     <div className=" bg-pollloop-bg-03">
