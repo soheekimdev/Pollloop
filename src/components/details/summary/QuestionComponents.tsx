@@ -19,7 +19,7 @@ import {
 } from 'recharts';
 
 import useWindowSize from '../../../hooks/useWindowSize';
-import { Check, CheckCircle, CheckCircle2, Copy, Download, Star } from 'lucide-react';
+import { Check, Copy, Download, Star } from 'lucide-react';
 import {
   ShortResultType,
   LongResultType,
@@ -779,7 +779,7 @@ const ImageSelectComponent: React.FC<{ results: ImageSelectResultType[] }> = ({ 
       return (
         <ImagePlaceholder
           iconSize={iconSize}
-          className="object-cover object-center rounded-lg border border-pollloop-brown-03"
+          className="object-cover object-center border rounded-lg border-pollloop-brown-03"
           style={style}
         />
       );
@@ -806,7 +806,7 @@ const ImageSelectComponent: React.FC<{ results: ImageSelectResultType[] }> = ({ 
           src={imageUrl}
           alt={`image-${index}`}
           iconSize={imageSize / 2}
-          className="object-cover object-center rounded-lg border border-pollloop-brown-03"
+          className="object-cover object-center border rounded-lg border-pollloop-brown-03"
           style={{
             width: `${imageSize}px`,
             height: `${imageSize}px`,
