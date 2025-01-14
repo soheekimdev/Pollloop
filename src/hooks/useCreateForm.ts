@@ -18,7 +18,6 @@ export function useCreateForm() {
     setError(null);
 
     const formData = {
-      user: 1, // TODO: 실제 사용자 ID로 변경 필요
       ...formInfo,
       is_closed: isPublishing ? 'OPEN' : 'TEMP',
       is_bookmark: false,
@@ -49,36 +48,23 @@ export function useCreateForm() {
         throw new Error('서버 응답에 데이터가 없습니다.');
       }
 
-      console.log('서버 응답 전체:', response);
-      console.log('폼 생성 성공:', response.data);
-
-      // TODO: 실제 URL로 변경 및 모달에 포함 필요
-      console.log('참여 폼 URL:', `localhost:5173/forms/response/${response.data.uuid}`);
+      console.log('서버 응답:', response.data);
       return response.data;
     } catch (err) {
-      console.log('에러 발생:', err);
+      console.error('폼 생성 실패:', err);
+      let errorMessage = '폼 생성 중 오류가 발생했습니다.';
 
-      if (err instanceof AxiosError) {
-        console.error('에러 객체:', err);
-        console.error('서버 응답 상태:', err.response?.status);
-        console.error('서버 응답 데이터:', err.response?.data);
-
-        let errorMessage;
-        if (err.response?.data) {
-          errorMessage =
-            typeof err.response.data === 'string'
-              ? err.response.data
-              : JSON.stringify(err.response.data);
-        } else if (err.message) {
-          errorMessage = err.message;
-        } else {
-          errorMessage = '폼 생성 중 오류가 발생했습니다.';
-        }
-
-        console.error('폼 생성 실패:', errorMessage);
-        setError(errorMessage);
-        throw new Error(errorMessage);
+      if (err instanceof AxiosError && err.response?.data) {
+        errorMessage =
+          typeof err.response.data === 'string'
+            ? err.response.data
+            : JSON.stringify(err.response.data);
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
       }
+
+      setError(errorMessage);
+      throw new Error(errorMessage);
     } finally {
       setIsLoading(false);
     }

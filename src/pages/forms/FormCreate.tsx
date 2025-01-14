@@ -97,14 +97,16 @@ export default function FormCreate() {
 
   const handleSubmit = async (isPublishing: boolean) => {
     try {
-      await createForm({
+      const result = await createForm({
         formInfo,
         questions,
         isPublishing,
       });
-      console.log('폼이 성공적으로 저장되었습니다.');
+      console.log('Form submit result:', result);
+      return result;
     } catch (error) {
       console.error('폼 저장 실패:', error);
+      throw error;
     }
   };
 
@@ -128,7 +130,7 @@ export default function FormCreate() {
             onQuestionDelete={handleDeleteQuestion}
             onQuestionUpdate={handleUpdateQuestion}
             onSave={() => handleSubmit(false)}
-            onPublish={() => handleSubmit(true)}
+            onPublish={async () => await handleSubmit(true)}
             onFormInfoUpdate={handleFormInfoUpdate}
           />
 

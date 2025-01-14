@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from '@/components/common/Button';
+import Modal from '@/components/common/Modal';
+import QuestionCard from '@/components/forms/responses/QuestionCard';
 import ShortAnswer from '@/components/forms/responses/ShortAnswer';
 import LongAnswer from '@/components/forms/responses/LongAnswer';
 import CheckboxAnswer from '@/components/forms/responses/CheckboxAnswer';
@@ -14,14 +16,17 @@ import DateAnswer from '@/components/forms/responses/DateAnswer';
 import EmailAnswer from '@/components/forms/responses/EmailAnswer';
 import FileUploadAnswer from '@/components/forms/responses/FileUploadAnswer';
 import { useFormData } from '@/hooks/useFormData';
-import QuestionCard from '@/components/forms/responses/QuestionCard';
+import { useModal } from '@/hooks/useModal';
+import LogoWithTitle from '@/components/common/LogoWithTitle';
 
 type AnswerValue = string | string[];
 
 export default function FormResponse() {
+  const navigate = useNavigate();
   const { formId } = useParams<{ formId: string }>();
   const { formData, isLoading, error } = useFormData(formId || '');
   const [answers, setAnswers] = useState<Record<number, AnswerValue>>({});
+  const { isOpen, open, close } = useModal();
 
   const handleAnswerChange = (questionOrder: number, value: AnswerValue) => {
     setAnswers(prev => ({
@@ -184,10 +189,31 @@ export default function FormResponse() {
           </QuestionCard>
         ))}
 
-        <Button type="submit" variant="primary" size="lg" className="self-end">
+        <Button type="submit" variant="primary" size="lg" className="self-end" onClick={open}>
           제출하기
         </Button>
       </form>
+
+      {/* 폼 제출 완료 모달 */}
+      <Modal isOpen={isOpen} onClose={close} width="sm">
+        <Modal.Content>
+          <div className="mb-4">
+            <LogoWithTitle title="🎉 폼이 제출되었어요!" />
+          </div>
+        </Modal.Content>
+        <Modal.Footer>
+          <Button
+            variant="primary"
+            flex
+            onClick={() => {
+              close();
+              navigate('/');
+            }}
+          >
+            홈으로 가기
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

@@ -18,8 +18,13 @@ import ShortAnswer from '@/components/forms/create/ShortAnswer';
 import StarRatingAnswer from '@/components/forms/create/StarRatingAnswer';
 import FormPreview from '@/components/forms/create/FormPreview';
 import { FormContentSectionProps } from '@/types/forms/forms.types';
-import { useModal } from '@/hooks/useModal';
 import { cn } from '@/utils/cn';
+import { useState } from 'react';
+import InputWithLabel from '@/components/form/InputWithLabel';
+import Label from '@/components/form/Label';
+import Input from '@/components/form/Input';
+import { Copy } from 'lucide-react';
+import { copyToClipboard } from '@/utils/copyToClipboard';
 
 export default function FormContentSection({
   formInfo,
@@ -32,32 +37,157 @@ export default function FormContentSection({
   onSave,
   onPublish,
 }: FormContentSectionProps) {
-  const { isOpen, open, close } = useModal();
+  const [formUrl, setFormUrl] = useState('');
+  const [formPassword, setFormPassword] = useState('');
+
+  const [isPreviewOpen, setPreviewOpen] = useState(false);
+  const [isConfirmOpen, setConfirmOpen] = useState(false);
+  const [isCompleteOpen, setCompleteOpen] = useState(false);
+
+  const openPreview = () => setPreviewOpen(true);
+  const closePreview = () => setPreviewOpen(false);
+
+  const openConfirm = () => setConfirmOpen(true);
+  const closeConfirm = () => setConfirmOpen(false);
+
+  const openComplete = () => setCompleteOpen(true);
+  const closeComplete = () => setCompleteOpen(false);
 
   const previewFormInfo = {
     ...formInfo,
     questions: questions.sort((a, b) => a.question_order - b.question_order),
   };
 
+  const handlePublish = async () => {
+    try {
+      const result = await onPublish();
+      console.log('발행 결과:', result);
+
+      if (result?.uuid) {
+        // 참여 링크 생성 (실제 도메인으로 수정 필요)
+        const participationUrl = `${window.location.origin}/forms/response/${result.uuid}`;
+        setFormUrl(participationUrl);
+        setFormPassword(result.access_code || '');
+
+        closeConfirm();
+        openComplete();
+      } else {
+        console.error('폼 발행 결과에 uuid가 없습니다:', result);
+      }
+    } catch (error) {
+      console.error('폼 발행 실패:', error);
+      // TODO: 에러 처리 (예: 에러 메시지 토스트 표시)
+    }
+  };
+
   return (
     <Section className="flex-1">
       <SectionTitle title={formInfo.title || '새로운 폼'}>
-        <Button type="button" variant="secondary" onClick={open}>
+        <Button type="button" variant="secondary" onClick={openPreview}>
           미리 보기
         </Button>
         <Button type="button" variant="secondary" onClick={onSave}>
           임시 저장
         </Button>
-        <Button type="button" variant="primary" onClick={onPublish}>
+        <Button type="button" variant="primary" onClick={openConfirm}>
           발행하기
         </Button>
       </SectionTitle>
 
-      <Modal isOpen={isOpen} onClose={close} width="2xl">
-        <Modal.Header title="미리 보기" onClose={close} />
+      {/* 미리 보기 모달 */}
+      <Modal isOpen={isPreviewOpen} onClose={closePreview} width="2xl">
+        <Modal.Header title="미리 보기" onClose={closePreview} />
         <Modal.Content>
-          <FormPreview formInfo={previewFormInfo} />
+          <div className="flex flex-col gap-4">
+            <div className="self-end flex gap-2">
+              <Button onClick={onSave}>임시 저장</Button>
+              <Button
+                variant="primary"
+                onClick={() => {
+                  closePreview();
+                  openConfirm();
+                }}
+              >
+                발행하기
+              </Button>
+            </div>
+            <FormPreview formInfo={previewFormInfo} />
+          </div>
         </Modal.Content>
+      </Modal>
+
+      {/* 발행 확인 모달 */}
+      <Modal isOpen={isConfirmOpen} onClose={closeConfirm} width="md">
+        <Modal.Header title="⚠️ 꼭 확인해 주세요!" />
+        <Modal.Content>
+          <p>
+            폼 발행 이후에는 수정이 불가능합니다.
+            <br />
+            정확한 데이터 수집을 위해 아래 사항을 확인해 주세요.
+          </p>
+          <ul className="list-disc pl-5 mt-2">
+            <li>질문 내용 및 순서</li>
+            <li>응답 옵션</li>
+            <li>마감 일자</li>
+            <li>비밀번호 설정 여부</li>
+          </ul>
+        </Modal.Content>
+        <Modal.Footer>
+          <Button flex onClick={closeConfirm}>
+            취소
+          </Button>
+          <Button
+            variant="primary"
+            flex
+            onClick={() => {
+              closeConfirm();
+              handlePublish();
+              openComplete();
+            }}
+          >
+            발행하기
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* 발행 완료 모달 */}
+      <Modal isOpen={isCompleteOpen} onClose={closeComplete} width="md">
+        <Modal.Header title="🎉 폼이 발행되었어요!" />
+        <Modal.Content>
+          <div className="flex flex-col gap-4">
+            <p>참여 링크와 비밀번호를 확인해 주세요.</p>
+
+            <InputWithLabel direction="row" className="gap-4">
+              <Label text="참여 링크" className="w-14" />
+              <div className="flex-1 relative">
+                <Input value={formUrl} disabled hasCopyButton />
+                <Copy
+                  size={22}
+                  className="absolute top-2 right-2 cursor-pointer"
+                  onClick={() => copyToClipboard(formUrl, '참여 링크가 복사되었습니다.')}
+                />
+              </div>
+            </InputWithLabel>
+            {formPassword && (
+              <InputWithLabel direction="row" className="gap-4">
+                <Label text="비밀번호" className="w-14" />
+                <div className="flex-1 relative">
+                  <Input value={formPassword} disabled hasCopyButton />
+                  <Copy
+                    size={22}
+                    className="absolute top-2 right-2 cursor-pointer"
+                    onClick={() => copyToClipboard(formPassword, '비밀번호가 복사되었습니다.')}
+                  />
+                </div>
+              </InputWithLabel>
+            )}
+          </div>
+        </Modal.Content>
+        <Modal.Footer>
+          <Button flex onClick={closeComplete}>
+            확인
+          </Button>
+        </Modal.Footer>
       </Modal>
 
       <div className="flex flex-col gap-4 p-2 scrollable">

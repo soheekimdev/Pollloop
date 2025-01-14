@@ -56,6 +56,11 @@ export interface FormInfo {
   questions: Question[];
 }
 
+export interface CreateFormResponse {
+  uuid: string;
+  access_code?: string;
+}
+
 // 컴포넌트 Props 인터페이스
 export interface FormSectionBaseProps {
   className?: string;
@@ -77,7 +82,7 @@ export interface FormContentSectionProps {
   onQuestionUpdate: (id: string, updates: Partial<Question>) => void;
   onFormInfoUpdate: (updates: Partial<FormInfo>) => void;
   onSave: () => void;
-  onPublish: () => void;
+  onPublish: () => Promise<CreateFormResponse>;
 }
 
 export interface FormQuestionSectionProps {
