@@ -348,7 +348,7 @@ export default function Forms() {
         </div>
         
         <div className="px-10">
-          <div className="flex flex-col h-[calc(100vh-140px)] bg-pollloop-bg-02 rounded-2xl">
+          <div className="flex flex-col h-[calc(100vh-188px)] bg-pollloop-bg-02 rounded-2xl">
             <div className="px-8 pt-8 pb-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-[22px] font-semibold">나의 폼</h2>
@@ -450,7 +450,7 @@ export default function Forms() {
                             <td className="p-4 text-sm">{form.create_at}</td>
                             <td className="p-4 text-sm">{form.end_at}</td>
                             <td className="p-4">
-                                <FormStatusBadge status={status} />
+                                <FormStatusBadge status={status} className='flex-shrink-0'/>
                             </td>
                             <td className="p-4 text-sm">
                                 {form.completed_count}/{form.target_count}
