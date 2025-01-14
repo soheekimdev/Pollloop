@@ -3,6 +3,7 @@ import { SummaryData } from '../../types/form-details.types';
 import Question from './summary/Question';
 import { fetchSummaryData } from '../../api/form-detail';
 import MainLoader from '../common/loaders/MainLoader';
+import CircleLoader from '../common/loaders/CircleLoader';
 
 export default function Summary({ formId }: { formId: string }) {
   const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
@@ -370,8 +371,8 @@ export default function Summary({ formId }: { formId: string }) {
 
   if (isLoading)
     return (
-      <div className="flex items-center justify-center w-full gap-5">
-        <MainLoader size={'sm'} />
+      <div className="flex items-center justify-center w-full gap-5 mt-10">
+        <CircleLoader size={40} />
       </div>
     );
   if (!summaryData) return <div>데이터가 없습니다</div>;

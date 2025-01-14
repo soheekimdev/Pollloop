@@ -15,29 +15,33 @@ import CustomTag from '../../components/home/parts/CustomTag';
 import { useAccessCode } from '../../hooks/useAccessCode';
 import SmallAccessCodeSection from '../../components/home/parts/SmallAccessCodeSection';
 import MainLoader from '@/components/common/loaders/MainLoader';
+import { useDelayedLoading } from '@/hooks/useDelayedLoading';
 
 export default function FormDetail() {
   const { formId } = useParams<{ formId: string }>();
   const [overviewData, setOverviewData] = useState<OverviewData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const { activeIndex, changeTab } = useTabs(0);
   const { isDisplayed, handleDisplay } = useAccessCode();
+  const [isActuallyLoading, setIsActuallyLoading] = useState(true);
   const navigate = useNavigate();
+
+  const isLoading = useDelayedLoading({
+    isActuallyLoading,
+    minimumLoadingTime: 1000,
+  });
 
   useEffect(() => {
     if (!formId) return;
 
     const loadOverviewData = async () => {
       try {
-        setIsLoading(true);
-
         const data = await fetchOverviewData(formId);
         // console.log(data);
         setOverviewData(data as OverviewData);
       } catch (err) {
         console.error('데이터 로딩 중 에러:', err);
       } finally {
-        setIsLoading(false);
+        setIsActuallyLoading(false);
       }
     };
 
