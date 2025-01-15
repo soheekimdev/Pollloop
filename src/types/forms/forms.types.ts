@@ -70,9 +70,8 @@ export interface FormListItem extends Pick<FormInfo,
   completed_count: number;
 }
 
-export interface FormListResponse {
-  forms: FormListItem[];
-}
+// forms.types.ts
+export type FormListResponse = FormListItem[];
 
 // 컴포넌트 Props 인터페이스
 export interface FormSectionBaseProps {
