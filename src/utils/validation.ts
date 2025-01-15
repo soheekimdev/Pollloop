@@ -100,8 +100,8 @@ export const validateFormTitle = (title: string): string | null => {
     return '폼 이름은 255자를 초과할 수 없습니다.';
   }
   // 허용된 특수문자를 제외한 특수문자 체크
-  const specialCharRegex = /[^A-Za-z0-9가-힣\s\-_()]/g;
-  if (specialCharRegex.test(title)) {
+  const disallowedSpecialChars = /[!@#$%^&*+=[\]{}"';:,.<>?/\\|`~]/g;
+  if (disallowedSpecialChars.test(title)) {
     return '폼 이름에는 하이픈(-), 밑줄(_), 소괄호()를 제외한 특수문자를 사용할 수 없습니다.';
   }
   return null;

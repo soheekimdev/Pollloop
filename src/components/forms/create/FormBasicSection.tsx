@@ -95,7 +95,7 @@ export default function FormBasicSection({
           <Label text="*참여 인원" />
           <Input
             type="number"
-            value={formInfo.target_count}
+            value={formInfo.target_count || ''}
             onChange={e => {
               setFormInfo((prev: FormInfo) => ({
                 ...prev,
