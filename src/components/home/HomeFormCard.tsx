@@ -19,7 +19,7 @@ export default function HomeFormCard({ item }: HomeFormCardProps) {
   };
 
   const getLinkPath = () => {
-    return is_closed === 'TEMP' ? `/forms/response/${form_id}` : `/forms/${form_id}`;
+    return is_closed === 'TEMP' ? `/forms/create/${form_id}` : `/forms/${form_id}`;
   };
 
   const participationRate = getParticipationRate();

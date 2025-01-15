@@ -19,7 +19,6 @@ export function ItemList({ items, createLink, buttonText }: ItemListProps) {
 
   return (
     <ul className="flex flex-wrap w-full h-full gap-4">
-      {/* HeaderComponent는 FormDetails 타입일 때만 렌더링 */}
       {isFormList && <CreateItemButtonSm createLink={createLink} buttonText={buttonText} />}
 
       {items.map(item =>
