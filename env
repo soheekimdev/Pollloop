@@ -1,0 +1,2 @@
+VITE_KAKAO_CLIENT_ID = 97e3f0b7147e4d5a036331b06583cfad
+VITE_KAKAO_REDIRECT_URI = http://localhost:5173/auth/kakao/callback

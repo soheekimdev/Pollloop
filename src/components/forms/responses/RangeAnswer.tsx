@@ -1,46 +1,44 @@
 import Radio from '@/components/form/Radio';
-import { Question } from '@/types/forms/forms.types';
+import { BaseAnswerProps } from '@/types/forms/forms.types';
 
-interface RangeAnswerProps {
-  data: Question;
-  value?: string;
-  onChange: (value: string) => void;
-  disabled?: boolean;
-  readOnly?: boolean;
-}
+type RangeAnswerProps = BaseAnswerProps;
 
-export default function RangeAnswer({ data, value, onChange, disabled = false, readOnly = false }: RangeAnswerProps) {
+export default function RangeAnswer({
+  data,
+  value,
+  onChange,
+  disabled = false,
+  error,
+}: RangeAnswerProps) {
   const minLabelOption = data.options_of_questions.find(option => option.option_number === 100);
   const maxLabelOption = data.options_of_questions.find(option => option.option_number === 200);
   const rangeOptions = data.options_of_questions.filter(
     option => option.option_number !== 100 && option.option_number !== 200,
   );
 
-  const handleChange = (optionNumber: number, optionContext: string) => {
-    onChange(optionContext);
-  };
-
   return (
-    <div className="flex flex-col md:flex-row gap-3 items-start md:items-end justify-between">
-      <p className="text-center">{minLabelOption?.option_context}</p>
-
-      <div className="flex flex-row justify-between gap-1 md:gap-3 mb-1 scrollable">
-        {rangeOptions.map(option => (
-          <label key={option.option_number} className="flex flex-col items-center">
-            <p>{option.option_context}</p>
-            <Radio
-              name={`question-${data.question_order}`}
-              id={`option-${data.question_order}-${option.option_number}`}
-              value={option.option_context}
-              checked={value === option.option_context}
-              onChange={() => handleChange(option.option_number, option.option_context)}
-              disabled={disabled}
-            />
-          </label>
-        ))}
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col md:flex-row gap-3 items-start md:items-end justify-between">
+        <p className="text-center">{minLabelOption?.option_context}</p>
+        <div className="flex flex-row justify-between gap-1 md:gap-3 mb-1 scrollable">
+          {rangeOptions.map(option => (
+            <label key={option.option_number} className="flex flex-col items-center">
+              <p>{option.option_context}</p>
+              <Radio
+                name={`question-${data.question_order}`}
+                id={`option-${data.question_order}-${option.option_number}`}
+                value={option.option_context}
+                checked={value === option.option_context}
+                onChange={() => onChange(data.layout_type, option.option_context)}
+                disabled={disabled}
+              />
+            </label>
+          ))}
+        </div>
+        <p className="text-center self-end">{maxLabelOption?.option_context}</p>
       </div>
 
-      <p className="text-center self-end">{maxLabelOption?.option_context}</p>
+      {error && <p className="text-xs text-status-red-text">{error}</p>}
     </div>
   );
 }

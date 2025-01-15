@@ -41,7 +41,7 @@ export default function FormPreview({ formInfo }: FormPreviewProps) {
   const hasEmptyFields = emptyFields.length > 0;
 
   return (
-    <div className="flex flex-col gap-2 max-w-3xl mx-auto py-8 px-10 rounded-lg bg-pollloop-bg-02">
+    <div className="flex flex-col gap-2 w-full max-w-3xl mx-auto py-8 px-10 rounded-lg bg-pollloop-bg-02">
       <div className="p-4 mb-4 rounded-lg bg-pollloop-light-beige border">
         <p className="font-medium">미리보기 화면입니다.</p>
         {hasEmptyFields && <p className="text-sm mt-1">비어있는 항목: {emptyFields.join(', ')}</p>}

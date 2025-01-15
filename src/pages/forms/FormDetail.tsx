@@ -14,36 +14,47 @@ import { AlignLeft, Calendar, FileText, Globe2, Tag, Target } from 'lucide-react
 import CustomTag from '../../components/home/parts/CustomTag';
 import { useAccessCode } from '../../hooks/useAccessCode';
 import SmallAccessCodeSection from '../../components/home/parts/SmallAccessCodeSection';
+import MainLoader from '@/components/common/loaders/MainLoader';
+import { useDelayedLoading } from '@/hooks/useDelayedLoading';
 
 export default function FormDetail() {
   const { formId } = useParams<{ formId: string }>();
   const [overviewData, setOverviewData] = useState<OverviewData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const { activeIndex, changeTab } = useTabs(0);
   const { isDisplayed, handleDisplay } = useAccessCode();
+  const [isActuallyLoading, setIsActuallyLoading] = useState(true);
   const navigate = useNavigate();
+
+  const isLoading = useDelayedLoading({
+    isActuallyLoading,
+    minimumLoadingTime: 1000,
+  });
 
   useEffect(() => {
     if (!formId) return;
 
     const loadOverviewData = async () => {
       try {
-        setIsLoading(true);
-
         const data = await fetchOverviewData(formId);
         // console.log(data);
         setOverviewData(data as OverviewData);
       } catch (err) {
         console.error('데이터 로딩 중 에러:', err);
       } finally {
-        setIsLoading(false);
+        setIsActuallyLoading(false);
       }
     };
 
     loadOverviewData();
   }, [formId, navigate]);
 
-  if (isLoading) return <div>로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중...</div>; // 로딩 컴포넌트 추가 예정
+  if (isLoading)
+    return (
+      <div className="gap-5 w-full h-[calc(100vh-96px)] flex items-center justify-center">
+        <MainLoader />
+      </div>
+    );
+
   if (!overviewData) return <div>데이터가 없습니다</div>;
 
   const {
@@ -85,7 +96,10 @@ export default function FormDetail() {
         <section className="flex flex-col justify-between w-full gap-4 md:flex-row-reverse">
           <Button
             onClick={() =>
-              copyToClipboard('domain.com/forms/' + uuid, '참여 링크가 클립보드에 복사되었습니다.')
+              copyToClipboard(
+                'pollloop.vercel.app/forms/response/' + uuid,
+                '참여 링크가 클립보드에 복사되었습니다.',
+              )
             }
             type="button"
             variant="primary"

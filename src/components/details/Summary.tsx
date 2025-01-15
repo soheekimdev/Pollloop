@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { SummaryData } from '../../types/form-details.types';
 import Question from './summary/Question';
 import { fetchSummaryData } from '../../api/form-detail';
+import CircleLoader from '../common/loaders/CircleLoader';
 
 export default function Summary({ formId }: { formId: string }) {
   const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
@@ -367,7 +368,12 @@ export default function Summary({ formId }: { formId: string }) {
     loadOverviewData();
   }, [formId]);
 
-  if (isLoading) return <div>로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중..로딩 중...</div>; // 로딩 컴포넌트 추가 예정
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center w-full gap-5 mt-10">
+        <CircleLoader size={40} />
+      </div>
+    );
   if (!summaryData) return <div>데이터가 없습니다</div>;
 
   return (

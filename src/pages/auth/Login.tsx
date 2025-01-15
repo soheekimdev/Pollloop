@@ -44,17 +44,22 @@ export default function Login() {
         <div className="w-full flex flex-col gap-4">
           <InputWithLabel>
             <Label htmlFor="email" text="아이디" />
-            <Input id="email" type="email" placeholder="name@example.com" {...register('email')} />
-            {errors.email && (
-              <p className="mt-2 text-xs text-status-red-text">{errors.email.message}</p>
-            )}
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              {...register('email')}
+              error={errors.email?.message}
+            />
           </InputWithLabel>
           <InputWithLabel>
             <Label htmlFor="password" text="비밀번호" />
-            <Input id="password" type="password" {...register('password')} />
-            {errors.password && (
-              <p className="mt-2 text-xs text-status-red-text">{errors.password.message}</p>
-            )}
+            <Input
+              id="password"
+              type="password"
+              {...register('password')}
+              error={errors.password?.message}
+            />
             <p className="text-sm underline self-end">
               <Link to="/password">비밀번호 찾기/재설정</Link>
             </p>
