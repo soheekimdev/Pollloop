@@ -17,6 +17,7 @@ import DateAnswer from '@/components/forms/responses/DateAnswer';
 import EmailAnswer from '@/components/forms/responses/EmailAnswer';
 import FileUploadAnswer from '@/components/forms/responses/FileUploadAnswer';
 import { errorToast } from '@/utils/toast';
+import { ValidationError, validateForm } from '@/utils/validation';
 import { useSubmitForm } from '@/hooks/useSubmitForm';
 import { useFormData } from '@/hooks/useFormData';
 import { useModal } from '@/hooks/useModal';
@@ -36,6 +37,7 @@ export default function FormResponse() {
   const [answers, setAnswers] = useState<Answers>({});
   const { isOpen, open, close } = useModal();
   const { submitForm, isSubmitting } = useSubmitForm();
+  const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
 
   const handleAnswerChange = (
     questionOrder: number,
@@ -59,6 +61,14 @@ export default function FormResponse() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData) return;
+
+    const errors = validateForm(formData.questions, answers);
+    setValidationErrors(errors);
+
+    if (errors.length > 0) {
+      errorToast('필수 항목을 모두 입력해주세요.');
+      return;
+    }
 
     try {
       const questionsWithAnswers: SubmitQuestion[] = formData.questions.map(question => {
@@ -150,6 +160,11 @@ export default function FormResponse() {
     }
   };
 
+  const getErrorMessage = (questionOrder: number): string | undefined => {
+    const error = validationErrors.find(err => err.questionOrder === questionOrder);
+    return error?.message;
+  };
+
   const handleGoHome = () => {
     navigate('/');
   };
@@ -175,7 +190,7 @@ export default function FormResponse() {
         {formData.form_description && <p className="text-center">{formData.form_description}</p>}
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2 flex-1">
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-2 flex-1">
         {formData?.questions?.map(question => (
           <QuestionCard
             key={question.question_order}
@@ -191,6 +206,7 @@ export default function FormResponse() {
                 data={question}
                 value={(answers[question.question_order]?.value as string) || ''}
                 onChange={(type, value) => handleAnswerChange(question.question_order, type, value)}
+                error={getErrorMessage(question.question_order)}
               />
             )}
             {question.layout_type === 'LONG_TYPE' && (
@@ -198,6 +214,7 @@ export default function FormResponse() {
                 data={question}
                 value={(answers[question.question_order]?.value as string) || ''}
                 onChange={(type, value) => handleAnswerChange(question.question_order, type, value)}
+                error={getErrorMessage(question.question_order)}
               />
             )}
             {question.layout_type === 'CHECKBOX_TYPE' && (
@@ -205,6 +222,7 @@ export default function FormResponse() {
                 data={question}
                 value={(answers[question.question_order]?.value as AnswerOption[]) || []}
                 onChange={(type, value) => handleAnswerChange(question.question_order, type, value)}
+                error={getErrorMessage(question.question_order)}
               />
             )}
             {question.layout_type === 'RADIO_TYPE' && (
@@ -212,6 +230,7 @@ export default function FormResponse() {
                 data={question}
                 value={answers[question.question_order]?.value as AnswerOption}
                 onChange={(type, value) => handleAnswerChange(question.question_order, type, value)}
+                error={getErrorMessage(question.question_order)}
               />
             )}
             {question.layout_type === 'DROPDOWN_TYPE' && (
@@ -219,6 +238,7 @@ export default function FormResponse() {
                 data={question}
                 value={answers[question.question_order]?.value as AnswerOption}
                 onChange={(type, value) => handleAnswerChange(question.question_order, type, value)}
+                error={getErrorMessage(question.question_order)}
               />
             )}
             {question.layout_type === 'RANGE_TYPE' && (
@@ -226,6 +246,7 @@ export default function FormResponse() {
                 data={question}
                 value={(answers[question.question_order]?.value as string) || ''}
                 onChange={(type, value) => handleAnswerChange(question.question_order, type, value)}
+                error={getErrorMessage(question.question_order)}
               />
             )}
             {question.layout_type === 'STAR_RATING_TYPE' && (
@@ -233,6 +254,7 @@ export default function FormResponse() {
                 data={question}
                 value={(answers[question.question_order]?.value as string) || ''}
                 onChange={(type, value) => handleAnswerChange(question.question_order, type, value)}
+                error={getErrorMessage(question.question_order)}
               />
             )}
             {question.layout_type === 'IMAGE_SELECT_TYPE' && (
@@ -240,6 +262,7 @@ export default function FormResponse() {
                 data={question}
                 value={answers[question.question_order]?.value as AnswerOption}
                 onChange={(type, value) => handleAnswerChange(question.question_order, type, value)}
+                error={getErrorMessage(question.question_order)}
               />
             )}
             {question.layout_type === 'NUMBER_TYPE' && (
@@ -247,6 +270,7 @@ export default function FormResponse() {
                 data={question}
                 value={(answers[question.question_order]?.value as string) || ''}
                 onChange={(type, value) => handleAnswerChange(question.question_order, type, value)}
+                error={getErrorMessage(question.question_order)}
               />
             )}
             {question.layout_type === 'DATE_TYPE' && (
@@ -254,6 +278,7 @@ export default function FormResponse() {
                 data={question}
                 value={(answers[question.question_order]?.value as string) || ''}
                 onChange={(type, value) => handleAnswerChange(question.question_order, type, value)}
+                error={getErrorMessage(question.question_order)}
               />
             )}
             {question.layout_type === 'EMAIL_TYPE' && (
@@ -261,6 +286,7 @@ export default function FormResponse() {
                 data={question}
                 value={(answers[question.question_order]?.value as string) || ''}
                 onChange={(type, value) => handleAnswerChange(question.question_order, type, value)}
+                error={getErrorMessage(question.question_order)}
               />
             )}
             {question.layout_type === 'FILE_UPLOAD_TYPE' && (
@@ -269,6 +295,7 @@ export default function FormResponse() {
                 value={(answers[question.question_order]?.value as string) || ''}
                 onChange={(type, value) => handleAnswerChange(question.question_order, type, value)}
                 formTitle={formData?.title || ''}
+                error={getErrorMessage(question.question_order)}
               />
             )}
           </QuestionCard>

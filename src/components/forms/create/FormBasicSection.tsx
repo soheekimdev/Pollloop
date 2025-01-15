@@ -15,7 +15,7 @@ export default function FormBasicSection({
     <Section className="flex-1 md:max-w-[304px]">
       <SectionTitle title="기본 정보" />
 
-      <fieldset className="flex flex-col gap-4">
+      <fieldset className="flex flex-col gap-4 scrollable">
         <InputWithLabel>
           <Label text="*폼 이름" />
           <Input

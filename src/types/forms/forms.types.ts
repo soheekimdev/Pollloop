@@ -149,8 +149,11 @@ export interface SubmitOption {
 // Answer 컴포넌트들의 공통 Props 타입
 export interface BaseAnswerProps {
   data: Question;
+  value?: string;
+  onChange: (type: QuestionType, value: string) => void;
   disabled?: boolean;
   readOnly?: boolean;
+  error?: string;
 }
 
 // 각 Answer 컴포넌트별 특화된 Props 타입
@@ -159,18 +162,27 @@ export interface TextAnswerProps extends BaseAnswerProps {
   onChange: (type: QuestionType, value: string) => void;
 }
 
-export interface OptionAnswerProps extends BaseAnswerProps {
+export interface OptionAnswerProps {
+  data: Question;
   value?: AnswerOption;
   onChange: (type: QuestionType, value: AnswerOption) => void;
+  disabled?: boolean;
+  readOnly?: boolean;
+  error?: string;
 }
 
-export interface MultiOptionAnswerProps extends BaseAnswerProps {
+export interface MultiOptionAnswerProps {
+  data: Question;
   value?: AnswerOption[];
   onChange: (type: QuestionType, value: AnswerOption[]) => void;
+  disabled?: boolean;
+  readOnly?: boolean;
+  error?: string;
 }
 
 export interface FileAnswerProps extends BaseAnswerProps {
   value?: string;
   onChange: (type: QuestionType, value: string) => void;
   formTitle: string;
+  error?: string;
 }
