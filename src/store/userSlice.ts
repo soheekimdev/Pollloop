@@ -112,11 +112,17 @@ const userSlice = createSlice({
         state.tokens = action.payload.tokens;
         storage.setUserData(state.user, state.tokens);
       })
+      .addCase(loginUser.rejected, state => {
+        state.status = 'idle';
+      })
       .addCase(registerUser.pending, state => {
         state.status = 'loading';
       })
       .addCase(registerUser.fulfilled, state => {
         state.status = 'succeeded';
+      })
+      .addCase(registerUser.rejected, state => {
+        state.status = 'idle';
       })
       .addCase(kakaoLoginUser.pending, state => {
         state.status = 'loading';
