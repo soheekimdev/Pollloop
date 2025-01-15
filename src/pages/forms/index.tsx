@@ -135,7 +135,7 @@ export default function Forms() {
   const handleDeleteForms = async () => {
     if (!window.confirm('선택한 폼을 삭제하시겠습니까?\n\n삭제한 후에는 복구할 수 없습니다.'))
       return;
-  
+
     try {
       await fetchFormDeleteData(selectedForms);
       setForms(prev => prev.filter(form => !selectedForms.includes(form.uuid)));
@@ -148,26 +148,42 @@ export default function Forms() {
   };
 
   const getFormStatus = (form: FormListItem): FormStatus => {
-    if (!form.is_closed) {
-      throw new Error('Form status is undefined');
-    }
-    return form.is_closed;
+    return form.is_closed || 'TEMP';
   };
 
-  const handleActionButton = (form: FormListItem) => {
+  const handleActionButton = (form: FormListItem, isPreviewModal: boolean = false) => {
     const status = getFormStatus(form);
+    const buttonStyles = isPreviewModal
+      ? { size: undefined, className: '' }
+      : { size: 'sm' as const, className: 'text-xs' };
+
     if (status === 'TEMP') {
       return (
         <div className="flex gap-2">
           <Button
-            size="sm"
+            {...buttonStyles}
             variant="neutral"
-            className="w-14 text-xs"
-            onClick={() => navigate(`/forms/create/${form.uuid}`)}
+            className={`${!isPreviewModal ? 'w-14' : ''} ${buttonStyles.className}`}
+            onClick={() => {
+              if (isPreviewModal) {
+                handleClosePreview();
+              }
+              navigate(`/forms/create/${form.uuid}`);
+            }}
           >
             수정
           </Button>
-          <Button size="sm" variant="neutral" className="w-20 text-xs">
+          <Button
+            {...buttonStyles}
+            variant="primary"
+            className={`${!isPreviewModal ? 'w-20' : ''} ${buttonStyles.className}`}
+            onClick={() => {
+              if (isPreviewModal) {
+                handleClosePreview();
+              }
+              navigate(`/forms/create/${form.uuid}`);
+            }}
+          >
             발행하기
           </Button>
         </div>
@@ -175,10 +191,15 @@ export default function Forms() {
     } else {
       return (
         <Button
-          size="sm"
+          {...buttonStyles}
           variant="neutral"
-          className="w-[146px] text-xs"
-          onClick={() => navigate(`/forms/${form.uuid}`)}
+          className={`${!isPreviewModal ? 'w-[146px]' : ''} ${buttonStyles.className}`}
+          onClick={() => {
+            if (isPreviewModal) {
+              handleClosePreview();
+            }
+            navigate(`/forms/${form.uuid}`);
+          }}
         >
           결과 보기
         </Button>
@@ -361,25 +382,25 @@ export default function Forms() {
       </div>
 
       {/* 미리 보기 모달 */}
-      <Modal isOpen={isPreviewModalOpen} onClose={handleClosePreview} width="2xl">
+      <Modal
+        isOpen={isPreviewModalOpen}
+        onClose={handleClosePreview}
+        width="2xl"
+        className="min-h-[620px]"
+      >
         <Modal.Header title="미리 보기" onClose={handleClosePreview} />
         <Modal.Content>
           <div className="flex flex-col gap-6">
             <div className="flex justify-end gap-2">
-              <Button
-                variant="neutral"
-                onClick={() => {
-                  handleClosePreview();
-                  navigate(`/forms/create/${selectedFormId}`);
-                }}
-              >
-                수정
-              </Button>
-              <Button variant="primary">발행하기</Button>
+              {selectedFormId &&
+                forms.find(form => form.uuid === selectedFormId) &&
+                handleActionButton(forms.find(form => form.uuid === selectedFormId)!, true)}
             </div>
 
             {isLoadingPreview ? (
-              <MainLoader />
+              <div className="flex items-center justify-center">
+                <MainLoader />
+              </div>
             ) : previewError ? (
               <div className="bg-pollloop-bg-01 rounded-xl w-full p-8 flex items-center justify-center text-pollloop-brown-01/60">
                 {previewError}
