@@ -8,10 +8,13 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { authAPI } from '@/api/auth';
 import { errorToast, successToast } from '@/utils/toast';
+import { useState } from 'react';
+import CircleLoader from '@/components/common/loaders/CircleLoader';
 
 export default function ResetPassword() {
   const navigate = useNavigate();
   const { uuid, token } = useParams();
+  const [isLoading, setIsloading] = useState(false);
 
   const {
     register,
@@ -23,6 +26,8 @@ export default function ResetPassword() {
   });
 
   const onSubmit = async (data: ResetPasswordFormValue) => {
+    setIsloading(true);
+
     try {
       if (!uuid || !token) {
         throw new Error('잘못된 요청입니다. UUID 또는 토큰이 없습니다.');
@@ -43,6 +48,8 @@ export default function ResetPassword() {
         console.error('비밀번호 재설정 실패', error);
         errorToast(error.error);
       }
+    } finally {
+      setIsloading(false);
     }
   };
 
@@ -68,7 +75,9 @@ export default function ResetPassword() {
             error={errors.confirmPassword?.message}
           />
         </InputWithLabel>
-        <Button type="submit">재설정</Button>
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? '재설정 중...' : '재설정'} {isLoading && <CircleLoader size={16} />}
+        </Button>
       </form>
     </div>
   );
