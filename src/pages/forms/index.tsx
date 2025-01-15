@@ -186,7 +186,7 @@ export default function Forms() {
   
             <div className="flex-1 overflow-hidden px-4 md:px-8 pb-8">
               <div className="h-full flex flex-col overflow-auto scrollable">
-                <div className="bg-pollloop-coral rounded-lg min-w-[1000px]">
+                <div className="bg-pollloop-coral rounded-lg min-w-fit">
                   <table className="w-full table-fixed">
                     <colgroup>
                       <col className="w-[300px]" />
