@@ -1,132 +1,172 @@
-import { useEffect, useState } from 'react';
-import { Mail } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import Button from '../../components/common/Button';
-import { fetchParticipants, sendParticipationRequest } from '../../api/form-detail';
-import { FormParticipant } from '../../types/form-details.types';
+import { fetchParticipantsList, sendParticipationReminder } from '../../api/form-detail';
 import { successToast, errorToast } from '../../utils/toast';
+import { Participant, SortOrder } from '../../types/form-details.types';
+import { useInView } from '../../hooks/useInView';
 
 interface ParticipantsProps {
   formId: string;
 }
 
 export default function Participants({ formId }: ParticipantsProps) {
-  const [participants, setParticipants] = useState<FormParticipant[]>([]);
-  const [sortByCompleted, setSortByCompleted] = useState(true);
-  const [lastRequestTime, setLastRequestTime] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(true);
-  const [isRequesting, setIsRequesting] = useState(false);
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [lastRequestTime, setLastRequestTime] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [sortBy, setSortBy] = useState<SortOrder>('completed');
+  
+  const { ref, isInView } = useInView<HTMLDivElement>();
 
-  useEffect(() => {
-    const loadParticipants = async () => {
-      try {
-        const { data } = await fetchParticipants(formId);
-        setParticipants(data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('참여자 목록 로딩 실패:', error);
-        errorToast('참여자 목록을 불러오는데 실패했습니다.');
-        setIsLoading(false);
+  const sortParticipants = (participants: Participant[], sortBy: SortOrder) => {
+    return [...participants].sort((a, b) => {
+      if (sortBy === 'completed') {
+        return Number(b.is_complete) - Number(a.is_complete);
+      } else {
+        return Number(a.is_complete) - Number(b.is_complete);
       }
-    };
-
-    loadParticipants();
-  }, [formId]);
-
-  const sortParticipants = () => {
-    setSortByCompleted(!sortByCompleted);
-    setParticipants(prev => 
-      [...prev].sort((a, b) => {
-        if (sortByCompleted) {
-          return a.is_complete === b.is_complete ? 0 : a.is_complete ? 1 : -1;
-        }
-        return a.is_complete === b.is_complete ? 0 : a.is_complete ? -1 : 1;
-      })
-    );
+    });
+  };
+  
+  const fetchParticipants = async (pageNum: number) => {
+    if (!hasMore) return;
+    
+    try {
+      setIsLoading(true);
+      const data = await fetchParticipantsList(formId);
+      if (data.length === 0) {
+        setHasMore(false);
+      } else {
+        const sortedData = sortParticipants(data, sortBy);
+        setParticipants(prev => 
+          pageNum === 1 ? sortedData : sortParticipants([...prev, ...data], sortBy)
+        );
+        setPage(pageNum + 1);
+      }
+    } catch (error) {
+      console.error('참여자 목록 조회 실패:', error);
+      errorToast('참여자 목록을 불러오는데 실패했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleParticipationRequest = async () => {
-    const uncompletedEmails = participants
-      .filter(p => !p.is_complete)
-      .map(p => p.email);
+  const handleSort = (newSortBy: SortOrder) => {
+    if (sortBy === newSortBy) return;
+    setSortBy(newSortBy);
+    setPage(1);
+    setHasMore(true);
+    setParticipants(prev => sortParticipants(prev, newSortBy));
+  };
 
-    if (uncompletedEmails.length === 0) {
-      errorToast('미응답 참여자가 없습니다.');
-      return;
-    }
-
-    // 24시간 쿨타임 체크
+  const sendReminder = async () => {
     if (lastRequestTime) {
-      const lastRequest = new Date(lastRequestTime).getTime();
-      const now = new Date().getTime();
-      const hoursSinceLastRequest = (now - lastRequest) / (1000 * 60 * 60);
+      const lastRequest = new Date(lastRequestTime);
+      const now = new Date();
+      const hoursDiff = (now.getTime() - lastRequest.getTime()) / (1000 * 60 * 60);
       
-      if (hoursSinceLastRequest < 24) {
-        errorToast('마지막 요청 후 24시간이 지나지 않았습니다.');
+      if (hoursDiff < 24) {
+        errorToast('참여 요청은 24시간에 한 번만 가능합니다.');
         return;
       }
     }
 
     try {
-      setIsRequesting(true);
-      await sendParticipationRequest(formId, uncompletedEmails);
-      successToast('참여 요청을 보냈습니다.');
+      setIsLoading(true);
+      await sendParticipationReminder(formId);
       setLastRequestTime(new Date().toISOString());
+      successToast('참여 요청을 보냈습니다.');
     } catch (error) {
-      console.error('참여 요청 실패:', error);
-      errorToast('참여 요청 전송에 실패했습니다.');
+      console.error('참여 요청 메일 전송 실패:', error);
+      errorToast('참여 요청 메일 전송에 실패했습니다.');
     } finally {
-      setIsRequesting(false);
+      setIsLoading(false);
     }
   };
 
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
+  useEffect(() => {
+    if (formId) {
+      fetchParticipants(1);
+    }
+  }, [formId, sortBy]);
+
+  useEffect(() => {
+    if (isInView && !isLoading && hasMore) {
+      fetchParticipants(page);
+    }
+  }, [isInView]);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between text-sm text-pollloop-brown-01">
-        <p>마지막 참여 요청 시간: {lastRequestTime || '-'}</p>
-        <div className="flex items-center gap-2">
-          <Button 
-            onClick={sortParticipants}
-            variant="neutral"
+    <div className="flex flex-col gap-4 bg-pollloop-light-beige p-8 rounded-2xl">
+      <div className="flex items-center justify-between">
+        <p className="text-13 text-tag-secondary-text">
+          마지막 참여 요청 시간: {lastRequestTime ? new Date(lastRequestTime).toLocaleString() : '-'}
+        </p>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant={sortBy === 'completed' ? 'primary' : 'neutral'}
             size="sm"
-            className="w-[100px]"
+            className="text-xs px-4"
+            onClick={() => handleSort('completed')}
           >
-            {sortByCompleted ? '응답 완료 순' : '미완료 순'}
+            응답 완료 순
+          </Button>
+          <Button
+            type="button"
+            variant={sortBy === 'incomplete' ? 'primary' : 'neutral'}
+            size="sm"
+            className="text-xs px-4"
+            onClick={() => handleSort('incomplete')}
+          >
+            미완료 순
           </Button>
           <Button 
-            onClick={handleParticipationRequest}
-            disabled={isRequesting}
-            variant="secondary"
+            type="button"
+            variant="primary"
             size="sm"
+            className="text-xs px-4"
+            onClick={sendReminder}
+            disabled={isLoading}
           >
             참여 요청하기
           </Button>
         </div>
       </div>
 
-      <ul className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 max-h-[calc(100vh-300px)] overflow-y-auto scrollable">
         {participants.map((participant, index) => (
-          <li 
-            key={index}
-            className="flex items-center justify-between gap-2 p-4 rounded-lg bg-pollloop-brown-01/15"
+          <div 
+            key={`${participant.email}-${index}`}
+            className="flex items-center justify-between px-4 py-3 bg-[#FFEED1] rounded-lg"
+            ref={index === participants.length - 1 ? ref : undefined}
           >
-            <div className="flex items-center gap-4">
-              <Mail size={24} />
-              <span>{participant.email}</span>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-[#FFDBB3] flex items-center justify-center">
+                <span className="text-pollloop-brown-01">
+                  {participant.email[0].toUpperCase()}
+                </span>
+              </div>
+              <span className="text-pollloop-brown-01">{participant.email}</span>
             </div>
-            <span className={`px-2 py-1 text-xs rounded-lg ${
-              participant.is_complete 
-                ? 'bg-status-green-bg text-status-green-text'
-                : 'bg-status-red-bg text-status-red-text'
-            }`}>
+            <span 
+              className={`px-2 py-1 text-xs rounded-full ${
+                participant.is_complete 
+                  ? 'bg-status-green-bg text-status-green-text' 
+                  : 'bg-status-red-bg text-status-red-text'
+              }`}
+            >
               {participant.is_complete ? '응답 완료' : '미응답'}
             </span>
-          </li>
+          </div>
         ))}
-      </ul>
+        {isLoading && (
+          <div className="flex justify-center py-4">
+            <span className="text-sm text-tag-secondary-text">로딩 중...</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
