@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
 interface UseDelayedLoadingProps {
-  isActuallyLoading: boolean; // 실제 로딩 상태
-  minimumLoadingTime?: number; // 최소 로딩 시간 (ms)
+  isActuallyLoading: boolean;
+  minimumLoadingTime?: number;
 }
 
 export function useDelayedLoading({
@@ -13,7 +13,6 @@ export function useDelayedLoading({
 
   useEffect(() => {
     if (!isActuallyLoading) {
-      // startTime 제거
       const timer = setTimeout(() => {
         setIsLoading(false);
       }, minimumLoadingTime);
