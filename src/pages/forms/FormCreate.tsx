@@ -76,6 +76,8 @@ export default function FormCreate() {
             id: String(q.question_order), // 임시 id 생성
           })),
         );
+
+        console.log(formData)
       } catch (error) {
         console.error('Form data loading failed:', error);
         errorToast('폼 데이터를 불러오는데 실패했습니다');

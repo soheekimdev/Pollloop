@@ -17,7 +17,7 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
   const [images, setImages] = useState<Option[]>(
     data.options_of_questions?.map(option => ({
       ...option,
-      imageUrl: option.option_context.split('|')[1] || '',
+      imageUrl: option.option_context,
     })) || [],
   );
   const [isUploading, setIsUploading] = useState(false);
@@ -135,7 +135,7 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
             <div className="relative aspect-square rounded-lg overflow-hidden">
               {image.imageUrl ? (
                 <img
-                  src={image.imageUrl ?? '/api/placeholder/144/144'}
+                  src={image.imageUrl}
                   alt={`${image.option_number}번`}
                   className="w-full h-full object-cover cursor-default"
                 />
