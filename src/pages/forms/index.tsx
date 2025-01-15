@@ -135,7 +135,7 @@ export default function Forms() {
   const handleDeleteForms = async () => {
     if (!window.confirm('선택한 폼을 삭제하시겠습니까?\n\n삭제한 후에는 복구할 수 없습니다.'))
       return;
-
+  
     try {
       await fetchFormDeleteData(selectedForms);
       setForms(prev => prev.filter(form => !selectedForms.includes(form.uuid)));
