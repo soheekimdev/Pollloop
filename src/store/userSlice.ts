@@ -7,15 +7,13 @@ import { AxiosError } from 'axios';
 interface UserState {
   user: User | null;
   tokens: Tokens | null;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string | null;
+  status: 'idle' | 'loading' | 'succeeded';
 }
 
 const initialState: UserState = {
   user: JSON.parse(localStorage.getItem('user') || 'null'),
   tokens: JSON.parse(localStorage.getItem('tokens') || 'null'),
   status: 'idle',
-  error: null,
 };
 
 export const loginUser = createAsyncThunk(
@@ -107,45 +105,27 @@ const userSlice = createSlice({
     builder
       .addCase(loginUser.pending, state => {
         state.status = 'loading';
-        state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.user = action.payload.user;
         state.tokens = action.payload.tokens;
-        state.error = null;
         storage.setUserData(state.user, state.tokens);
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload as string;
       })
       .addCase(registerUser.pending, state => {
         state.status = 'loading';
-        state.error = null;
       })
       .addCase(registerUser.fulfilled, state => {
         state.status = 'succeeded';
-        state.error = null;
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload as string;
       })
       .addCase(kakaoLoginUser.pending, state => {
         state.status = 'loading';
-        state.error = null;
       })
       .addCase(kakaoLoginUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.user = action.payload.user;
         state.tokens = action.payload.tokens;
-        state.error = null;
         storage.setUserData(state.user, state.tokens);
-      })
-      .addCase(kakaoLoginUser.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload as string;
       })
       .addCase(logoutUser.pending, state => {
         state.status = 'loading';
@@ -154,12 +134,7 @@ const userSlice = createSlice({
         state.user = null;
         state.tokens = null;
         state.status = 'idle';
-        state.error = null;
         storage.clearUserData();
-      })
-      .addCase(logoutUser.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload as string;
       });
   },
 });

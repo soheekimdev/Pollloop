@@ -9,8 +9,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user } = useSelector((state: RootState) => state.user);
 
-  const toggleModal = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const toggleMenuDropdown = () => {
     setIsMenuOpen(prev => !prev);
   };
   return (
@@ -31,7 +30,7 @@ export default function Navbar() {
         </nav>
       </div>
       <aside className="flex h-8 justify-end items-center gap-2">
-        <button onClick={toggleModal} className="relative z-10">
+        <button onClick={toggleMenuDropdown} className="relative z-10">
           <Menu className="block md:hidden hover:cursor-pointer" />
         </button>
         <div className="hidden md:flex items-center gap-2">
@@ -41,7 +40,7 @@ export default function Navbar() {
             <CircleUserRound />
           )}
           <p className="text-sm font-bold">{user?.email}</p>
-          <button onClick={toggleModal} className="relative z-10">
+          <button onClick={toggleMenuDropdown} className="relative z-10">
             <ChevronDown className="hover:cursor-pointer" />
           </button>
         </div>
