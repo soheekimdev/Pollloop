@@ -8,7 +8,7 @@ import FormQuestionSection from '@/components/forms/create/FormQuestionSection';
 import { FormInfo, Question, QuestionType } from '@/types/forms/forms.types';
 import { generateAccessCode } from '@/utils/generateAccessCode';
 import { validateFormInfo } from '@/utils/validation';
-import { errorToast } from '@/utils/toast';
+import { errorToast, successToast } from '@/utils/toast';
 import { useCreateForm } from '@/hooks/useCreateForm';
 import { instance } from '@/api/axios';
 
@@ -205,6 +205,18 @@ export default function FormCreate() {
 
   const handleSubmit = async (isPublishing: boolean) => {
     try {
+      const updatedQuestions = questions.map(q => {
+        if (!q.question.trim()) {
+          return {
+            ...q,
+            question: `질문 ${q.question_order}`,
+          };
+        }
+        return q;
+      });
+
+      setQuestions(updatedQuestions);
+
       const formErrors = validateFormInfo(formInfo);
       if (formErrors.length > 0) {
         errorToast(formErrors[0].message);
@@ -220,19 +232,27 @@ export default function FormCreate() {
 
       const formData = {
         ...formInfo,
-        questions,
+        questions: updatedQuestions,
         ...(formId && { uuid: formId }),
       };
 
       const result = await createForm({
         formInfo: formData,
-        questions,
+        questions: updatedQuestions,
         isPublishing,
       });
-      console.log('Form submit result:', result);
+
+      if (result?.uuid) {
+        successToast(isPublishing ? '폼이 발행되었습니다.' : '폼이 임시 저장되었습니다.');
+        navigate(`/forms/create/${result.uuid}`);
+      } else {
+        errorToast('유효한 응답이 없습니다.');
+      }
+
       return result;
     } catch (error) {
       console.error('폼 저장 실패:', error);
+      errorToast('폼 저장에 실패했습니다.');
       throw error;
     }
   };
