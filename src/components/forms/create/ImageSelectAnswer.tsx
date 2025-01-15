@@ -144,7 +144,7 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
               )}
 
               <div className="absolute bottom-0 left-0 right-0 bg-pollloop-brown-03/70 text-pollloop-light-beige text-xs py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity truncate">
-                {image.option_context.split('|')[0]}
+                {image.option_context}
               </div>
             </div>
 
