@@ -7,6 +7,7 @@ interface ShortAnswerProps {
   onChange: (type: QuestionType, value: string) => void;
   disabled?: boolean;
   readOnly?: boolean;
+  error?: string;
 }
 
 export default function ShortAnswer({
@@ -15,6 +16,7 @@ export default function ShortAnswer({
   onChange,
   disabled = false,
   readOnly = false,
+  error,
 }: ShortAnswerProps) {
   return (
     <div className="space-y-2">
@@ -25,6 +27,7 @@ export default function ShortAnswer({
         required={data.is_required}
         disabled={disabled}
         readOnly={readOnly}
+        error={error}
       />
     </div>
   );

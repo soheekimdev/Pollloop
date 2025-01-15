@@ -1,21 +1,16 @@
 import { useState, useEffect } from 'react';
 import Checkbox from '@/components/form/Checkbox';
 import Input from '@/components/form/Input';
-import { AnswerOption, Question, QuestionType } from '@/types/forms/forms.types';
+import { AnswerOption, MultiOptionAnswerProps } from '@/types/forms/forms.types';
 
-interface CheckboxAnswerProps {
-  data: Question;
-  value?: AnswerOption[];
-  onChange: (type: QuestionType, value: AnswerOption[]) => void;
-  disabled?: boolean;
-  readOnly?: boolean;
-}
+type CheckboxAnswerProps = MultiOptionAnswerProps;
 
 export default function CheckboxAnswer({
   data,
   value = [],
   onChange,
   readOnly = false,
+  error,
 }: CheckboxAnswerProps) {
   const [etcText, setEtcText] = useState('');
   const [showEtcInput, setShowEtcInput] = useState(false);
@@ -71,7 +66,7 @@ export default function CheckboxAnswer({
   };
 
   return (
-    <div className="flex flex-col gap-4 items-start">
+    <div className="flex flex-col gap-4">
       <div className="flex flex-col items-start gap-2 w-full">
         {data.options_of_questions.map(option => {
           const isEtcOption = option.option_number === 99;
@@ -106,6 +101,8 @@ export default function CheckboxAnswer({
           />
         )}
       </div>
+
+      {error && <p className="text-xs text-status-red-text mt-1">{error}</p>}
     </div>
   );
 }

@@ -7,6 +7,7 @@ interface EmailAnswerProps {
   onChange: (type: QuestionType, value: string) => void;
   disabled?: boolean;
   readOnly?: boolean;
+  error?: string;
 }
 
 export default function EmailAnswer({
@@ -15,6 +16,7 @@ export default function EmailAnswer({
   onChange,
   disabled = false,
   readOnly = false,
+  error,
 }: EmailAnswerProps) {
   return (
     <div className="space-y-2">
@@ -26,6 +28,7 @@ export default function EmailAnswer({
         required={data.is_required}
         disabled={disabled}
         readOnly={readOnly}
+        error={error}
       />
     </div>
   );
