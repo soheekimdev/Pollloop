@@ -4,8 +4,10 @@ import FormBasicSection from '@/components/forms/create/FormBasicSection';
 import FormContentSection from '@/components/forms/create/FormContentSection';
 import FormQuestionSection from '@/components/forms/create/FormQuestionSection';
 import { FormInfo, Question, QuestionType } from '@/types/forms/forms.types';
-import { useCreateForm } from '@/hooks/useCreateForm';
 import { generateAccessCode } from '@/utils/generateAccessCode';
+import { validateFormInfo } from '@/utils/validation';
+import { errorToast } from '@/utils/toast';
+import { useCreateForm } from '@/hooks/useCreateForm';
 import { NO_OPTIONS_TYPES } from '@/constants/forms.constants';
 
 export default function FormCreate() {
@@ -21,7 +23,22 @@ export default function FormCreate() {
     questions: [],
   });
 
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questions, setQuestions] = useState<Question[]>([
+    {
+      id: '1',
+      layout_type: 'SHORT_TYPE',
+      question: '',
+      question_order: 1,
+      is_required: false,
+      options_of_questions: [
+        {
+          option_number: 1,
+          option_context: '',
+        },
+      ],
+    },
+  ]);
+
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
   const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
 
@@ -98,6 +115,11 @@ export default function FormCreate() {
   };
 
   const handleDeleteQuestion = (id: string) => {
+    if (id === '1') {
+      errorToast('첫 번째 질문은 삭제할 수 없습니다.');
+      return;
+    }
+
     setQuestions(prev => {
       const filteredQuestions = prev.filter(q => q.id !== id);
       return filteredQuestions.map((question, index) => ({
@@ -115,6 +137,19 @@ export default function FormCreate() {
 
   const handleSubmit = async (isPublishing: boolean) => {
     try {
+      const formErrors = validateFormInfo(formInfo);
+      if (formErrors.length > 0) {
+        errorToast(formErrors[0].message);
+        return;
+      }
+
+      if (isPublishing) {
+        if (questions.length === 0) {
+          errorToast('최소 1개 이상의 질문을 추가해주세요.');
+          return;
+        }
+      }
+
       const result = await createForm({
         formInfo,
         questions,

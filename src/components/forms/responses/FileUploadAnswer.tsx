@@ -4,7 +4,13 @@ import { instance } from '@/api/axios';
 import { errorToast } from '@/utils/toast';
 import { FileAnswerProps } from '@/types/forms/forms.types';
 
-export default function FileUploadAnswer({ data, value, onChange, formTitle }: FileAnswerProps) {
+export default function FileUploadAnswer({
+  data,
+  value,
+  onChange,
+  formTitle,
+  error,
+}: FileAnswerProps) {
   const handleFileUpload = async (file: File) => {
     try {
       const formData = new FormData();
@@ -28,7 +34,7 @@ export default function FileUploadAnswer({ data, value, onChange, formTitle }: F
       errorToast('파일 업로드에 실패했습니다.');
     }
   };
-  
+
   const handleClick = () => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -44,13 +50,17 @@ export default function FileUploadAnswer({ data, value, onChange, formTitle }: F
 
   return (
     <div className="flex flex-col gap-4">
-      <Button type="button" className="self-start" onClick={handleClick}>
-        <Upload size={16} />
-        파일 업로드
-      </Button>
-      {value && (
-        <div className="text-sm text-gray-600">업로드된 파일: {value.split('/').pop()}</div>
-      )}
+      <div className="flex flex-col gap-4">
+        <Button type="button" className="self-start" onClick={handleClick}>
+          <Upload size={16} />
+          파일 업로드
+        </Button>
+        {value && (
+          <div className="text-sm text-gray-600">업로드된 파일: {value.split('/').pop()}</div>
+        )}
+      </div>
+
+      {error && <p className="text-xs text-status-red-text">{error}</p>}
     </div>
   );
 }

@@ -1,19 +1,14 @@
 import Select from '@/components/form/Select';
-import { AnswerOption, Question, QuestionType } from '@/types/forms/forms.types';
+import { OptionAnswerProps } from '@/types/forms/forms.types';
 
-interface DropdownAnswerProps {
-  data: Question;
-  value?: AnswerOption;
-  onChange: (type: QuestionType, value: AnswerOption) => void;
-  disabled?: boolean;
-  readOnly?: boolean;
-}
+type DropdownAnswerProps = OptionAnswerProps;
 
 export default function DropdownAnswer({
   data,
   value,
   onChange,
   disabled = false,
+  error,
 }: DropdownAnswerProps) {
   const defaultOption = {
     value: 'default',
@@ -55,6 +50,7 @@ export default function DropdownAnswer({
         required={data.is_required}
         disabled={disabled}
       />
+      {error && <p className="text-xs text-status-red-text">{error}</p>}
     </div>
   );
 }
