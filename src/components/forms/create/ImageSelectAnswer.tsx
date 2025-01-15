@@ -17,7 +17,7 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
   const [images, setImages] = useState<Option[]>(
     data.options_of_questions?.map(option => ({
       ...option,
-      imageUrl: option.option_context.split('|')[1] || '',
+      imageUrl: option.option_context,
     })) || [],
   );
   const [isUploading, setIsUploading] = useState(false);
@@ -44,10 +44,10 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
       return;
     }
 
-    // 파일 크기 제한 (1MB)
+    // 파일 크기 제한 (10MB)
     const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
-      alert('파일 크기는 1MB 이하여야 합니다.');
+      alert('파일 크기는 10MB 이하여야 합니다.');
       return;
     }
 
@@ -123,7 +123,7 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
           onChange={handleQuestionChange}
         />
         <FormsDescription>
-          이미지는 최대 {MAX_IMAGES}개까지, 파일당 1MB 이하로 업로드 가능합니다.
+          이미지는 최대 {MAX_IMAGES}개까지, 파일당 10MB 이하로 업로드 가능합니다.
           <br />
           모든 이미지는 정사각형(1:1) 비율로 표시됩니다.
         </FormsDescription>
@@ -135,7 +135,7 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
             <div className="relative aspect-square rounded-lg overflow-hidden">
               {image.imageUrl ? (
                 <img
-                  src={image.imageUrl ?? '/api/placeholder/144/144'}
+                  src={image.imageUrl}
                   alt={`${image.option_number}번`}
                   className="w-full h-full object-cover cursor-default"
                 />
