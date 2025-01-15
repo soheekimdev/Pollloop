@@ -1,19 +1,14 @@
-import { Question, QuestionType } from '@/types/forms/forms.types';
 import { Star } from 'lucide-react';
+import { BaseAnswerProps } from '@/types/forms/forms.types';
 
-interface StarRatingAnswerProps {
-  data: Question;
-  value?: string;
-  onChange: (type: QuestionType, value: string) => void;
-  disabled?: boolean;
-  readOnly?: boolean;
-}
+type StarRatingAnswerProps = BaseAnswerProps;
 
 export default function StarRatingAnswer({
   data,
   value,
   onChange,
   readOnly = false,
+  error,
 }: StarRatingAnswerProps) {
   const stars = Array.from({ length: 5 }, (_, i) => i + 1);
 
@@ -38,17 +33,21 @@ export default function StarRatingAnswer({
   }
 
   return (
-    <div className="flex gap-2">
-      {stars.map(rating => (
-        <Star
-          key={rating}
-          size={24}
-          className="cursor-pointer hover:scale-110 transition-transform"
-          fill={Number(value) >= rating ? '#FACC15' : 'transparent'}
-          strokeWidth={1.5}
-          onClick={() => handleRatingClick(rating)}
-        />
-      ))}
+    <div className="flex flex-col gap-4">
+      <div className="flex gap-2">
+        {stars.map(rating => (
+          <Star
+            key={rating}
+            size={24}
+            className="cursor-pointer hover:scale-110 transition-transform"
+            fill={Number(value) >= rating ? '#FACC15' : 'transparent'}
+            strokeWidth={1.5}
+            onClick={() => handleRatingClick(rating)}
+          />
+        ))}
+      </div>
+
+      {error && <p className="text-xs text-status-red-text">{error}</p>}
     </div>
   );
 }

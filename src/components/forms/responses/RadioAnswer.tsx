@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import Radio from '@/components/form/Radio';
 import Input from '@/components/form/Input';
-import { AnswerOption, Question, QuestionType } from '@/types/forms/forms.types';
+import { OptionAnswerProps } from '@/types/forms/forms.types';
 
-interface RadioAnswerProps {
-  data: Question;
-  value?: AnswerOption;
-  onChange: (type: QuestionType, value: AnswerOption) => void;
-  disabled?: boolean;
-  readOnly?: boolean;
-}
+type RadioAnswerProps = OptionAnswerProps;
 
-export default function RadioAnswer({ data, value, onChange, readOnly = false }: RadioAnswerProps) {
+export default function RadioAnswer({
+  data,
+  value,
+  onChange,
+  readOnly = false,
+  error,
+}: RadioAnswerProps) {
   const [etcText, setEtcText] = useState('');
   const [showEtcInput, setShowEtcInput] = useState(false);
 
@@ -91,6 +91,8 @@ export default function RadioAnswer({ data, value, onChange, readOnly = false }:
           />
         )}
       </div>
+
+      {error && <p className="text-xs text-status-red-text mt-1">{error}</p>}
     </div>
   );
 }

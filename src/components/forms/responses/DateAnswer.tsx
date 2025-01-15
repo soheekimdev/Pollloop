@@ -7,6 +7,7 @@ interface DateAnswerProps {
   onChange: (type: QuestionType, value: string) => void;
   disabled?: boolean;
   readOnly?: boolean;
+  error?: string;
 }
 
 export default function DateAnswer({
@@ -15,6 +16,7 @@ export default function DateAnswer({
   onChange,
   disabled = false,
   readOnly = false,
+  error,
 }: DateAnswerProps) {
   return (
     <div className="space-y-2">
@@ -26,6 +28,7 @@ export default function DateAnswer({
         required={data.is_required}
         disabled={disabled}
         readOnly={readOnly}
+        error={error}
       />
     </div>
   );

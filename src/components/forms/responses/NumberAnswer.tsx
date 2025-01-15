@@ -7,6 +7,7 @@ interface NumberAnswerProps {
   onChange: (type: QuestionType, value: string) => void;
   disabled?: boolean;
   readOnly?: boolean;
+  error?: string;
 }
 
 export default function NumberAnswer({
@@ -15,6 +16,7 @@ export default function NumberAnswer({
   onChange,
   disabled = false,
   readOnly = false,
+  error,
 }: NumberAnswerProps) {
   return (
     <div className="space-y-2">
@@ -26,6 +28,7 @@ export default function NumberAnswer({
         required={data.is_required}
         disabled={disabled}
         readOnly={readOnly}
+        error={error}
       />
     </div>
   );
