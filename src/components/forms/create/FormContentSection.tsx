@@ -26,6 +26,7 @@ import { copyToClipboard } from '@/utils/copyToClipboard';
 import { errorToast } from '@/utils/toast';
 import { cn } from '@/utils/cn';
 import { FormContentSectionProps } from '@/types/forms/forms.types';
+import { validateFormInfo, validateFormSubtitle } from '@/utils/validation';
 
 export default function FormContentSection({
   formInfo,
@@ -62,21 +63,18 @@ export default function FormContentSection({
   const handlePublish = async () => {
     try {
       const result = await onPublish();
-      console.log('발행 결과:', result);
 
       if (result?.uuid) {
         const participationUrl = `${window.location.origin}/forms/response/${result.uuid}`;
         setFormUrl(participationUrl);
         setFormPassword(result.access_code || '');
-
         closeConfirm();
         openComplete();
-      } else {
-        console.error('폼 발행 결과에 uuid가 없습니다:', result);
       }
     } catch (error) {
       console.error('폼 발행 실패:', error);
       errorToast('폼 발행에 실패했습니다.');
+      closeConfirm();
     }
   };
 
@@ -89,7 +87,30 @@ export default function FormContentSection({
         <Button type="button" variant="secondary" onClick={onSave}>
           임시 저장
         </Button>
-        <Button type="button" variant="primary" onClick={openConfirm}>
+        <Button
+          type="button"
+          variant="primary"
+          onClick={async () => {
+            const formErrors = validateFormInfo(formInfo);
+            if (formErrors.length > 0) {
+              errorToast(formErrors[0].message);
+              return;
+            }
+
+            const subtitleError = validateFormSubtitle(formInfo.subtitle || '');
+            if (subtitleError) {
+              errorToast(subtitleError);
+              return;
+            }
+
+            if (questions.length === 0) {
+              errorToast('최소 1개 이상의 질문을 추가해주세요.');
+              return;
+            }
+
+            openConfirm();
+          }}
+        >
           발행하기
         </Button>
       </SectionTitle>

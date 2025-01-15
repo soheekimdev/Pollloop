@@ -4,8 +4,10 @@ import FormBasicSection from '@/components/forms/create/FormBasicSection';
 import FormContentSection from '@/components/forms/create/FormContentSection';
 import FormQuestionSection from '@/components/forms/create/FormQuestionSection';
 import { FormInfo, Question, QuestionType } from '@/types/forms/forms.types';
-import { useCreateForm } from '@/hooks/useCreateForm';
 import { generateAccessCode } from '@/utils/generateAccessCode';
+import { validateFormInfo } from '@/utils/validation';
+import { errorToast } from '@/utils/toast';
+import { useCreateForm } from '@/hooks/useCreateForm';
 import { NO_OPTIONS_TYPES } from '@/constants/forms.constants';
 
 export default function FormCreate() {
@@ -115,6 +117,19 @@ export default function FormCreate() {
 
   const handleSubmit = async (isPublishing: boolean) => {
     try {
+      const formErrors = validateFormInfo(formInfo);
+      if (formErrors.length > 0) {
+        errorToast(formErrors[0].message);
+        return;
+      }
+
+      if (isPublishing) {
+        if (questions.length === 0) {
+          errorToast('최소 1개 이상의 질문을 추가해주세요.');
+          return;
+        }
+      }
+
       const result = await createForm({
         formInfo,
         questions,

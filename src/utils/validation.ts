@@ -1,9 +1,11 @@
-import { Answer, Question } from '@/types/forms/forms.types';
+import { Answer, FormInfo, Question } from '@/types/forms/forms.types';
 
 export interface ValidationError {
   questionOrder: number;
   message: string;
 }
+
+// 참여 폼
 
 export const validateAnswer = (question: Question, answer?: Answer): ValidationError | null => {
   // 필수 필드 검사
@@ -79,4 +81,110 @@ export const validateForm = (
 const isValidDate = (dateString: string): boolean => {
   const date = new Date(dateString);
   return date instanceof Date && !isNaN(date.getTime());
+};
+
+// 폼 만들기
+
+// 폼 정보 유효성 검사 에러 타입
+export interface FormInfoValidationError {
+  field: 'title' | 'tag' | 'target_count' | 'end_at' | 'subtitle';
+  message: string;
+}
+
+// 폼 제목 유효성 검사
+export const validateFormTitle = (title: string): string | null => {
+  if (!title) {
+    return '폼 이름을 입력해주세요.';
+  }
+  if (title.length > 255) {
+    return '폼 이름은 255자를 초과할 수 없습니다.';
+  }
+  // 허용된 특수문자를 제외한 특수문자 체크
+  const specialCharRegex = /[^A-Za-z0-9가-힣\s\-_()]/g;
+  if (specialCharRegex.test(title)) {
+    return '폼 이름에는 하이픈(-), 밑줄(_), 소괄호()를 제외한 특수문자를 사용할 수 없습니다.';
+  }
+  return null;
+};
+
+// 태그 유효성 검사
+export const validateFormTag = (tag: string): string | null => {
+  if (tag && tag.length > 15) {
+    return '태그는 15자를 초과할 수 없습니다.';
+  }
+  return null;
+};
+
+// 참여 인원 유효성 검사
+export const validateTargetCount = (count: number): string | null => {
+  if (!count) {
+    return '참여 인원을 입력해주세요.';
+  }
+  if (count < 1 || count > 50) {
+    return '참여 인원은 1명에서 50명 사이여야 합니다.';
+  }
+  return null;
+};
+
+// 마감 일자 유효성 검사
+export const validateEndDate = (date: string): string | null => {
+  if (!date) {
+    return '마감 일자를 선택해주세요.';
+  }
+  return null;
+};
+
+// 표지 제목 유효성 검사
+export const validateSubtitle = (subtitle: string): string | null => {
+  if (!subtitle) {
+    return '표지 제목을 입력해주세요.';
+  }
+  if (subtitle.length > 255) {
+    return '표지 제목은 255자를 초과할 수 없습니다.';
+  }
+  return null;
+};
+
+// 전체 폼 정보 유효성 검사
+export const validateFormInfo = (formInfo: FormInfo): FormInfoValidationError[] => {
+  const errors: FormInfoValidationError[] = [];
+
+  const titleError = validateFormTitle(formInfo.title);
+  if (titleError) {
+    errors.push({ field: 'title', message: titleError });
+  }
+
+  const tagError = validateFormTag(formInfo.tag || '');
+  if (tagError) {
+    errors.push({ field: 'tag', message: tagError });
+  }
+
+  const targetCountError = validateTargetCount(formInfo.target_count);
+  if (targetCountError) {
+    errors.push({ field: 'target_count', message: targetCountError });
+  }
+
+  const endDateError = validateEndDate(formInfo.end_at);
+  if (endDateError) {
+    errors.push({ field: 'end_at', message: endDateError });
+  }
+
+  if (formInfo.subtitle) {
+    const subtitleError = validateSubtitle(formInfo.subtitle);
+    if (subtitleError) {
+      errors.push({ field: 'subtitle', message: subtitleError });
+    }
+  }
+
+  return errors;
+};
+
+export const validateFormSubtitle = (subtitle: string): string | null => {
+  if (!subtitle || subtitle.trim() === '') {
+    return '표지 제목을 입력해주세요.';
+  }
+  if (subtitle.length > 255) {
+    return '표지 제목은 255자를 초과할 수 없습니다.';
+  }
+  return null;
 };
