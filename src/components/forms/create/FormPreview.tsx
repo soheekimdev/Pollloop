@@ -59,7 +59,7 @@ export default function FormPreview({ formInfo }: FormPreviewProps) {
           ?.sort((a, b) => a.question_order - b.question_order)
           .map(question => (
             <QuestionCard
-              key={question.id}
+              key={question.question_order}
               question={question}
               hasDescription={
                 question.layout_type === 'FILE_UPLOAD_TYPE'
