@@ -2,7 +2,7 @@ import { FormDetails } from '../types/home/home.types';
 import { instance } from './axios';
 
 const getLastFourItems = (data: FormDetails[]): FormDetails[] => {
-  return data.slice(-4);
+  return data.slice(-3);
 };
 
 export const fetchHomeData = async () => {

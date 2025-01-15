@@ -4,6 +4,7 @@ import HomeCategory from '../components/home/HomeCategory';
 import { HomeUserData } from '../types/home/home.types';
 import MainLoader from '@/components/common/loaders/MainLoader';
 import { useDelayedLoading } from '@/hooks/useDelayedLoading';
+import Footer from '@/components/home/Footer';
 
 export default function Home() {
   const [homeData, setHomeData] = useState<HomeUserData>({ forms: [], asks: [] });
@@ -56,6 +57,7 @@ export default function Home() {
           moreLink="/asks"
           createLink="/asks/create"
         />
+        <Footer />
       </div>
     </div>
   );

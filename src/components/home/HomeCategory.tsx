@@ -17,7 +17,7 @@ export default function HomeCategory({
         {items.length === 0 ? (
           <CreateItemButton createLink={createLink} buttonText={buttonText} />
         ) : (
-          <ItemList items={items} />
+          <ItemList items={items} createLink={createLink} buttonText={buttonText} />
         )}
       </>
     </section>
