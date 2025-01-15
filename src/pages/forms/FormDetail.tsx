@@ -36,7 +36,6 @@ export default function FormDetail() {
     const loadOverviewData = async () => {
       try {
         const data = await fetchOverviewData(formId);
-        // console.log(data);
         setOverviewData(data as OverviewData);
       } catch (err) {
         console.error('데이터 로딩 중 에러:', err);
@@ -86,7 +85,7 @@ export default function FormDetail() {
     },
   ];
 
-  const complete_rate = getCompleteRate(completed_count, user_count);
+  const complete_rate = getCompleteRate(completed_count, target_count);
 
   return (
     <div className="flex flex-col gap-4 px-10 min-w-[480px] pb-10">
