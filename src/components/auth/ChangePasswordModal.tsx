@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { errorToast, successToast } from '@/utils/toast';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser } from '@/store/userSlice';
+import { useState } from 'react';
+import MainLoader from '../common/loaders/MainLoader';
 
 type ChangePasswordModalProps = {
   isOpen: boolean;
@@ -30,6 +32,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const [isLoading, setIsloading] = useState(false);
   const { tokens } = useSelector((state: RootState) => state.user);
 
   const onSubmit = async (data: ChangePasswordFormValue) => {
@@ -37,6 +40,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
       errorToast('로그인 정보가 없습니다.');
       return;
     }
+    setIsloading(true);
     try {
       const response = await authAPI.changePassword(
         tokens.refresh,
@@ -50,63 +54,72 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
     } catch (error: any) {
       console.error(error);
       errorToast(error.password[0]);
+    } finally {
+      setIsloading(false);
     }
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} width="sm" closeOnScrimClick>
-      <Modal.Header title="비밀번호 변경" />
-      <Modal.Content>
-        <form
-          id="password-change-form"
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-4"
-        >
-          <InputWithLabel>
-            <Label htmlFor="previous-password" text="기존 비밀번호" />
-            <Input
-              id="precious-password"
-              type="password"
-              {...register('password')}
-              error={errors.password?.message}
-            />
-          </InputWithLabel>
-          <InputWithLabel>
-            <Label htmlFor="new-password" text="새 비밀번호" />
-            <Input
-              id="precious-password"
-              type="password"
-              {...register('newPassword')}
-              error={errors.newPassword?.message}
-            />
-          </InputWithLabel>
-          <InputWithLabel>
-            <Label htmlFor="confirm-new-password" text="새 비밀번호 확인" />
-            <Input
-              id="confirm-new-password"
-              type="password"
-              {...register('confirmNewPassword')}
-              error={errors.confirmNewPassword?.message}
-            />
-          </InputWithLabel>
-        </form>
-      </Modal.Content>
-      <Modal.Footer>
-        <Button
-          type="button"
-          onClick={onClose}
-          className="flex-grow flex-shrink-0 basis-0 px-4 py-2 bg-tag-default-bg text-pollloop-brown-01"
-        >
-          취소
-        </Button>
-        <Button
-          type="submit"
-          form="password-change-form"
-          className="flex-grow flex-shrink-0 basis-0 px-4 py-2"
-        >
-          변경
-        </Button>
-      </Modal.Footer>
+      <div className="relative">
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <MainLoader size="sm" />
+          </div>
+        )}
+        <Modal.Header title="비밀번호 변경" />
+        <Modal.Content>
+          <form
+            id="password-change-form"
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
+            <InputWithLabel>
+              <Label htmlFor="previous-password" text="기존 비밀번호" />
+              <Input
+                id="precious-password"
+                type="password"
+                {...register('password')}
+                error={errors.password?.message}
+              />
+            </InputWithLabel>
+            <InputWithLabel>
+              <Label htmlFor="new-password" text="새 비밀번호" />
+              <Input
+                id="precious-password"
+                type="password"
+                {...register('newPassword')}
+                error={errors.newPassword?.message}
+              />
+            </InputWithLabel>
+            <InputWithLabel>
+              <Label htmlFor="confirm-new-password" text="새 비밀번호 확인" />
+              <Input
+                id="confirm-new-password"
+                type="password"
+                {...register('confirmNewPassword')}
+                error={errors.confirmNewPassword?.message}
+              />
+            </InputWithLabel>
+          </form>
+        </Modal.Content>
+        <Modal.Footer>
+          <Button
+            type="button"
+            onClick={onClose}
+            className="flex-grow flex-shrink-0 basis-0 px-4 py-2 bg-tag-default-bg text-pollloop-brown-01"
+          >
+            취소
+          </Button>
+          <Button
+            type="submit"
+            form="password-change-form"
+            className="flex-grow flex-shrink-0 basis-0 px-4 py-2"
+          >
+            변경
+          </Button>
+        </Modal.Footer>
+      </div>
     </Modal>
   );
 }
