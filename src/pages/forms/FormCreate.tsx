@@ -150,6 +150,12 @@ export default function FormCreate() {
           { option_number: 200, option_context: '' }, // max label
         ];
 
+      case 'STAR_RATING_TYPE':
+        return Array.from({ length: 5 }, (_, i) => ({
+          option_number: i + 1,
+          option_context: String(i + 1),
+        }));
+
       default:
         return [
           {
