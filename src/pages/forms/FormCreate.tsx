@@ -23,7 +23,22 @@ export default function FormCreate() {
     questions: [],
   });
 
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questions, setQuestions] = useState<Question[]>([
+    {
+      id: '1',
+      layout_type: 'SHORT_TYPE',
+      question: '',
+      question_order: 1,
+      is_required: false,
+      options_of_questions: [
+        {
+          option_number: 1,
+          option_context: '',
+        },
+      ],
+    },
+  ]);
+
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
   const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
 
@@ -100,6 +115,11 @@ export default function FormCreate() {
   };
 
   const handleDeleteQuestion = (id: string) => {
+    if (id === '1') {
+      errorToast('첫 번째 질문은 삭제할 수 없습니다.');
+      return;
+    }
+
     setQuestions(prev => {
       const filteredQuestions = prev.filter(q => q.id !== id);
       return filteredQuestions.map((question, index) => ({

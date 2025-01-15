@@ -221,6 +221,7 @@ export default function FormContentSection({
         {questions.map(question => (
           <QuestionCard
             key={question.id}
+            questionId={question.id}
             onClick={() => onQuestionSelect(question.id)}
             onDelete={() => onQuestionDelete(question.id)}
             isSelected={selectedQuestionId === question.id}
