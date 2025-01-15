@@ -1,30 +1,31 @@
 import { useState, useEffect } from 'react';
 import Checkbox from '@/components/form/Checkbox';
 import Input from '@/components/form/Input';
-import { Question } from '@/types/forms/forms.types';
+import { AnswerOption, Question, QuestionType } from '@/types/forms/forms.types';
 
 interface CheckboxAnswerProps {
   data: Question;
-  value?: string[];
-  onChange: (value: string[]) => void;
+  value?: AnswerOption[];
+  onChange: (type: QuestionType, value: AnswerOption[]) => void;
   disabled?: boolean;
   readOnly?: boolean;
 }
 
-export default function CheckboxAnswer({ data, value = [], onChange }: CheckboxAnswerProps) {
+export default function CheckboxAnswer({
+  data,
+  value = [],
+  onChange,
+  readOnly = false,
+}: CheckboxAnswerProps) {
   const [etcText, setEtcText] = useState('');
   const [showEtcInput, setShowEtcInput] = useState(false);
 
   const etcOption = data.options_of_questions.find(option => option.option_number === 99);
 
-  const getOptionId = (option: { option_number: number; option_context: string }) =>
-    `${option.option_number}-${option.option_context}`;
-
   useEffect(() => {
-    const hasEtcValue = value.some(v => v.startsWith('99-'));
-    if (hasEtcValue) {
-      const etcValue = value.find(v => v.startsWith('99-'))?.split('-')[2] || '';
-      setEtcText(etcValue);
+    const etcValue = value.find(v => v.optionNumber === 99);
+    if (etcValue) {
+      setEtcText(etcValue.context);
       setShowEtcInput(true);
     } else {
       setShowEtcInput(false);
@@ -32,34 +33,41 @@ export default function CheckboxAnswer({ data, value = [], onChange }: CheckboxA
     }
   }, [value]);
 
-  const handleChange = (optionId: string, isEtc = false) => {
-    let newValue: string[];
+  const handleChange = (optionNumber: number, context: string) => {
+    let newValue: AnswerOption[];
 
-    if (isEtc) {
-      if (value.some(v => v.startsWith('99-'))) {
-        newValue = value.filter(v => !v.startsWith('99-'));
+    if (optionNumber === 99) {
+      if (value.some(v => v.optionNumber === 99)) {
+        // 기타 옵션 제거
+        newValue = value.filter(v => v.optionNumber !== 99);
         setShowEtcInput(false);
         setEtcText('');
       } else {
-        newValue = [...value, `99-기타-${etcText}`];
+        // 기타 옵션 추가
+        newValue = [...value, { optionNumber: 99, context: etcText }];
         setShowEtcInput(true);
       }
     } else {
-      newValue = value.includes(optionId)
-        ? value.filter(v => v !== optionId)
-        : [...value, optionId];
+      const optionExists = value.some(v => v.optionNumber === optionNumber);
+      if (optionExists) {
+        // 기존 옵션 제거
+        newValue = value.filter(v => v.optionNumber !== optionNumber);
+      } else {
+        // 새 옵션 추가
+        newValue = [...value, { optionNumber, context }];
+      }
     }
 
-    onChange(newValue);
+    onChange(data.layout_type, newValue);
   };
 
   const handleEtcTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newText = e.target.value;
     setEtcText(newText);
 
-    const newValue = value.map(v => (v.startsWith('99-') ? `99-기타-${newText}` : v));
+    const newValue = value.map(v => (v.optionNumber === 99 ? { ...v, context: newText } : v));
 
-    onChange(newValue);
+    onChange(data.layout_type, newValue);
   };
 
   return (
@@ -67,7 +75,7 @@ export default function CheckboxAnswer({ data, value = [], onChange }: CheckboxA
       <div className="flex flex-col items-start gap-2 w-full">
         {data.options_of_questions.map(option => {
           const isEtcOption = option.option_number === 99;
-          const optionId = getOptionId(option);
+          const isChecked = value.some(v => v.optionNumber === option.option_number);
 
           return (
             <label
@@ -78,21 +86,23 @@ export default function CheckboxAnswer({ data, value = [], onChange }: CheckboxA
                 name={`question-${data.question_order}`}
                 id={`option-${data.question_order}-${option.option_number}`}
                 value={option.option_context}
-                checked={isEtcOption ? showEtcInput : value.includes(optionId)}
-                onChange={() => handleChange(optionId, isEtcOption)}
+                checked={isEtcOption && !readOnly ? showEtcInput : isChecked}
+                onChange={() => handleChange(option.option_number, option.option_context)}
+                readOnly={readOnly}
               />
               <div>{option.option_context}</div>
             </label>
           );
         })}
 
-        {etcOption && showEtcInput && (
+        {etcOption && showEtcInput && !readOnly && (
           <Input
             type="text"
             value={etcText}
             onChange={handleEtcTextChange}
             placeholder="기타 내용을 입력하세요"
             className="ml-8 w-[calc(100%-2rem)]"
+            readOnly={readOnly}
           />
         )}
       </div>

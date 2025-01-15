@@ -5,6 +5,7 @@ import Input from '@/components/form/Input';
 import InputWithLabel from '@/components/form/InputWithLabel';
 import Label from '@/components/form/Label';
 import { FindPasswordFormValue, findPasswordSchema } from '@/schemas/auth';
+import { errorToast, successToast } from '@/utils/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
@@ -20,10 +21,11 @@ export default function RequestPasswordReset() {
 
   const onSubmit = async (data: FindPasswordFormValue) => {
     try {
-      await authAPI.requestPasswordReset(data.email);
-      alert('이메일로 재설정 링크가 전송되었습니다).');
-    } catch (error) {
-      console.error('요청 실패', error);
+      const response = await authAPI.requestPasswordReset(data.email);
+      successToast(response.message);
+    } catch (error: any) {
+      console.log('비밀번호 재설정 요청 실패:', error);
+      errorToast(error.error);
     }
   };
 
@@ -34,10 +36,13 @@ export default function RequestPasswordReset() {
         <fieldset>
           <InputWithLabel>
             <Label htmlFor="email" text="아이디" />
-            <Input id="email" type="email" placeholder="name@example.com" {...register('email')} />
-            {errors.email && (
-              <p className="mt-2 text-sm text-status-red-text">{errors.email.message}</p>
-            )}
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              {...register('email')}
+              error={errors.email?.message}
+            />
           </InputWithLabel>
         </fieldset>
         <FormActionButton

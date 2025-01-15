@@ -13,7 +13,7 @@ export interface LoginResponse {
   email: string;
   access: string;
   refresh: string;
-  profileImage: string | null;
+  profile: string | null;
 }
 
 export interface LogoutResponse {
@@ -29,21 +29,40 @@ export interface RegisterResponse {
 
 export interface RequestPasswordResetResponse {
   message: string;
-  email: string;
 }
 
 export interface ResetPasswordResponse {
   message: string;
 }
+export interface ChangePasswordResponse {
+  message: string;
+}
 
 export interface DeleteUserResponse {
   message: string;
+  deletion_date: string;
 }
-
-export interface ProfileImageResponse {
-  url: string;
-}
-
 export interface AuthError {
   message: string;
+}
+
+export interface FileUploadResponse {
+  file_url: string;
+}
+
+export interface UpdateUserProfileResponse {
+  id: string;
+  email: string;
+  uuid: string;
+  profile: string;
+}
+export interface KakaoLoginResponse {
+  user: {
+    id: number;
+    email: string;
+    profile: string;
+    uuid: string;
+  };
+  access_token: string;
+  refresh_token: string;
 }

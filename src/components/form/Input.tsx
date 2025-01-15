@@ -4,10 +4,11 @@ import { cn } from '@/utils/cn';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   tip?: string;
   error?: string;
+  hasCopyButton?: boolean;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ type = 'text', tip, error, className, ...props }, ref) => {
+  ({ type = 'text', tip, error, className, hasCopyButton, ...props }, ref) => {
     return (
       <div className={cn('flex flex-col gap-1', className)}>
         <input
@@ -16,6 +17,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           className={cn(
             'w-full h-10 px-3 rounded-lg bg-input-bg border text-sm placeholder:text-input-placeholder focus-visible:outline-pollloop-brown-01 disabled:bg-button-ghost-bg-active',
             error ? 'border-status-red-text' : 'border-input-border',
+            hasCopyButton && 'pr-8 truncate',
           )}
           {...props}
         />

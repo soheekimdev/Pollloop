@@ -19,7 +19,7 @@ import {
 } from 'recharts';
 
 import useWindowSize from '../../../hooks/useWindowSize';
-import { Check, CheckCircle, CheckCircle2, Copy, Download, Star } from 'lucide-react';
+import { Check, Copy, Download, Star } from 'lucide-react';
 import {
   ShortResultType,
   LongResultType,
@@ -38,6 +38,9 @@ import { copyToClipboard } from '../../../utils/copyToClipboard';
 import { useInView } from '../../../hooks/useInView';
 import ImagePlaceholder from '../../common/ImagePlaceholder';
 import { useState } from 'react';
+import { useModal } from '@/hooks/useModal';
+import Modal from '@/components/common/Modal';
+import Button from '@/components/common/Button';
 
 const POLLLOOP_RED_01 = '#fbbaba';
 const POLLLOOP_GREEN_01 = '#b3f5b3';
@@ -779,7 +782,7 @@ const ImageSelectComponent: React.FC<{ results: ImageSelectResultType[] }> = ({ 
       return (
         <ImagePlaceholder
           iconSize={iconSize}
-          className="object-cover object-center rounded-lg border border-pollloop-brown-03"
+          className="object-cover object-center border rounded-lg border-pollloop-brown-03"
           style={style}
         />
       );
@@ -806,7 +809,7 @@ const ImageSelectComponent: React.FC<{ results: ImageSelectResultType[] }> = ({ 
           src={imageUrl}
           alt={`image-${index}`}
           iconSize={imageSize / 2}
-          className="object-cover object-center rounded-lg border border-pollloop-brown-03"
+          className="object-cover object-center border rounded-lg border-pollloop-brown-03"
           style={{
             width: `${imageSize}px`,
             height: `${imageSize}px`,
@@ -1197,63 +1200,85 @@ const EmailComponent: React.FC<{ results: EmailResultType[] }> = ({ results }) =
 
 const FileUploadComponent: React.FC<{ results: FileUploadResultType[] }> = ({ results }) => {
   const [downloadedFiles, setDownloadedFiles] = useState<string[]>([]);
+  const [selectedFile, setSelectedFile] = useState<{
+    id: string;
+    name: string;
+    url: string | null;
+  } | null>(null);
+  const { isOpen, open, close } = useModal();
 
   const handleDownload = (fileId: string, fileName: string, e: React.MouseEvent) => {
-    if (!window.confirm(`${fileName} 파일을 다운로드하시겠습니까?`)) {
-      e.preventDefault();
-      return;
-    }
-
+    e.preventDefault();
     const url = e.currentTarget.getAttribute('href');
-    if (url) {
-      const newWindow = window.open(url, '_blank');
+    setSelectedFile({ id: fileId, name: fileName, url });
+    open();
+  };
 
+  const handleConfirmDownload = () => {
+    if (selectedFile?.url) {
+      console.log(selectedFile.url);
+      const newWindow = window.open(selectedFile.url, '_blank');
       if (newWindow) {
         newWindow.blur();
         window.focus();
         setTimeout(() => {
           newWindow.close();
-          setDownloadedFiles(prev => [...prev, fileId]);
+          setDownloadedFiles(prev => [...prev, selectedFile.id]);
         }, 500);
       }
     }
-
-    e.preventDefault();
+    close();
   };
 
   return (
-    <div className="pr-4 scrollable">
-      <ul className="p-1 space-y-2 h-[200px]">
-        {results.map(result => {
-          const fullPath = result.value;
-          const fileNameWithExtension = fullPath.substring(fullPath.lastIndexOf('/') + 1);
-          const fileId = fullPath;
-          const isDownloaded = downloadedFiles.includes(fileId);
+    <>
+      <div className="pr-4 scrollable">
+        <ul className="p-1 space-y-2 h-[200px]">
+          {results.map(result => {
+            const fullPath = result.value;
+            const fileNameWithExtension = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+            const fileId = fullPath;
+            const isDownloaded = downloadedFiles.includes(fileId);
 
-          return (
-            <li
-              key={fileId}
-              className="flex items-center justify-between gap-2 px-3 py-1 text-sm border rounded-lg cursor-pointer group hover:shadow-primary hover:border-pollloop-orange border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15"
-            >
-              <a
-                href={`https://${fullPath}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={e => handleDownload(fileId, fileNameWithExtension, e)}
-                className="flex items-center justify-between w-full"
+            return (
+              <li
+                key={fileId}
+                className="flex items-center justify-between gap-2 px-3 py-1 text-sm border rounded-lg cursor-pointer group hover:shadow-primary hover:border-pollloop-orange border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15"
               >
-                <p className="break-all">{fileNameWithExtension}</p>
-                {isDownloaded ? (
-                  <Check size={14} className="flex-shrink-0 ml-1" />
-                ) : (
-                  <Download size={14} className="flex-shrink-0 hidden ml-1 group-hover:block" />
-                )}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+                <a
+                  href={`https://${fullPath}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={e => handleDownload(fileId, fileNameWithExtension, e)}
+                  className="flex items-center justify-between w-full"
+                >
+                  <p className="break-all">{fileNameWithExtension}</p>
+                  {isDownloaded ? (
+                    <Check size={14} className="flex-shrink-0 ml-1" />
+                  ) : (
+                    <Download size={14} className="flex-shrink-0 hidden ml-1 group-hover:block" />
+                  )}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <Modal isOpen={isOpen} onClose={close} width="sm">
+        <Modal.Header title="파일 다운로드" onClose={close} />
+        <Modal.Content>
+          <p>{selectedFile?.name} 파일을 다운로드하시겠습니까?</p>
+        </Modal.Content>
+        <Modal.Footer>
+          <Button variant="neutral" onClick={close} flex>
+            취소
+          </Button>
+          <Button onClick={handleConfirmDownload} flex>
+            확인
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 };
 

@@ -9,19 +9,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logoutUser, updateUserProfileImage } from '@/store/userSlice';
 import { AppDispatch, RootState } from '@/store';
-import axios from 'axios';
 import ChangePasswordModal from '@/components/auth/ChangePasswordModal';
 import { authAPI } from '@/api/auth';
+import { errorToast, successToast } from '@/utils/toast';
+import DeleteAccountModal from '@/components/auth/DeleteAccountModal';
+import Dropdown from '@/components/common/Dropdown';
 
 export default function Profile() {
   const [isclickedSetting, setIsClickedSetting] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isDeleteAccountModalOpen, setIsDeleteAccountModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.user.user);
+  const { user } = useSelector((state: RootState) => state.user);
 
   const toggleSettingModal = () => setIsClickedSetting(prev => !prev);
+  const openDeleteAccountModal = () => setIsDeleteAccountModalOpen(true);
   const openPasswordModal = () => setIsPasswordModalOpen(true);
   const handleLogout = async () => {
     try {
@@ -41,54 +45,53 @@ export default function Profile() {
   const handleFilechange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      const MAX_FILE_SIZE = 1 * 1024 * 1024;
+
+      if (file.size > MAX_FILE_SIZE) {
+        errorToast('파일 크기는 1MB 이하여야 합니다.');
+        if (event.target) {
+          event.target.value = '';
+        }
+        return;
+      }
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append('input_source', 'profile');
+      formData.append('file', file);
       try {
-        const response = await axios.post(
-          'https://api.imgbb.com/1/upload?key=f645de5a07b0cf7a43b5a44396235a47',
-          formData,
-        );
-        console.log(response.data);
-        const profileImage = response.data.data.url;
-        dispatch(updateUserProfileImage(profileImage));
+        const response = await authAPI.inputFile(formData);
+        const profileImage = response.file_url;
+
+        if (!profileImage) {
+          throw new Error('파일 URL을 받지 못했습니다.');
+        }
+        if (user?.email) {
+          const response = await authAPI.updateUserProfile(user.email, profileImage);
+          dispatch(updateUserProfileImage(response.profile));
+          successToast('프로필 이미지가 업데이트되었습니다.');
+        }
       } catch (error) {
         console.error('파일 업로드 실패', error);
+        errorToast('이미지 업로드에 실패하였습니다.');
       }
     }
   };
 
-  const handleDeleteAccount = async () => {
-    try {
-      const confirmDelete = window.confirm('정말 탈퇴하시겠습니까?');
-      if (!confirmDelete) return;
-      await authAPI.deleteUser();
-
-      await dispatch(logoutUser()).unwrap();
-      alert('회원 탈퇴가 완료되었습니다.');
-      navigate('/login');
-    } catch (error) {
-      console.error('탈퇴 에러', error);
-    }
-  };
-
   return (
-    <div className="h-full flex flex-col items-center gap-[170px]">
+    <div className="h-full flex flex-col items-center gap-[170px] ">
       <Breadcrumbs items={['홈', '프로필']} className="px-10 w-full" />
-      <div className="relative w-[480px] flex flex-col bg-pollloop-light-beige p-10 gap-10 items-center rounded-2xl -translate-y-10">
+      <div className="w-[480px] flex flex-col bg-pollloop-light-beige p-10 gap-10 items-center rounded-2xl -translate-y-10">
         <div className="flex h-6 pl-[170px] justify-end items-start gap-[147px]">
           <h1 className="text-lg font-extrabold">내 정보</h1>
-          <button>
-            <Settings className=" w-6 h-6 " onClick={toggleSettingModal} />
+          <button onClick={toggleSettingModal}>
+            <Settings className=" w-6 h-6 " />
           </button>
           {isclickedSetting && (
-            <div className="absolute top-[75px] right-[-50px] py-2 w-[120px] border-[0.5px] border-solid border-[#E0D5C3] shadow-[0_2px_10px_0_rgba(0,0,0,0.13)] bg-pollloop-light-beige rounded-lg ">
-              <p
-                onClick={handleDeleteAccount}
-                className="px-4 py-2 text-status-red-text hover:cursor-pointer"
-              >
-                탈퇴
-              </p>
-            </div>
+            <Dropdown
+              position={{ top: '75px', right: '-50px' }}
+              className="border-[0.5px] borer-solid border-[#E0D5C3]"
+              items={[{ label: '탈퇴', onClick: openDeleteAccountModal, isDestructive: true }]}
+              onClose={() => setIsClickedSetting(false)}
+            />
           )}
         </div>
         <div className="flex w-24 h-24 justify-center relative">
@@ -125,11 +128,24 @@ export default function Profile() {
           로그아웃
         </button>
       </div>
-      {isPasswordModalOpen ? (
+      {isDeleteAccountModalOpen && (
         <div className="fixed inset-0 flex justify-center items-center bg-scrim">
-          <ChangePasswordModal setIsPasswordModalOpen={setIsPasswordModalOpen} />
+          <DeleteAccountModal
+            isOpen={isDeleteAccountModalOpen}
+            onClose={() => setIsDeleteAccountModalOpen(false)}
+          />
         </div>
-      ) : null}
+      )}
+      {isPasswordModalOpen && (
+        <div className="fixed inset-0 flex justify-center items-center bg-scrim">
+          <ChangePasswordModal
+            isOpen={isPasswordModalOpen}
+            onClose={() => {
+              setIsPasswordModalOpen(false);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -12,9 +12,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '@/store/userSlice';
 import { AppDispatch, RootState } from '@/store';
 import { LoginFormValue, loginSchema } from '@/schemas/auth';
+import { errorToast } from '@/utils/toast';
 
 export default function Login() {
-  const { status, error } = useSelector((state: RootState) => state.user);
+  const { status } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const {
@@ -29,10 +30,10 @@ export default function Login() {
   const onSubmit = async (data: LoginFormValue) => {
     try {
       await dispatch(loginUser({ email: data.email, password: data.password })).unwrap();
-      alert('로그인 성공');
       navigate('/');
-    } catch (error) {
+    } catch (error: any) {
       console.error('로그인 실패', error);
+      errorToast(error);
     }
   };
 
@@ -43,17 +44,22 @@ export default function Login() {
         <div className="w-full flex flex-col gap-4">
           <InputWithLabel>
             <Label htmlFor="email" text="아이디" />
-            <Input id="email" type="email" placeholder="name@example.com" {...register('email')} />
-            {errors.email && (
-              <p className="mt-2 text-xs text-status-red-text">{errors.email.message}</p>
-            )}
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              {...register('email')}
+              error={errors.email?.message}
+            />
           </InputWithLabel>
           <InputWithLabel>
             <Label htmlFor="password" text="비밀번호" />
-            <Input id="password" type="password" {...register('password')} />
-            {errors.password && (
-              <p className="mt-2 text-xs text-status-red-text">{errors.password.message}</p>
-            )}
+            <Input
+              id="password"
+              type="password"
+              {...register('password')}
+              error={errors.password?.message}
+            />
             <p className="text-sm underline self-end">
               <Link to="/password">비밀번호 찾기/재설정</Link>
             </p>

@@ -10,12 +10,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '@/store/userSlice';
-import { AppDispatch } from '@/store';
+import { AppDispatch, RootState } from '@/store';
 import { RegisterFormValue, registerSchema } from '@/schemas/auth';
-import { RootState } from '@reduxjs/toolkit/query';
+import { errorToast, successToast } from '@/utils/toast';
 
 export default function Register() {
-  const { status, error } = useSelector((state: RootState) => state.user);
+  const { status } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const {
@@ -29,17 +29,18 @@ export default function Register() {
 
   const onSubmit = async (data: RegisterFormValue) => {
     try {
-      await dispatch(
+      const response = await dispatch(
         registerUser({
           email: data.email,
           password: data.password,
           password2: data.confirmPassword,
         }),
       ).unwrap();
-      alert('회원가입 성공!');
-      navigate('/');
-    } catch (error) {
+      successToast(response.message);
+      navigate('/login');
+    } catch (error: any) {
       console.error('회원가입 실패', error);
+      errorToast(error.message || '회원가입에 실패했습니다.');
     }
   };
   return (
@@ -53,25 +54,27 @@ export default function Register() {
               id="email"
               type="email"
               placeholder="이메일을 입력해주세요"
+              error={errors.email?.message}
               {...register('email')}
             />
-            {errors.email && (
-              <p className="mt-2 text-xs text-status-red-text">{errors.email.message}</p>
-            )}
           </InputWithLabel>
           <InputWithLabel>
             <Label htmlFor="password" text="비밀번호" />
-            <Input id="password" type="password" {...register('password')} />
-            {errors.password && (
-              <p className="mt-2 text-xs text-status-red-text">{errors.password.message}</p>
-            )}
+            <Input
+              id="password"
+              type="password"
+              {...register('password')}
+              error={errors.password?.message}
+            />
           </InputWithLabel>
           <InputWithLabel>
             <Label htmlFor="confirmPassword" text="비밀번호 확인" />
-            <Input id="confirmPassword" type="password" {...register('confirmPassword')} />
-            {errors.confirmPassword && (
-              <p className="mt-2 text-xs text-status-red-text">{errors.confirmPassword.message}</p>
-            )}
+            <Input
+              id="confirmPassword"
+              type="password"
+              {...register('confirmPassword')}
+              error={errors.confirmPassword?.message}
+            />
           </InputWithLabel>
         </fieldset>
         <FormActionButton submitButtonText="회원가입" linkButtonText="로그인" path="/login" />

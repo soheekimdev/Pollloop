@@ -3,10 +3,10 @@ import Breadcrumbs from '@/components/common/Breadcrumbs.tsx';
 import FormBasicSection from '@/components/forms/create/FormBasicSection';
 import FormContentSection from '@/components/forms/create/FormContentSection';
 import FormQuestionSection from '@/components/forms/create/FormQuestionSection';
-import { FormInfo, Option, Question, QuestionType } from '@/types/forms/forms.types';
-import { NO_OPTIONS_TYPES } from '@/constants/forms.constants';
+import { FormInfo, Question, QuestionType } from '@/types/forms/forms.types';
 import { useCreateForm } from '@/hooks/useCreateForm';
 import { generateAccessCode } from '@/utils/generateAccessCode';
+import { NO_OPTIONS_TYPES } from '@/constants/forms.constants';
 
 export default function FormCreate() {
   const breadcrumbsItems = ['홈', '나의 폼', '폼 만들기'];
@@ -47,9 +47,15 @@ export default function FormCreate() {
     setQuestions(prev =>
       prev.map(q => {
         if (q.id === selectedQuestionId) {
-          let defaultOptions: Option[] = [];
+          const defaultOptions = [
+            {
+              option_number: 1,
+              option_context: '',
+            },
+          ];
+
           if (!NO_OPTIONS_TYPES.includes(questionType)) {
-            defaultOptions = [{ option_number: 1, option_context: '' }];
+            defaultOptions[0].option_context = '옵션 1';
           }
 
           return {
@@ -71,10 +77,10 @@ export default function FormCreate() {
       question_order: questions.length + 1,
       is_required: false,
       options_of_questions: [
-        // {
-        //   option_number: 1,
-        //   option_context: '',
-        // },
+        {
+          option_number: 1,
+          option_context: '',
+        },
       ],
     };
     setQuestions(prev => [...prev, newQuestion]);
@@ -92,7 +98,14 @@ export default function FormCreate() {
   };
 
   const handleDeleteQuestion = (id: string) => {
-    setQuestions(prev => prev.filter(q => q.id !== id));
+    setQuestions(prev => {
+      const filteredQuestions = prev.filter(q => q.id !== id);
+      return filteredQuestions.map((question, index) => ({
+        ...question,
+        question_order: index + 1,
+      }));
+    });
+
     if (selectedQuestionId === id) {
       setSelectedQuestionId(null);
     }
@@ -102,14 +115,16 @@ export default function FormCreate() {
 
   const handleSubmit = async (isPublishing: boolean) => {
     try {
-      await createForm({
+      const result = await createForm({
         formInfo,
         questions,
         isPublishing,
       });
-      console.log('폼이 성공적으로 저장되었습니다.');
+      console.log('Form submit result:', result);
+      return result;
     } catch (error) {
       console.error('폼 저장 실패:', error);
+      throw error;
     }
   };
 
@@ -133,7 +148,7 @@ export default function FormCreate() {
             onQuestionDelete={handleDeleteQuestion}
             onQuestionUpdate={handleUpdateQuestion}
             onSave={() => handleSubmit(false)}
-            onPublish={() => handleSubmit(true)}
+            onPublish={async () => await handleSubmit(true)}
             onFormInfoUpdate={handleFormInfoUpdate}
           />
 
