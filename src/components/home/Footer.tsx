@@ -106,6 +106,7 @@ export default function Footer() {
             />
             <Teammate
               name="이준영"
+              githubUrl="https://github.com/yichunyoung"
               avatarUrl="https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight2&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerShirt&eyeType=Default&eyebrowType=Default&mouthType=Default&skinColor=Light"
             />
           </ul>
