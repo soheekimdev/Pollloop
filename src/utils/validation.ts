@@ -176,6 +176,20 @@ export const validateFormInfo = (formInfo: FormInfo): FormInfoValidationError[] 
     }
   }
 
+  if (formInfo.end_at) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const endDate = new Date(formInfo.end_at);
+    endDate.setHours(0, 0, 0, 0);
+
+    if (endDate < today) {
+      errors.push({
+        field: 'end_at',
+        message: '마감일은 오늘 이후여야 합니다.',
+      });
+    }
+  }
+
   return errors;
 };
 

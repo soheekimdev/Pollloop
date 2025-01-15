@@ -45,7 +45,7 @@ export default function ImageSelectAnswer({ data, onUpdate }: ImageSelectAnswerP
     }
 
     // 파일 크기 제한 (1MB)
-    const maxSize = 1 * 1024 * 1024;
+    const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
       alert('파일 크기는 1MB 이하여야 합니다.');
       return;

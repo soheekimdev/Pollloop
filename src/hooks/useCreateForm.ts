@@ -46,6 +46,15 @@ export function useCreateForm() {
       if (!formData.end_at) throw new Error('마감 일자는 필수입니다.');
       if (!formData.target_count) throw new Error('참여 인원은 필수입니다.');
 
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const endDate = new Date(formData.end_at);
+      endDate.setHours(0, 0, 0, 0);
+
+      if (endDate < today) {
+        throw new Error('마감일은 오늘 또는 미래 날짜여야 합니다.');
+      }
+
       const response = await instance.post('/form/create/', formData);
 
       if (!response?.data) {
