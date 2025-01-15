@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumbs from '@/components/common/Breadcrumbs.tsx';
+import MainLoader from '@/components/common/loaders/MainLoader';
 import FormBasicSection from '@/components/forms/create/FormBasicSection';
 import FormContentSection from '@/components/forms/create/FormContentSection';
 import FormQuestionSection from '@/components/forms/create/FormQuestionSection';
@@ -9,8 +11,13 @@ import { validateFormInfo } from '@/utils/validation';
 import { errorToast } from '@/utils/toast';
 import { useCreateForm } from '@/hooks/useCreateForm';
 import { NO_OPTIONS_TYPES } from '@/constants/forms.constants';
+import { instance } from '@/api/axios';
 
 export default function FormCreate() {
+  const navigate = useNavigate();
+  const { formId } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+
   const breadcrumbsItems = ['홈', '나의 폼', '폼 만들기'];
 
   const [formInfo, setFormInfo] = useState<FormInfo>({
@@ -39,8 +46,48 @@ export default function FormCreate() {
     },
   ]);
 
-  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
+  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>('1');
   const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
+
+  useEffect(() => {
+    const loadFormData = async () => {
+      if (!formId) return;
+
+      setIsLoading(true);
+      try {
+        const response = await instance.get(`/form/uuid:${formId}/`);
+        const formData = response.data;
+
+        setFormInfo({
+          title: formData.title,
+          tag: formData.tag || '',
+          end_at: formData.end_at,
+          target_count: formData.target_count,
+          is_closed: formData.is_closed,
+          is_private: !!formData.access_code,
+          subtitle: formData.subtitle,
+          form_description: formData.form_description,
+          questions: [],
+        });
+
+        setQuestions(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          formData.questions.map((q: any) => ({
+            ...q,
+            id: String(q.question_order), // 임시 id 생성
+          })),
+        );
+      } catch (error) {
+        console.error('Form data loading failed:', error);
+        errorToast('폼 데이터를 불러오는데 실패했습니다');
+        navigate('/forms');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadFormData();
+  }, [formId, navigate]);
 
   const handlePrivateToggle = (isChecked: boolean) => {
     const newAccessCode = isChecked ? generateAccessCode() : '';
@@ -150,8 +197,14 @@ export default function FormCreate() {
         }
       }
 
+      const formData = {
+        ...formInfo,
+        questions,
+        ...(formId && { uuid: formId }),
+      };
+
       const result = await createForm({
-        formInfo,
+        formInfo: formData,
         questions,
         isPublishing,
       });
@@ -162,6 +215,10 @@ export default function FormCreate() {
       throw error;
     }
   };
+
+  if (isLoading) {
+    return <MainLoader />;
+  }
 
   return (
     <div className="flex flex-col gap-4 h-full md:overflow-hidden">
