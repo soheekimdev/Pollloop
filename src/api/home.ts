@@ -2,13 +2,12 @@ import { FormDetails } from '../types/home/home.types';
 import { instance } from './axios';
 
 const getLastFourItems = (data: FormDetails[]): FormDetails[] => {
-  return data.slice(-3);
+  return data.slice(-3).reverse();
 };
 
 export const fetchHomeData = async () => {
   try {
-    const response = await instance.get<FormDetails[]>(`/form/list/`); // BE-FOR008로 대체
-    // console.log('response', response);
+    const response = await instance.get<FormDetails[]>(`/form/list/`);
     const data = {
       forms: getLastFourItems(response.data),
       asks: [

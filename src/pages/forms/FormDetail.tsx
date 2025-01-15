@@ -133,13 +133,15 @@ export default function FormDetail() {
                     return (
                       <div className="flex items-center gap-4 md:items-start md:relative ">
                         <span>{value}</span>
-                        <SmallAccessCodeSection
-                          buttonText="비밀번호 확인하기"
-                          is_closed={is_closed}
-                          isDisplayed={isDisplayed}
-                          access_code={access_code}
-                          onDisplay={handleDisplay}
-                        />
+                        {is_private ? (
+                          <SmallAccessCodeSection
+                            buttonText="비밀번호 확인하기"
+                            is_closed={is_closed}
+                            isDisplayed={isDisplayed}
+                            access_code={access_code}
+                            onDisplay={handleDisplay}
+                          />
+                        ) : null}
                       </div>
                     );
                   default:
