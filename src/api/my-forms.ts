@@ -12,17 +12,16 @@ export const fetchFormListData = async () => {
 };
 
 /* 폼 삭제 */
-export const fetchFormDeleteData = async (formIds: string[]) => {   
-  try {     
-    for (const uuid of formIds) {
-      const response = await instance.post('/form/list/remove/', {
-        uuid: uuid
-      });
-      return response.data;
-    }   
-  } catch (error) {     
-    throw error;   
-  } 
+export const fetchFormDeleteData = async (formIds: string[]) => {
+  try {
+    const deletePromises = formIds.map(uuid => 
+      instance.post('/form/list/remove/', { uuid })
+    );
+    const responses = await Promise.all(deletePromises);
+    return responses;
+  } catch (error) {
+    throw error;
+  }
 };
 
 /* 폼 즐겨찾기 수정 */

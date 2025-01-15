@@ -132,15 +132,28 @@ export default function Forms() {
     }
   };
 
-  const handleDeleteForms = async () => {
-    if (!window.confirm('선택한 폼을 삭제하시겠습니까?\n\n삭제한 후에는 복구할 수 없습니다.'))
+  const handleDeleteForms = async (formId?: string) => {
+    const formsToDelete = formId ? [formId] : selectedForms;
+    
+    if (formsToDelete.length === 0) return;
+    
+    const confirmMessage = formsToDelete.length === 1
+      ? '이 폼을 삭제하시겠습니까?'
+      : `선택한 ${formsToDelete.length}개의 폼을 삭제하시겠습니까?`;
+  
+    if (!window.confirm(`${confirmMessage}\n\n삭제한 후에는 복구할 수 없습니다.`)) 
       return;
-
+  
     try {
-      await fetchFormDeleteData(selectedForms);
-      setForms(prev => prev.filter(form => !selectedForms.includes(form.uuid)));
-      setSelectedForms([]);
-      successToast('폼이 삭제되었습니다.');
+      await fetchFormDeleteData(formsToDelete);
+      
+      setForms(prev => prev.filter(form => !formsToDelete.includes(form.uuid)));
+      setSelectedForms(prev => prev.filter(id => !formsToDelete.includes(id)));
+      
+      const successMessage = formsToDelete.length === 1
+        ? '폼이 삭제되었습니다.'
+        : `${formsToDelete.length}개의 폼이 삭제되었습니다.`;
+      successToast(successMessage);
     } catch (error) {
       console.error('폼 삭제 실패:', error);
       errorToast('폼 삭제에 실패했습니다.');
@@ -222,7 +235,7 @@ export default function Forms() {
                 <div className="flex gap-2">
                   <Button
                     variant="danger"
-                    onClick={handleDeleteForms}
+                    onClick={() => handleDeleteForms()}
                     disabled={selectedForms.length === 0}
                   >
                     삭제
@@ -348,9 +361,13 @@ export default function Forms() {
                               <td className="p-4">{handleActionButton(form)}</td>
                               <td className="p-4 rounded-r-lg">
                                 <div className="flex gap-4 text-pollloop-brown-01">
-                                  <button
-                                    onClick={() => handleDeleteForms()}
+                                <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleDeleteForms(form.uuid);
+                                    }}
                                     className="hover:text-pollloop-brown-02"
+                                    aria-label="폼 삭제"
                                   >
                                     <Trash2 size={18} />
                                   </button>
