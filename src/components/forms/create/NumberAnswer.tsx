@@ -6,9 +6,10 @@ import { Question } from '@/types/forms/forms.types';
 interface NumberAnswerProps {
   data: Question;
   onUpdate: (updates: Partial<Question>) => void;
+  error?: string;
 }
 
-export default function NumberAnswer({ data, onUpdate }: NumberAnswerProps) {
+export default function NumberAnswer({ data, onUpdate, error }: NumberAnswerProps) {
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdate({ question: e.target.value });
   };
@@ -24,7 +25,7 @@ export default function NumberAnswer({ data, onUpdate }: NumberAnswerProps) {
         />
       </div>
 
-      <Input type="number" readOnly />
+      <Input type="number" readOnly error={error} />
     </>
   );
 }

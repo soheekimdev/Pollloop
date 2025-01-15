@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Button from '../common/Button';
+import CircleLoader from '../common/loaders/CircleLoader';
 
 type FormActionButtonProps = {
   submitButtonText: string;
@@ -25,6 +26,7 @@ export default function FormActionButton({
         className="text-sm"
       >
         {submitButtonText}
+        {disabled && <CircleLoader size={16} />}
       </Button>
       <p className="text-13 text-pollloop-orange text-center">
         <Link to={path}>{linkButtonText}</Link>

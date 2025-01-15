@@ -14,7 +14,7 @@ interface RangeAnswerProps {
 }
 
 export default function RangeAnswer({ data, onUpdate }: RangeAnswerProps) {
-  const [minValue, setMinValue] = useState('0');
+  const [minValue, setMinValue] = useState('1');
   const [maxValue, setMaxValue] = useState('5');
 
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {

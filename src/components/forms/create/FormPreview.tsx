@@ -77,10 +77,20 @@ export default function FormPreview({ formInfo }: FormPreviewProps) {
                 <CheckboxAnswer data={question} value={[]} onChange={() => {}} readOnly={true} />
               )}
               {question.layout_type === 'RADIO_TYPE' && (
-                <RadioAnswer data={question} value="" onChange={() => {}} readOnly={true} />
+                <RadioAnswer
+                  data={question}
+                  value={{ optionNumber: 0, context: '' }}
+                  onChange={() => {}}
+                  readOnly={true}
+                />
               )}
               {question.layout_type === 'DROPDOWN_TYPE' && (
-                <DropdownAnswer data={question} value="" onChange={() => {}} readOnly={true} />
+                <DropdownAnswer
+                  data={question}
+                  value={{ optionNumber: 0, context: '' }}
+                  onChange={() => {}}
+                  readOnly={true}
+                />
               )}
               {question.layout_type === 'RANGE_TYPE' && (
                 <RangeAnswer data={question} value="" onChange={() => {}} readOnly={true} />
@@ -89,7 +99,11 @@ export default function FormPreview({ formInfo }: FormPreviewProps) {
                 <StarRatingAnswer data={question} onChange={() => {}} readOnly={true} />
               )}
               {question.layout_type === 'IMAGE_SELECT_TYPE' && (
-                <ImageSelectAnswer data={question} value="" onChange={() => {}} />
+                <ImageSelectAnswer
+                  data={question}
+                  value={{ optionNumber: 0, context: '' }}
+                  onChange={() => {}}
+                />
               )}
               {question.layout_type === 'NUMBER_TYPE' && (
                 <NumberAnswer data={question} onChange={() => {}} readOnly={true} />
@@ -101,7 +115,12 @@ export default function FormPreview({ formInfo }: FormPreviewProps) {
                 <EmailAnswer data={question} onChange={() => {}} readOnly={true} />
               )}
               {question.layout_type === 'FILE_UPLOAD_TYPE' && (
-                <FileUploadAnswer data={question} onChange={() => {}} readOnly={true} />
+                <FileUploadAnswer
+                  data={question}
+                  onChange={() => {}}
+                  formTitle={formInfo.title}
+                  readOnly={true}
+                />
               )}
             </QuestionCard>
           ))}
