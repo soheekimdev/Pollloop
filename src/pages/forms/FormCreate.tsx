@@ -39,7 +39,7 @@ export default function FormCreate() {
     },
   ]);
 
-  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(null);
+  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>('1');
   const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
 
   const handlePrivateToggle = (isChecked: boolean) => {
