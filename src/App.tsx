@@ -18,6 +18,7 @@ import ProtectedLayout from './layouts/ProtectedLayout';
 import RequestPasswordReset from './pages/auth/RequestPasswordReset';
 import ResetPassword from './pages/auth/ResetPassword';
 import CustomToastContainer from './components/common/CustomToastContainer';
+import ProtectedForm from './layouts/ProtectedForm';
 
 function App() {
   return (
@@ -45,7 +46,8 @@ function App() {
               <Route path=":formId" element={<FormDetail />} />
             </Route>
           </Route>
-
+        </Route>
+        <Route element={<ProtectedForm />}>
           <Route element={<FormLayout />}>
             <Route path="forms">
               <Route path="response/:formId" element={<FormResponse />} />

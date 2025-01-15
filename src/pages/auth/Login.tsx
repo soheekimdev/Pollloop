@@ -2,7 +2,7 @@ import KakaoLoginButton from '@/components/auth/KakaoLoginButton';
 import Input from '@/components/form/Input';
 import InputWithLabel from '@/components/form/InputWithLabel';
 import Label from '@/components/form/Label';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import SocialLoginDivider from '@/components/auth/SocialLoginDivider';
 import LogoWithTitle from '@/components/common/LogoWithTitle';
 import FormActionButton from '@/components/auth/FormActionButton';
@@ -18,6 +18,7 @@ export default function Login() {
   const { status } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const location = useLocation();
   const {
     register,
     handleSubmit,
@@ -30,7 +31,8 @@ export default function Login() {
   const onSubmit = async (data: LoginFormValue) => {
     try {
       await dispatch(loginUser({ email: data.email, password: data.password })).unwrap();
-      navigate('/');
+      const from = location.state?.from || '/';
+      navigate(from);
     } catch (error: any) {
       console.error('로그인 실패', error);
       errorToast(error);
