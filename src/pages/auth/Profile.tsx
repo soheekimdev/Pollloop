@@ -46,10 +46,10 @@ export default function Profile() {
   const handleFilechange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const MAX_FILE_SIZE = 1 * 1024 * 1024;
+      const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
       if (file.size > MAX_FILE_SIZE) {
-        errorToast('파일 크기는 1MB 이하여야 합니다.');
+        errorToast('파일 크기는 10MB 이하여야 합니다.');
         if (event.target) {
           event.target.value = '';
         }

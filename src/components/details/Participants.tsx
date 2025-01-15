@@ -4,6 +4,7 @@ import { fetchParticipantsList, sendParticipationReminder } from '../../api/form
 import { successToast, errorToast } from '../../utils/toast';
 import { Participant, SortOrder } from '../../types/form-details.types';
 import { useInView } from '../../hooks/useInView';
+import { getFormLastSendTime, updateFormSendTime } from '@/utils/formStorage';
 
 interface ParticipantsProps {
   formId: string;
@@ -11,12 +12,11 @@ interface ParticipantsProps {
 
 export default function Participants({ formId }: ParticipantsProps) {
   const [participants, setParticipants] = useState<Participant[]>([]);
-  const [lastRequestTime, setLastRequestTime] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [sortBy, setSortBy] = useState<SortOrder>('completed');
-  
+
   const { ref, isInView } = useInView<HTMLDivElement>();
 
   const sortParticipants = (participants: Participant[], sortBy: SortOrder) => {
@@ -28,10 +28,10 @@ export default function Participants({ formId }: ParticipantsProps) {
       }
     });
   };
-  
+
   const fetchParticipants = async (pageNum: number) => {
     if (!hasMore) return;
-    
+
     try {
       setIsLoading(true);
       const data = await fetchParticipantsList(formId);
@@ -39,8 +39,8 @@ export default function Participants({ formId }: ParticipantsProps) {
         setHasMore(false);
       } else {
         const sortedData = sortParticipants(data, sortBy);
-        setParticipants(prev => 
-          pageNum === 1 ? sortedData : sortParticipants([...prev, ...data], sortBy)
+        setParticipants(prev =>
+          pageNum === 1 ? sortedData : sortParticipants([...prev, ...data], sortBy),
         );
         setPage(pageNum + 1);
       }
@@ -61,11 +61,13 @@ export default function Participants({ formId }: ParticipantsProps) {
   };
 
   const sendReminder = async () => {
-    if (lastRequestTime) {
-      const lastRequest = new Date(lastRequestTime);
+    const lastSendTime = getFormLastSendTime(formId);
+
+    if (lastSendTime) {
+      const lastRequest = new Date(lastSendTime);
       const now = new Date();
       const hoursDiff = (now.getTime() - lastRequest.getTime()) / (1000 * 60 * 60);
-      
+
       if (hoursDiff < 24) {
         errorToast('참여 요청은 24시간에 한 번만 가능합니다.');
         return;
@@ -75,7 +77,7 @@ export default function Participants({ formId }: ParticipantsProps) {
     try {
       setIsLoading(true);
       await sendParticipationReminder(formId);
-      setLastRequestTime(new Date().toISOString());
+      updateFormSendTime(formId); // localStorage 업데이트
       successToast('참여 요청을 보냈습니다.');
     } catch (error) {
       console.error('참여 요청 메일 전송 실패:', error);
@@ -101,7 +103,10 @@ export default function Participants({ formId }: ParticipantsProps) {
     <div className="flex flex-col gap-4 bg-pollloop-light-beige p-8 rounded-2xl">
       <div className="flex items-center justify-between">
         <p className="text-13 text-tag-secondary-text">
-          마지막 참여 요청 시간: {lastRequestTime ? new Date(lastRequestTime).toLocaleString() : '-'}
+          마지막 참여 요청 시간:
+          {getFormLastSendTime(formId)
+            ? new Date(getFormLastSendTime(formId)!).toLocaleString()
+            : '-'}
         </p>
         <div className="flex gap-2">
           <Button
@@ -122,7 +127,7 @@ export default function Participants({ formId }: ParticipantsProps) {
           >
             미완료 순
           </Button>
-          <Button 
+          <Button
             type="button"
             variant="primary"
             size="sm"
@@ -137,23 +142,21 @@ export default function Participants({ formId }: ParticipantsProps) {
 
       <div className="flex flex-col gap-2 max-h-[calc(100vh-300px)] overflow-y-auto scrollable">
         {participants.map((participant, index) => (
-          <div 
+          <div
             key={`${participant.email}-${index}`}
             className="flex items-center justify-between px-4 py-3 bg-[#FFEED1] rounded-lg"
             ref={index === participants.length - 1 ? ref : undefined}
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-[#FFDBB3] flex items-center justify-center">
-                <span className="text-pollloop-brown-01">
-                  {participant.email[0].toUpperCase()}
-                </span>
+                <span className="text-pollloop-brown-01">{participant.email[0].toUpperCase()}</span>
               </div>
               <span className="text-pollloop-brown-01">{participant.email}</span>
             </div>
-            <span 
+            <span
               className={`px-2 py-1 text-xs rounded-full ${
-                participant.is_complete 
-                  ? 'bg-status-green-bg text-status-green-text' 
+                participant.is_complete
+                  ? 'bg-status-green-bg text-status-green-text'
                   : 'bg-status-red-bg text-status-red-text'
               }`}
             >
