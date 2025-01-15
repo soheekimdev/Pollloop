@@ -124,10 +124,13 @@ export default function Forms() {
     if (status === 'TEMP') {
       return (
         <div className="flex gap-2">
-          <Button size="sm" variant="neutral" className="w-14 text-xs">
+          <Button 
+          size="sm" variant="neutral" className="w-14 text-xs"
+          onClick={() => navigate(`/forms/create/${form.uuid}`)}>
             수정
           </Button>
-          <Button size="sm" variant="neutral" className="w-20 text-xs">
+          <Button 
+          size="sm" variant="neutral" className="w-20 text-xs">
             발행하기
           </Button>
         </div>
@@ -146,7 +149,7 @@ export default function Forms() {
     }
   };
 
-  
+
   return (
     <div className="flex flex-col h-full bg-pollloop-bg-01">
     <div className="flex-1 overflow-hidden pb-10">
@@ -261,9 +264,12 @@ export default function Forms() {
                                 />
                               </td>
                               <td className="p-4">
-                                <span className="px-2 py-1 rounded-lg text-xs bg-tag-secondary-bg text-tag-secondary-text">
-                                  {form.tag}
-                                </span>
+                                {form.tag && (
+                                  <span className="inline-block px-2 py-1 rounded-lg text-xs 
+                                  bg-tag-secondary-bg text-tag-secondary-text whitespace-normal break-words">
+                                    {form.tag}
+                                  </span>
+                                )}
                               </td>
                               <td className="p-4 text-sm">{form.create_at}</td>
                               <td className="p-4 text-sm">{form.end_at}</td>
@@ -333,7 +339,12 @@ export default function Forms() {
         <Modal.Content>
           <div className="flex flex-col gap-6">
             <div className="flex justify-end gap-2">
-              <Button variant="neutral" size="sm" className="w-14 text-xs">
+              <Button variant="neutral" size="sm" className="w-14 text-xs"
+                onClick={() => {
+                setIsPreviewModalOpen(false);
+                navigate(`/forms/create/${selectedFormId}`);
+                }}
+              >
                 수정
               </Button>
               <Button variant="primary" size="sm" className="w-20 text-xs">

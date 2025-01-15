@@ -50,12 +50,12 @@ export const fetchFormResultData = async (uuid: string) => {
  * 폼 미리보기 데이터 조회
  * TODO: API 경로 확정 후 수정 필요
  */
-export const fetchFormPreviewData = async (uuid: string) => {
-  try {
-    // const response = await axiosInstance.get(`/form/preview/${uuid}`);
-    // return response.data;
-    throw new Error('API 경로가 아직 정의되지 않았습니다.');
-  } catch (error) {
-    throw error;
-  }
-};
+// export const fetchFormPreviewData = async (uuid: string) => {
+//   try {
+//     // const response = await instance.get(`/form/preview/${uuid}`);
+//     // return response.data;
+//     throw new Error('API 경로가 아직 정의되지 않았습니다.');
+//   } catch (error) {
+//     throw error;
+//   }
+// };
