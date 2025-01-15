@@ -5,28 +5,38 @@ import Breadcrumbs from '../../components/common/Breadcrumbs';
 import Button from '../../components/common/Button';
 import FormStatusBadge from '../../components/common/status-badge/FormStatusBadge';
 import { cn } from '../../utils/cn';
-import { FormListItem, FormStatus } from '../../types/forms/forms.types';
+import { FormInfo, FormListItem, FormStatus } from '../../types/forms/forms.types';
 import { successToast, errorToast } from '../../utils/toast';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from '../../components/common/Modal';
 import { fetchFormListData, fetchFormDeleteData, fetchFormBookmarkData } from '../../api/my-forms';
-
+import FormPreview from '@/components/forms/create/FormPreview';
+import { instance } from '@/api/axios';
+import MainLoader from '@/components/common/loaders/MainLoader';
 
 // 체크박스 컴포넌트
-const CheckboxWithLabel = ({ checked, onChange, label }: { checked: boolean; onChange: (checked: boolean) => void; label?: string }) => (
+const CheckboxWithLabel = ({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label?: string;
+}) => (
   <div className="relative flex items-center gap-6">
     <div className="relative w-5 h-5">
       <input
         type="checkbox"
         checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
+        onChange={e => onChange(e.target.checked)}
         className="absolute w-5 h-5 rounded-[4px] border border-pollloop-brown-01 bg-pollloop-bg-02 checked:bg-pollloop-brown-01 checked:border-pollloop-brown-01 cursor-pointer appearance-none peer"
       />
       {checked && (
-        <Check 
-          className="pointer-events-none absolute left-0 top-0 w-5 h-5 text-pollloop-light-beige stroke-2" 
-          strokeLinecap="round" 
-          strokeLinejoin="round" 
+        <Check
+          className="pointer-events-none absolute left-0 top-0 w-5 h-5 text-pollloop-light-beige stroke-2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       )}
     </div>
@@ -34,19 +44,23 @@ const CheckboxWithLabel = ({ checked, onChange, label }: { checked: boolean; onC
   </div>
 );
 
-
 export default function Forms() {
   const navigate = useNavigate();
   const [forms, setForms] = useState<FormListItem[]>([]);
   const [selectedForms, setSelectedForms] = useState<string[]>([]);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [selectedFormId, setSelectedFormId] = useState<string | null>(null);
+  const [previewFormData, setPreviewFormData] = useState<FormInfo | null>(null);
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+
+  const breadcrumbsItems = ['홈', '나의 폼'];
 
   useEffect(() => {
     const loadForms = async () => {
       try {
         const forms = await fetchFormListData(); // forms는 FormListItem[] 타입
-        
+
         const sortedForms = [...forms].sort((a, b) => {
           if (a.is_bookmark === b.is_bookmark) return 0;
           return a.is_bookmark ? -1 : 1;
@@ -60,15 +74,35 @@ export default function Forms() {
     loadForms();
   }, []);
 
+  const loadFormPreview = async (uuid: string) => {
+    setIsLoadingPreview(true);
+    setPreviewError(null);
+
+    try {
+      const response = await instance.get(`/form/uuid:${uuid}/`);
+      setPreviewFormData(response.data);
+    } catch (error) {
+      console.error('폼 데이터 로딩 실패:', error);
+      setPreviewError('폼 데이터를 불러오는데 실패했습니다');
+    } finally {
+      setIsLoadingPreview(false);
+    }
+  };
+
+  const handleClosePreview = () => {
+    setIsPreviewModalOpen(false);
+    setSelectedFormId(null);
+    setPreviewFormData(null);
+    setPreviewError(null);
+  };
+
   const handleSelectAll = (checked: boolean) => {
     setSelectedForms(checked ? forms.map(form => form.uuid) : []);
   };
 
   const handleSelectForm = (formId: string) => {
-    setSelectedForms(prev => 
-      prev.includes(formId) 
-        ? prev.filter(id => id !== formId)
-        : [...prev, formId]
+    setSelectedForms(prev =>
+      prev.includes(formId) ? prev.filter(id => id !== formId) : [...prev, formId],
     );
   };
 
@@ -84,12 +118,12 @@ export default function Forms() {
         }
         return f;
       });
-      
+
       const sortedForms = [...updatedForms].sort((a, b) => {
         if (a.is_bookmark === b.is_bookmark) return 0;
         return a.is_bookmark ? -1 : 1;
       });
-      
+
       setForms(sortedForms);
       successToast(form.is_bookmark ? '즐겨찾기가 해제되었습니다.' : '즐겨찾기에 추가되었습니다.');
     } catch (error) {
@@ -99,8 +133,9 @@ export default function Forms() {
   };
 
   const handleDeleteForms = async () => {
-    if (!window.confirm('선택한 폼을 삭제하시겠습니까?\n\n삭제한 후에는 복구할 수 없습니다.')) return;
-    
+    if (!window.confirm('선택한 폼을 삭제하시겠습니까?\n\n삭제한 후에는 복구할 수 없습니다.'))
+      return;
+
     try {
       await fetchFormDeleteData(selectedForms);
       setForms(prev => prev.filter(form => !selectedForms.includes(form.uuid)));
@@ -114,32 +149,34 @@ export default function Forms() {
 
   const getFormStatus = (form: FormListItem): FormStatus => {
     if (!form.is_closed) {
-        throw new Error('Form status is undefined');;
+      throw new Error('Form status is undefined');
     }
     return form.is_closed;
-};
+  };
 
   const handleActionButton = (form: FormListItem) => {
     const status = getFormStatus(form);
     if (status === 'TEMP') {
       return (
         <div className="flex gap-2">
-          <Button 
-          size="sm" variant="neutral" className="w-14 text-xs"
-          onClick={() => navigate(`/forms/create/${form.uuid}`)}>
+          <Button
+            size="sm"
+            variant="neutral"
+            className="w-14 text-xs"
+            onClick={() => navigate(`/forms/create/${form.uuid}`)}
+          >
             수정
           </Button>
-          <Button 
-          size="sm" variant="neutral" className="w-20 text-xs">
+          <Button size="sm" variant="neutral" className="w-20 text-xs">
             발행하기
           </Button>
         </div>
       );
     } else {
       return (
-        <Button 
-          size="sm" 
-          variant="neutral" 
+        <Button
+          size="sm"
+          variant="neutral"
           className="w-[146px] text-xs"
           onClick={() => navigate(`/forms/${form.uuid}`)}
         >
@@ -149,44 +186,36 @@ export default function Forms() {
     }
   };
 
-
   return (
     <div className="flex flex-col h-full bg-pollloop-bg-01">
-    <div className="flex-1 overflow-hidden pb-10">
-      <div className="px-4 py-4 md:px-8">
-        <Breadcrumbs items={['홈', '나의 폼']} />
-      </div>
-        
+      <div className="flex-1 overflow-hidden pb-10">
+        <div className="px-4 py-4 md:px-8">
+          <Breadcrumbs items={breadcrumbsItems} />
+        </div>
+
         <div className="px-4 md:px-8">
           <div className="flex flex-col h-[calc(100vh-188px)] bg-pollloop-bg-02 rounded-2xl">
             <div className="px-4 md:px-8 pt-8 pb-6">
               <div className="flex justify-between items-center">
                 <h2 className="text-[22px] font-semibold">나의 폼</h2>
                 <div className="flex gap-2">
-                  <Button 
-                    variant="danger" 
-                    size="sm"
+                  <Button
+                    variant="danger"
                     onClick={handleDeleteForms}
                     disabled={selectedForms.length === 0}
-                    className="text-xs"
                   >
                     삭제
                   </Button>
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => navigate('/forms/create')}
-                    className="text-xs"
-                  >
+                  <Button variant="primary" onClick={() => navigate('/forms/create')}>
                     폼 만들기
                   </Button>
                 </div>
               </div>
             </div>
-  
+
             <div className="flex-1 overflow-hidden px-4 md:px-8 pb-8">
-              <div className="h-full flex flex-col overflow-auto scrollable">
-                <div className="bg-pollloop-coral rounded-lg min-w-[1000px]">
+              <div className="h-full flex flex-col">
+                <div className="bg-pollloop-coral rounded-lg pr-2 overflow-hidden">
                   <table className="w-full table-fixed">
                     <colgroup>
                       <col className="w-[300px]" />
@@ -203,7 +232,7 @@ export default function Forms() {
                     <thead>
                       <tr>
                         <th className="p-4 font-semibold text-sm text-left rounded-l-lg">
-                          <CheckboxWithLabel 
+                          <CheckboxWithLabel
                             checked={selectedForms.length === forms.length}
                             onChange={handleSelectAll}
                             label="폼 이름"
@@ -222,9 +251,9 @@ export default function Forms() {
                     </thead>
                   </table>
                 </div>
-  
-                <div className="flex-1 min-w-[1000px]">
-                  <table className="w-full table-fixed">
+
+                <div className="flex-1 pr-2 scrollable">
+                  <table className="w-full table-fixed border-separate border-spacing-y-2">
                     <colgroup>
                       <col className="w-[300px]" />
                       <col className="w-[120px]" />
@@ -240,24 +269,22 @@ export default function Forms() {
                     <tbody className="divide-y divide-pollloop-bg-01">
                       {forms.length === 0 ? (
                         <tr className="bg-pollloop-light-beige h-16">
-                        <td colSpan={10} className="text-center p-4 rounded-lg">
-                          <div className="flex items-center justify-center h-full">
-                            생성된 폼이 존재하지 않습니다
-                          </div>
-                        </td>
-                      </tr>
+                          <td colSpan={10} className="text-center p-4 rounded-lg">
+                            <div className="flex items-center justify-center h-full">
+                              생성된 폼이 존재하지 않습니다
+                            </div>
+                          </td>
+                        </tr>
                       ) : (
-                        forms.map((form) => {
+                        forms.map(form => {
                           const status = getFormStatus(form);
                           return (
-                            <tr 
-                              key={form.uuid} 
-                              className={cn(
-                                'bg-pollloop-light-beige hover:bg-pollloop-bg-01 h-16'
-                              )}
+                            <tr
+                              key={form.uuid}
+                              className={cn('bg-pollloop-light-beige hover:bg-pollloop-bg-01 h-16')}
                             >
                               <td className="p-4 rounded-l-lg">
-                                <CheckboxWithLabel 
+                                <CheckboxWithLabel
                                   checked={selectedForms.includes(form.uuid)}
                                   onChange={() => handleSelectForm(form.uuid)}
                                   label={form.title}
@@ -265,8 +292,10 @@ export default function Forms() {
                               </td>
                               <td className="p-4">
                                 {form.tag && (
-                                  <span className="inline-block px-2 py-1 rounded-lg text-xs 
-                                  bg-tag-secondary-bg text-tag-secondary-text whitespace-normal break-words">
+                                  <span
+                                    className="inline-block px-2 py-1 rounded-lg text-xs 
+                                  bg-tag-secondary-bg text-tag-secondary-text whitespace-normal break-words"
+                                  >
                                     {form.tag}
                                   </span>
                                 )}
@@ -274,7 +303,7 @@ export default function Forms() {
                               <td className="p-4 text-sm">{form.create_at}</td>
                               <td className="p-4 text-sm">{form.end_at}</td>
                               <td className="p-4">
-                                <FormStatusBadge status={status} className="flex-shrink-0"/>
+                                <FormStatusBadge status={status} className="flex-shrink-0" />
                               </td>
                               <td className="p-4 text-sm">
                                 {form.completed_count}/{form.target_count}
@@ -286,21 +315,19 @@ export default function Forms() {
                                 <Button
                                   size="sm"
                                   variant="neutral"
-                                  className="w-20 text-xs"
-                                  onClick={() => {
+                                  onClick={async () => {
                                     setSelectedFormId(form.uuid);
                                     setIsPreviewModalOpen(true);
+                                    await loadFormPreview(form.uuid);
                                   }}
                                 >
                                   미리 보기
                                 </Button>
                               </td>
-                              <td className="p-4">
-                                {handleActionButton(form)}
-                              </td>
+                              <td className="p-4">{handleActionButton(form)}</td>
                               <td className="p-4 rounded-r-lg">
                                 <div className="flex gap-4 text-pollloop-brown-01">
-                                  <button 
+                                  <button
                                     onClick={() => handleDeleteForms()}
                                     className="hover:text-pollloop-brown-02"
                                   >
@@ -309,11 +336,14 @@ export default function Forms() {
                                   <button
                                     onClick={() => handleToggleBookmark(form.uuid)}
                                     className={cn(
-                                      "hover:text-pollloop-brown-02",
-                                      form.is_bookmark && "text-pollloop-orange"
+                                      'hover:text-pollloop-brown-02',
+                                      form.is_bookmark && 'text-pollloop-orange',
                                     )}
                                   >
-                                    <Star size={18} fill={form.is_bookmark ? "currentColor" : "none"} />
+                                    <Star
+                                      size={18}
+                                      fill={form.is_bookmark ? 'currentColor' : 'none'}
+                                    />
                                   </button>
                                 </div>
                               </td>
@@ -330,30 +360,33 @@ export default function Forms() {
         </div>
       </div>
 
-      <Modal 
-        isOpen={isPreviewModalOpen} 
-        onClose={() => setIsPreviewModalOpen(false)}
-        width="xl"
-      >
-        <Modal.Header title="미리 보기" onClose={() => setIsPreviewModalOpen(false)} />
+      {/* 미리 보기 모달 */}
+      <Modal isOpen={isPreviewModalOpen} onClose={handleClosePreview} width="2xl">
+        <Modal.Header title="미리 보기" onClose={handleClosePreview} />
         <Modal.Content>
           <div className="flex flex-col gap-6">
             <div className="flex justify-end gap-2">
-              <Button variant="neutral" size="sm" className="w-14 text-xs"
+              <Button
+                variant="neutral"
                 onClick={() => {
-                setIsPreviewModalOpen(false);
-                navigate(`/forms/create/${selectedFormId}`);
+                  handleClosePreview();
+                  navigate(`/forms/create/${selectedFormId}`);
                 }}
               >
                 수정
               </Button>
-              <Button variant="primary" size="sm" className="w-20 text-xs">
-                발행하기
-              </Button>
+              <Button variant="primary">발행하기</Button>
             </div>
-            <div className="bg-pollloop-bg-01 rounded-xl w-full h-[308px] flex items-center justify-center text-pollloop-brown-01/60">
-              (미리보기 내용 생략)
-            </div>
+
+            {isLoadingPreview ? (
+              <MainLoader />
+            ) : previewError ? (
+              <div className="bg-pollloop-bg-01 rounded-xl w-full p-8 flex items-center justify-center text-pollloop-brown-01/60">
+                {previewError}
+              </div>
+            ) : previewFormData ? (
+              <FormPreview formInfo={previewFormData} />
+            ) : null}
           </div>
         </Modal.Content>
       </Modal>

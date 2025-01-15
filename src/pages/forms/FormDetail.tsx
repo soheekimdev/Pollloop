@@ -36,7 +36,6 @@ export default function FormDetail() {
     const loadOverviewData = async () => {
       try {
         const data = await fetchOverviewData(formId);
-        // console.log(data);
         setOverviewData(data as OverviewData);
       } catch (err) {
         console.error('데이터 로딩 중 에러:', err);
@@ -86,7 +85,7 @@ export default function FormDetail() {
     },
   ];
 
-  const complete_rate = getCompleteRate(completed_count, user_count);
+  const complete_rate = getCompleteRate(completed_count, target_count);
 
   return (
     <div className="flex flex-col gap-4 px-10 min-w-[480px] pb-10">
@@ -134,13 +133,15 @@ export default function FormDetail() {
                     return (
                       <div className="flex items-center gap-4 md:items-start md:relative ">
                         <span>{value}</span>
-                        <SmallAccessCodeSection
-                          buttonText="비밀번호 확인하기"
-                          is_closed={is_closed}
-                          isDisplayed={isDisplayed}
-                          access_code={access_code}
-                          onDisplay={handleDisplay}
-                        />
+                        {is_private ? (
+                          <SmallAccessCodeSection
+                            buttonText="비밀번호 확인하기"
+                            is_closed={is_closed}
+                            isDisplayed={isDisplayed}
+                            access_code={access_code}
+                            onDisplay={handleDisplay}
+                          />
+                        ) : null}
                       </div>
                     );
                   default:

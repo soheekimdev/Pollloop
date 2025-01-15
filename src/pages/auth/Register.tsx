@@ -40,7 +40,7 @@ export default function Register() {
       navigate('/login');
     } catch (error: any) {
       console.error('회원가입 실패', error);
-      errorToast(error.message || '회원가입에 실패했습니다.');
+      errorToast(error);
     }
   };
   return (
@@ -77,15 +77,15 @@ export default function Register() {
             />
           </InputWithLabel>
         </fieldset>
-        <FormActionButton submitButtonText="회원가입" linkButtonText="로그인" path="/login" />
+        <FormActionButton
+          submitButtonText={status === 'loading' ? '회원가입 중...' : '회원가입'}
+          linkButtonText="로그인"
+          path="/login"
+          disabled={status === 'loading'}
+        />
       </form>
       <SocialLoginDivider />
       <KakaoLoginButton />
-      {status === 'loading' && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
-        </div>
-      )}
     </div>
   );
 }

@@ -25,11 +25,11 @@ export default function MenuDropdown({ setIsMenuOpen }: MenuDropdownProps) {
   };
   return (
     <Dropdown
-      position={{ top: '70px', right: '38px' }}
       items={[
         { label: '프로필', onClick: moveToProfile },
         { label: '로그아웃', onClick: handleLogout, isDestructive: true },
       ]}
+      className="top-[70px] right-[38px] w-[120px]"
       onClose={() => setIsMenuOpen(false)}
     />
   );

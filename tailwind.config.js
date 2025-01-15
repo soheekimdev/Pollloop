@@ -14,7 +14,7 @@ export default {
       current: 'currentColor',
       scrim: '#252525A3',
       pollloop: {
-        red: 'FF0000',
+        red: '#FF0000',
         orange: '#FFA632',
         coral: '#FFC082',
         'brown-01': '#85582B',

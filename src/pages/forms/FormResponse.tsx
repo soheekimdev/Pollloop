@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
@@ -29,10 +29,28 @@ import {
   SubmitOption,
   SubmitQuestion,
 } from '@/types/forms/forms.types';
+import { instance } from '@/api/axios';
 
 export default function FormResponse() {
   const navigate = useNavigate();
   const { formId } = useParams<{ formId: string }>();
+
+  useEffect(() => {
+    const recordAccess = async () => {
+      try {
+        await instance.post('/form/invited/', {
+          uuid: formId,
+        });
+      } catch (error) {
+        console.error('Failed to record form access:', error);
+      }
+    };
+
+    if (formId) {
+      recordAccess();
+    }
+  }, [formId]);
+
   const { formData, isLoading, error } = useFormData(formId || '');
   const [answers, setAnswers] = useState<Answers>({});
   const { isOpen, open, close } = useModal();
