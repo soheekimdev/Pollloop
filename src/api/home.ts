@@ -1,15 +1,16 @@
 import { FormDetails } from '../types/home/home.types';
 import { instance } from './axios';
 
-const getLastFourItems = (data: FormDetails[]): FormDetails[] => {
-  return data.slice(-3).reverse();
+const getLastThreeItems = (data: FormDetails[]): FormDetails[] => {
+  return data.slice(-3);
 };
 
 export const fetchHomeData = async () => {
   try {
     const response = await instance.get<FormDetails[]>(`/form/list/`);
+    const lastThreeItems = getLastThreeItems(response.data);
     const data = {
-      forms: getLastFourItems(response.data),
+      forms: lastThreeItems ? lastThreeItems.reverse() : [],
       asks: [
         {
           author_id: 111,
@@ -37,7 +38,7 @@ export const fetchHomeData = async () => {
         },
       ],
     };
-
+    console.log(data);
     return data;
   } catch (error) {
     throw error;
