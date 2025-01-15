@@ -41,7 +41,7 @@ function App() {
           <Route element={<DashboardLayout />}>
             <Route path="forms">
               <Route index element={<Forms />} />
-              <Route path="create" element={<FormCreate />} />
+              <Route path="create/:formId?" element={<FormCreate />} />
               <Route path=":formId" element={<FormDetail />} />
             </Route>
           </Route>
