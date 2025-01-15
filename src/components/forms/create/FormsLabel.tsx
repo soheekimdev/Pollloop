@@ -3,5 +3,5 @@ interface LabelProps {
 }
 
 export default function FormsLabel({ text }: LabelProps) {
-  return <p className="pl-[18px] text-sm font-medium text-13 opacity-70">{text}</p>;
+  return <p className="pl-5 text-sm font-medium text-13 opacity-70">{text}</p>;
 }
