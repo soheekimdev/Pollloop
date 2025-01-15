@@ -23,7 +23,7 @@ export default function Profile() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { user } = useSelector((state: RootState) => state.user);
+  const { user, kakaoLogin } = useSelector((state: RootState) => state.user);
 
   const toggleSettingDropdown = () => setIsClickedSetting(prev => !prev);
   const openDeleteAccountModal = () => setIsDeleteAccountModalOpen(true);
@@ -124,14 +124,22 @@ export default function Profile() {
               <Label htmlFor="userEmail" text="아이디" />
               <Input id="userEmail" value={user?.email} disabled />
             </InputWithLabel>
-            <div className="flex flex-col gap-2">
-              <Label text="비밀번호" />
-              <Button onClick={openPasswordModal}>계정 비밀번호 변경</Button>
-            </div>
+            {!kakaoLogin && (
+              <div className="flex flex-col gap-2">
+                <Label text="비밀번호" />
+                <Button onClick={openPasswordModal}>계정 비밀번호 변경</Button>
+              </div>
+            )}
           </div>
-          <button onClick={handleLogout} className="text-button-secondary-bg text-sm">
-            로그아웃
-          </button>
+          {!kakaoLogin ? (
+            <button onClick={handleLogout} className="text-button-secondary-bg text-sm">
+              로그아웃
+            </button>
+          ) : (
+            <Button onClick={handleLogout} fullWidth={true}>
+              로그아웃
+            </Button>
+          )}
         </div>
       </div>
       {isDeleteAccountModalOpen && (

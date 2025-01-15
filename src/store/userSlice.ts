@@ -8,12 +8,14 @@ interface UserState {
   user: User | null;
   tokens: Tokens | null;
   status: 'idle' | 'loading' | 'succeeded';
+  kakaoLogin: boolean;
 }
 
 const initialState: UserState = {
   user: JSON.parse(localStorage.getItem('user') || 'null'),
   tokens: JSON.parse(localStorage.getItem('tokens') || 'null'),
   status: 'idle',
+  kakaoLogin: false,
 };
 
 export const loginUser = createAsyncThunk(
@@ -120,6 +122,7 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, state => {
         state.status = 'succeeded';
+        state.kakaoLogin = true;
       })
       .addCase(registerUser.rejected, state => {
         state.status = 'idle';
@@ -140,6 +143,7 @@ const userSlice = createSlice({
         state.user = null;
         state.tokens = null;
         state.status = 'idle';
+        state.kakaoLogin = false;
         storage.clearUserData();
       });
   },
