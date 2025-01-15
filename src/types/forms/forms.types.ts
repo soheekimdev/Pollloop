@@ -54,11 +54,26 @@ export interface FormInfo {
   questions: Question[];
 }
 
-export interface CreateFormResponse {
+// 폼 목록 인터페이스
+export interface FormListItem extends Pick<FormInfo, 
+  'title' | 
+  'tag' |
+  'create_at' |
+  'end_at' |
+  'is_closed' |
+  'access_code' |
+  'target_count' |
+  'is_private' |
+  'is_bookmark'
+> {
   uuid: string;
-  access_code?: string;
+  completed_count: number;
 }
 
+// forms.types.ts
+export type FormListResponse = FormListItem[];
+
+// 컴포넌트 Props 인터페이스
 export interface FormSectionBaseProps {
   className?: string;
   children?: React.ReactNode;
