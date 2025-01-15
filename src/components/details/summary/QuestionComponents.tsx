@@ -273,7 +273,7 @@ const RadioComponent: React.FC<{ results: RadioResultType[] }> = ({ results }) =
 
   const processedData = results.map(item => ({
     ...item,
-    count: item.count === 0 ? 0.1 : item.count,
+    count: item.count === 0 ? 0.2 : item.count,
   }));
 
   const CustomTooltip: React.FC<TooltipProps<string, string>> = ({ active, payload }) => {
@@ -426,7 +426,7 @@ const DropdownComponent: React.FC<{ results: DropdownResultType[] }> = ({ result
 
   const processedData = results.map(item => ({
     ...item,
-    count: item.count === 0 ? 0.1 : item.count,
+    count: item.count === 0 ? 0.2 : item.count,
   }));
 
   const CustomTooltip: React.FC<TooltipProps<string, string>> = ({ active, payload }) => {
