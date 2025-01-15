@@ -210,14 +210,8 @@ export default function FormContentSection({
           </div>
         </Modal.Content>
         <Modal.Footer>
-          <Button
-            flex
-            onClick={() => {
-              closeComplete();
-              navigate('/forms');
-            }}
-          >
-            확인
+          <Button flex onClick={closeComplete}>
+            나의 폼으로 이동
           </Button>
         </Modal.Footer>
       </Modal>
