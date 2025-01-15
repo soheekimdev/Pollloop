@@ -10,7 +10,6 @@ import { generateAccessCode } from '@/utils/generateAccessCode';
 import { validateFormInfo } from '@/utils/validation';
 import { errorToast } from '@/utils/toast';
 import { useCreateForm } from '@/hooks/useCreateForm';
-import { NO_OPTIONS_TYPES } from '@/constants/forms.constants';
 import { instance } from '@/api/axios';
 
 export default function FormCreate() {
@@ -111,21 +110,11 @@ export default function FormCreate() {
     setQuestions(prev =>
       prev.map(q => {
         if (q.id === selectedQuestionId) {
-          const defaultOptions = [
-            {
-              option_number: 1,
-              option_context: '',
-            },
-          ];
-
-          if (!NO_OPTIONS_TYPES.includes(questionType)) {
-            defaultOptions[0].option_context = '옵션 1';
-          }
-
           return {
             ...q,
             layout_type: questionType,
-            options_of_questions: defaultOptions,
+            options_of_questions: getDefaultOptions(questionType),
+            _frontend: questionType === 'FILE_UPLOAD_TYPE' ? { fileType: 'image' } : undefined,
           };
         }
         return q;
@@ -133,22 +122,54 @@ export default function FormCreate() {
     );
   };
 
+  const getDefaultOptions = (type: QuestionType) => {
+    switch (type) {
+      case 'IMAGE_SELECT_TYPE':
+        return [];
+
+      case 'CHECKBOX_TYPE':
+      case 'RADIO_TYPE':
+      case 'DROPDOWN_TYPE':
+        return [
+          {
+            option_number: 1,
+            option_context: '옵션 1',
+          },
+        ];
+
+      case 'RANGE_TYPE':
+        return [
+          { option_number: 1, option_context: '1' },
+          { option_number: 2, option_context: '2' },
+          { option_number: 3, option_context: '3' },
+          { option_number: 4, option_context: '4' },
+          { option_number: 5, option_context: '5' },
+          { option_number: 100, option_context: '' }, // min label
+          { option_number: 200, option_context: '' }, // max label
+        ];
+
+      default:
+        return [
+          {
+            option_number: 1,
+            option_context: '',
+          },
+        ];
+    }
+  };
+
   const handleAddQuestion = () => {
+    const defaultType = 'SHORT_TYPE' as const;
     const newQuestion: Question = {
       id: Date.now().toString(),
-      layout_type: 'SHORT_TYPE',
+      layout_type: defaultType,
       question: '',
       question_order: questions.length + 1,
       is_required: false,
-      options_of_questions: [
-        {
-          option_number: 1,
-          option_context: '',
-        },
-      ],
+      options_of_questions: getDefaultOptions(defaultType),
     };
     setQuestions(prev => [...prev, newQuestion]);
-    setSelectedQuestionId(newQuestion.id as string);
+    setSelectedQuestionId(newQuestion.id);
   };
 
   const handleUpdateQuestion = (id: string, updates: Partial<Question>) => {
