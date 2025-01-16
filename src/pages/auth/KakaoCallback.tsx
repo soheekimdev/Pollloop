@@ -13,7 +13,6 @@ export default function KakaoCallback() {
     const handleKakaoCallback = async () => {
       const searchParams = new URL(window.location.href).searchParams;
       const code = searchParams.get('code');
-      const from = searchParams.get('state');
 
       if (!code) {
         console.error('인증 코드가 없습니다.');
@@ -23,8 +22,9 @@ export default function KakaoCallback() {
 
       try {
         await dispatch(kakaoLoginUser(code)).unwrap();
-        console.log('카카오 로그인 성공');
-        navigate(from || '/');
+        const redirectPath = localStorage.getItem('redirectPath') || '/';
+        localStorage.removeItem('redirectPath');
+        navigate(redirectPath);
       } catch (error) {
         console.error('카카오 로그인 실패:', error);
         errorToast('카카오 로그인에 실패했습니다.');
