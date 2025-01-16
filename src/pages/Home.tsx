@@ -32,7 +32,7 @@ export default function Home() {
 
   if (isLoading)
     return (
-      <div className="flex-col gap-5 w-full h-[calc(100vh-96px)] flex items-center justify-center">
+      <div className="flex-col gap-5 w-full h-[calc(100vh-96px)] flex items-center justify-center pb-20">
         <MainLoader />
       </div>
     );
