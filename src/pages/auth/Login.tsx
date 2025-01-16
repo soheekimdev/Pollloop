@@ -18,7 +18,6 @@ export default function Login() {
   const { status } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const location = useLocation();
   const {
     register,
     handleSubmit,
@@ -31,8 +30,9 @@ export default function Login() {
   const onSubmit = async (data: LoginFormValue) => {
     try {
       await dispatch(loginUser({ email: data.email, password: data.password })).unwrap();
-      const from = location.state?.from || '/';
-      navigate(from);
+      const redirectPath = localStorage.getItem('redirectPath') || '/';
+      localStorage.removeItem('redirectPath');
+      navigate(redirectPath);
     } catch (error: any) {
       console.error('로그인 실패', error);
       errorToast(error);

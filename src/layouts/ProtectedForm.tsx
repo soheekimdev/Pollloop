@@ -6,7 +6,8 @@ export default function ProtectedForm() {
   const { user } = useSelector((state: RootState) => state.user);
 
   if (!user) {
-    return <Navigate to="/login" state={{ from: location.pathname }} />;
+    localStorage.setItem('redirectPath', location.pathname);
+    return <Navigate to="/login" />;
   }
 
   return <Outlet />;
