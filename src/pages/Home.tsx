@@ -40,9 +40,10 @@ export default function Home() {
   return (
     <div className=" bg-pollloop-bg-03">
       <div className="m-auto w-full max-w-[1440px] min-w-[360px] px-8 flex flex-col gap-12 pb-10">
-        <article className="h-20 rounded-xl flex justify-center items-center font-bold text-xl">
+        <article className="bg-input-bg h-20 border rounded-xl shadow-xl flex justify-center items-center font-bold text-xl relative">
+          <div className="z-10 absolute left-[50%] bottom-0 bg-input-bg h-4 w-4 -translate-x-1/2 translate-y-1/2 rotate-45 transform border-r border-b border-gray-100 bg-white"></div>
           <p className="animate-bounce text-3xl">💡</p>
-          <p>오늘의 질문이 내일의 인사이트로</p>
+          <p className="pr-5">오늘의 질문이 내일의 인사이트로</p>
         </article>
         <HomeCategory
           title="최근 폼"
