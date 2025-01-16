@@ -1,13 +1,10 @@
 import kakaoLogo from '@/assets/kakao_logo.svg';
-import { useLocation } from 'react-router-dom';
 export default function KakaoLoginButton() {
   const REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI;
   const CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID;
-  const location = useLocation();
 
   const hadleKakaoLogin = () => {
-    const from = location.state?.from || '/';
-    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&state=${encodeURIComponent(from)}`;
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
     window.location.href = kakaoAuthUrl;
   };
   return (
