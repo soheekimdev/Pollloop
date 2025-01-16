@@ -56,7 +56,6 @@ export default function Home() {
           title="최근 애스크"
           buttonText="새로운 애스크를 만들어 보세요"
           items={homeData.asks}
-          moreLink="/asks"
           createLink="/asks/create"
         />
         <Footer />

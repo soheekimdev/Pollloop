@@ -33,6 +33,6 @@ export interface HomeCategoryProps {
   title: string; // 카테고리 제목
   buttonText: string; // 버튼 이름
   items: FormDetails[] | AskDetails[]; // 카테고리 아이템 리스트
-  moreLink: string; // 더보기 링크
+  moreLink?: string; // 더보기 링크
   createLink: string; // 폼 생성 버튼 링크
 }
