@@ -8,12 +8,14 @@ interface UserState {
   user: User | null;
   tokens: Tokens | null;
   status: 'idle' | 'loading' | 'succeeded';
+  kakaoLogin: boolean;
 }
 
 const initialState: UserState = {
   user: JSON.parse(localStorage.getItem('user') || 'null'),
   tokens: JSON.parse(localStorage.getItem('tokens') || 'null'),
   status: 'idle',
+  kakaoLogin: JSON.parse(localStorage.getItem('kakaoLogin') || 'false'),
 };
 
 export const loginUser = createAsyncThunk(
@@ -97,7 +99,7 @@ const userSlice = createSlice({
     updateUserProfileImage: (state, action) => {
       if (state.user && state.tokens) {
         state.user.profileImage = action.payload;
-        storage.setUserData(state.user, state.tokens);
+        storage.setUserData(state.user, state.tokens, state.kakaoLogin);
       }
     },
   },
@@ -110,7 +112,8 @@ const userSlice = createSlice({
         state.status = 'succeeded';
         state.user = action.payload.user;
         state.tokens = action.payload.tokens;
-        storage.setUserData(state.user, state.tokens);
+        state.kakaoLogin = false;
+        storage.setUserData(state.user, state.tokens, false);
       })
       .addCase(loginUser.rejected, state => {
         state.status = 'idle';
@@ -131,7 +134,8 @@ const userSlice = createSlice({
         state.status = 'succeeded';
         state.user = action.payload.user;
         state.tokens = action.payload.tokens;
-        storage.setUserData(state.user, state.tokens);
+        state.kakaoLogin = true;
+        storage.setUserData(state.user, state.tokens, true);
       })
       .addCase(logoutUser.pending, state => {
         state.status = 'loading';
@@ -140,6 +144,7 @@ const userSlice = createSlice({
         state.user = null;
         state.tokens = null;
         state.status = 'idle';
+        state.kakaoLogin = false;
         storage.clearUserData();
       });
   },

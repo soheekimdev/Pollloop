@@ -9,6 +9,7 @@ interface ModalProps {
   children: React.ReactNode;
   closeOnScrimClick?: boolean;
   width?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl' | '6xl' | '7xl';
+  className?: string;
 }
 
 interface ModalHeaderProps {
@@ -59,7 +60,14 @@ function ModalFooter({ children }: ModalFooterProps) {
   return <div className="flex justify-end gap-2">{children}</div>;
 }
 
-function Modal({ isOpen, onClose, children, closeOnScrimClick = false, width }: ModalProps) {
+function Modal({
+  isOpen,
+  onClose,
+  children,
+  closeOnScrimClick = false,
+  width,
+  className,
+}: ModalProps) {
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -79,12 +87,13 @@ function Modal({ isOpen, onClose, children, closeOnScrimClick = false, width }: 
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className={'fixed inset-0 z-50 flex items-center justify-center'}>
       <div className="fixed inset-0 bg-scrim" onClick={closeOnScrimClick ? onClose : undefined} />
       <div
         className={cn(
           'relative flex flex-col gap-4 w-full max-h-[80vh] mx-4 p-6 rounded-lg bg-pollloop-light-beige shadow-lg',
           width && sizeClasses[width],
+          className,
         )}
       >
         {children}

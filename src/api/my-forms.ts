@@ -14,10 +14,11 @@ export const fetchFormListData = async () => {
 /* 폼 삭제 */
 export const fetchFormDeleteData = async (formIds: string[]) => {
   try {
-    const response = await instance.post('/form/list/remove/', {
-      uuids: formIds
-    });
-    return response.data;
+    const deletePromises = formIds.map(uuid => 
+      instance.post('/form/list/remove/', { uuid })
+    );
+    const responses = await Promise.all(deletePromises);
+    return responses;
   } catch (error) {
     throw error;
   }

@@ -36,7 +36,6 @@ export interface OverviewData {
 }
 
 // 폼 요약정보 타입 정의
-
 export interface SummaryData {
   uuid: string;
   title: string;
@@ -108,4 +107,12 @@ export interface QuestionResultType {
   max_label?: string;
   question: string;
   results: FormResultType[];
+}
+
+// 참여자 정보 관련 타입 정의
+export type SortOrder = 'completed' | 'incomplete';
+
+export interface Participant {
+  email: string;
+  is_complete: boolean;
 }

@@ -215,7 +215,7 @@ export default function FormResponse() {
             question={question}
             hasDescription={
               question.layout_type === 'FILE_UPLOAD_TYPE'
-                ? '파일은 최대 1개까지, 파일당 1MB 이하로 업로드 가능합니다.'
+                ? '파일은 최대 1개까지, 파일당 10MB 이하로 업로드 가능합니다.'
                 : null
             }
           >

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal';
 import InputWithLabel from '@/components/form/InputWithLabel';
@@ -39,6 +40,7 @@ export default function FormContentSection({
   onSave,
   onPublish,
 }: FormContentSectionProps) {
+  const navigate = useNavigate();
   const [formUrl, setFormUrl] = useState('');
   const [formPassword, setFormPassword] = useState('');
 
@@ -53,7 +55,10 @@ export default function FormContentSection({
   const closeConfirm = () => setConfirmOpen(false);
 
   const openComplete = () => setCompleteOpen(true);
-  const closeComplete = () => setCompleteOpen(false);
+  const closeComplete = () => {
+    setCompleteOpen(false);
+    navigate('/forms');
+  };
 
   const previewFormInfo = {
     ...formInfo,
@@ -206,7 +211,7 @@ export default function FormContentSection({
         </Modal.Content>
         <Modal.Footer>
           <Button flex onClick={closeComplete}>
-            확인
+            나의 폼으로 이동
           </Button>
         </Modal.Footer>
       </Modal>

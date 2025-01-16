@@ -7,9 +7,12 @@ import Label from '@/components/form/Label';
 import { FindPasswordFormValue, findPasswordSchema } from '@/schemas/auth';
 import { errorToast, successToast } from '@/utils/toast';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 export default function RequestPasswordReset() {
+  const [isLoading, setIsloading] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -20,12 +23,15 @@ export default function RequestPasswordReset() {
   });
 
   const onSubmit = async (data: FindPasswordFormValue) => {
+    setIsloading(true);
     try {
       const response = await authAPI.requestPasswordReset(data.email);
       successToast(response.message);
     } catch (error: any) {
       console.log('비밀번호 재설정 요청 실패:', error);
       errorToast(error.error);
+    } finally {
+      setIsloading(false);
     }
   };
 
@@ -46,9 +52,10 @@ export default function RequestPasswordReset() {
           </InputWithLabel>
         </fieldset>
         <FormActionButton
-          submitButtonText="이메일로 찾기/재설정"
+          submitButtonText={isLoading ? '이메일 전송 중...' : '이메일로 찾기/재설정'}
           linkButtonText="로그인"
           path="/login"
+          disabled={isLoading}
         />
       </form>
     </div>

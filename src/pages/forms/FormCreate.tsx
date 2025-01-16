@@ -76,6 +76,8 @@ export default function FormCreate() {
             id: String(q.question_order), // 임시 id 생성
           })),
         );
+
+        console.log(formData);
       } catch (error) {
         console.error('Form data loading failed:', error);
         errorToast('폼 데이터를 불러오는데 실패했습니다');
@@ -147,6 +149,12 @@ export default function FormCreate() {
           { option_number: 100, option_context: '' }, // min label
           { option_number: 200, option_context: '' }, // max label
         ];
+
+      case 'STAR_RATING_TYPE':
+        return Array.from({ length: 5 }, (_, i) => ({
+          option_number: i + 1,
+          option_context: String(i + 1),
+        }));
 
       default:
         return [
@@ -243,8 +251,12 @@ export default function FormCreate() {
       });
 
       if (result?.uuid) {
-        successToast(isPublishing ? '폼이 발행되었습니다.' : '폼이 임시 저장되었습니다.');
-        navigate(`/forms/create/${result.uuid}`);
+        if (isPublishing) {
+          successToast('폼이 발행되었습니다.');
+        } else {
+          successToast('폼이 임시 저장되었습니다.');
+          navigate(`/forms/create/${result.uuid}`);
+        }
       } else {
         errorToast('유효한 응답이 없습니다.');
       }
@@ -280,7 +292,7 @@ export default function FormCreate() {
             onQuestionSelect={setSelectedQuestionId}
             onQuestionDelete={handleDeleteQuestion}
             onQuestionUpdate={handleUpdateQuestion}
-            onSave={() => handleSubmit(false)}
+            onSave={async () => await handleSubmit(false)}
             onPublish={async () => await handleSubmit(true)}
             onFormInfoUpdate={handleFormInfoUpdate}
           />
