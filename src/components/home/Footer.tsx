@@ -22,13 +22,13 @@ const Teammate = ({ name, avatarUrl, leader, githubUrl, position }: TeammateProp
           className="absolute top-3 right-0 text-pollloop-red opacity-0 group-hover:opacity-100 transition-opacity"
         />
       </div>
-      <p className="flex flex-col items-center justify-center font-semibold">
+      <div className="flex flex-col items-center justify-center font-semibold">
         <div className="flex items-center">
           {leader ? <Crown size={16} /> : ''}
           <span>{name}</span>
         </div>
         {position ? `(${position})` : ''}
-      </p>
+      </div>
     </div>
   );
 

@@ -38,7 +38,6 @@ export const fetchHomeData = async () => {
         },
       ],
     };
-    console.log(data);
     return data;
   } catch (error) {
     throw error;

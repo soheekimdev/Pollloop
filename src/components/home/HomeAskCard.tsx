@@ -9,7 +9,7 @@ interface HomeAskCardProps {
 }
 
 export default function HomeAskCard({ item }: HomeAskCardProps) {
-  const { id: ask_id, title, tag, is_closed, access_code } = item;
+  const { title, tag, is_closed, access_code } = item;
   const { isDisplayed, handleDisplay } = useAccessCode();
 
   const ASK_STATUS = is_closed ? '종료된' : '진행 중인';
