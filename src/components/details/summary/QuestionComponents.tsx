@@ -1240,13 +1240,15 @@ const FileUploadComponent: React.FC<{ results: FileUploadResultType[] }> = ({ re
             const fileId = fullPath;
             const isDownloaded = downloadedFiles.includes(fileId);
 
+            console.log(fullPath);
+
             return (
               <li
                 key={fileId}
                 className="flex items-center justify-between gap-2 px-3 py-1 text-sm border rounded-lg cursor-pointer group hover:shadow-primary hover:border-pollloop-orange border-pollloop-brown-01 border-opacity-30 bg-pollloop-brown-01/15"
               >
                 <a
-                  href={`https://${fullPath}`}
+                  href={`${fullPath}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={e => handleDownload(fileId, fileNameWithExtension, e)}
