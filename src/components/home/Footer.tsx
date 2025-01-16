@@ -49,7 +49,7 @@ export default function Footer() {
   const [isHover, setIsHover] = useState(false);
   return (
     <footer
-      className="w-full mt-40 gap-12 flex flex-col"
+      className="w-full mt-20 gap-12 flex flex-col"
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
     >

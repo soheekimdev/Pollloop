@@ -20,7 +20,7 @@ export default function HomeAskCard({ item }: HomeAskCardProps) {
       role="article"
     >
       <Link
-        to={`/asks/${ask_id}`}
+        to="#"
         className="flex items-center h-full"
         aria-label={`${title} - ${ASK_STATUS} 애스크${access_code ? ', 비공개' : ''}`}
       >
