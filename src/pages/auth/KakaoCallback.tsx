@@ -3,11 +3,12 @@ import { kakaoLoginUser } from '@/store/userSlice';
 import { errorToast } from '@/utils/toast';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function KakaoCallback() {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const location = useLocation();
 
   useEffect(() => {
     const handleKakaoCallback = async () => {
@@ -22,7 +23,8 @@ export default function KakaoCallback() {
       try {
         await dispatch(kakaoLoginUser(code)).unwrap();
         console.log('카카오 로그인 성공');
-        navigate('/');
+        const from = location.state?.from || '/';
+        navigate(from);
       } catch (error) {
         console.error('카카오 로그인 실패:', error);
         errorToast('카카오 로그인에 실패했습니다.');
@@ -31,7 +33,7 @@ export default function KakaoCallback() {
     };
 
     handleKakaoCallback();
-  }, [dispatch, navigate]);
+  }, [dispatch, navigate, location.state]);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
