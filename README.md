@@ -44,15 +44,6 @@ Pollloop은 동적으로 업데이트되는 설문 & QnA 플랫폼입니다. 사
 - 폼 결과 통계 및 시각화
 - 참여자 관리 및 참여 요청 메일 발송
 
-### 애스크(Ask)
-
-- 실시간성 질문 작성 및 관리
-- 질문 좋아요 기능
-- 익명/실명 선택 가능
-- 공지사항 등록 및 관리
-- 질문 고정 및 숨김 기능
-- 종료 후 통계 제공
-
 ## 🛠 기술 스택
 
 - Framework/Library: React + Vite
@@ -75,21 +66,38 @@ Pollloop은 동적으로 업데이트되는 설문 & QnA 플랫폼입니다. 사
 
 ## 📋 프로젝트 산출물
 
+### 프로젝트 미리 보기
+![회원가입_로그인](https://github.com/user-attachments/assets/32ab3c85-d66a-42db-8f6e-de2713650a0c)
+![로그인_홈](https://github.com/user-attachments/assets/9c442226-81ec-48ae-b315-8ac29f4d77b1)
+![프로필](https://github.com/user-attachments/assets/b44cf6a2-b3fd-487a-9202-73c95a42cb92)
+![폼만들기_기본정보_단답형_장문형](https://github.com/user-attachments/assets/742f1549-96ac-45c4-ba53-3d99865b0582)
+![폼만들기_체크박스_옵션_기타_필수](https://github.com/user-attachments/assets/b2ab2c63-94fb-430f-8efe-22ad8afc8bb7)
+![폼만들기_라디오_드롭다운_범위선택](https://github.com/user-attachments/assets/a58bcb50-e320-48b0-ab64-dbfcc3bf6d19)
+![폼만들기_이미지선택](https://github.com/user-attachments/assets/4a462888-cb7e-40ed-a921-0103ce16c5f4)
+![폼만들기_숫자_날짜_이메일_파일업로드](https://github.com/user-attachments/assets/5ad4d65f-8640-4d1d-910b-b6fe63bb92fb)
+![폼만들기_미리보기](https://github.com/user-attachments/assets/1a7a2fd9-8d0b-468f-9371-10f2b00fce05)
+![폼만들기_임시저장](https://github.com/user-attachments/assets/613b8070-63ec-4469-ac3b-1e08bbf3670a)
+![폼만들기_발행하기](https://github.com/user-attachments/assets/1bd89658-56d9-4da9-a8d4-3fe88c23337e)
+![참여폼](https://github.com/user-attachments/assets/806c45f1-0382-49c7-8444-7c7638e7c457)
+![결과보기_요약](https://github.com/user-attachments/assets/7da940cd-b047-48b2-8731-105f1dd4a06e)
+![참여자목록_참여요청](https://github.com/user-attachments/assets/085516d2-4e16-4477-8a04-7349f05df800)
+![나의폼](https://github.com/user-attachments/assets/6aa55a6c-33f2-4b1f-97cd-952847a1084c)
+
 ### 기획/설계
 
-- [사용자 요구사항 정의서](link)
-- [와이어프레임](link)
-- [플로우차트](link)
-- [화면 정의서](link)
+- [사용자 요구사항 정의서](https://docs.google.com/spreadsheets/d/1cbOjzrG9eImTpaL68OsDOKNqIvixxpM4MQ7CLhkWSRY/edit?gid=841587565#gid=841587565)
+- [와이어프레임](https://www.figma.com/design/0O0YiuuDlU8gU1rXqxBk9L/OZ_MERN_Team_1_Pollloop?node-id=99-673&t=CxUKCIKBE9Dco38p-1)
+- [플로우차트](https://www.figma.com/board/rMwYPKN5wCwCQyDd5jwx9w/OZ_MERN_Team_1_Pollloop?node-id=0-1&t=ghuUdW8Afq6JorH2-1)
+- [화면 정의서](https://docs.google.com/spreadsheets/d/1p3dYyMwH_zKKihMMGBp9cQM_y5V6N4eWuTLfLOpKYOA/edit?usp=sharing)
 
 ### API 연동
 
-- [API 명세서](link)
+- [API 명세서](https://docs.google.com/spreadsheets/d/1R9Qn01BVr1VMkwzyEEENLLw3H0zJpmeFepmhopC9siA/edit?gid=1565530336#gid=1565530336)
+- [API 명세서(스웨거)](https://api.pollloop.store/api/swagger/)
 
 ### 배포
 
-- [배포 링크](link)
-- [데모데이 발표자료](link)
+- [배포 링크](https://pollloop.vercel.app/)
 
 ## 💻 실행 방법
 
